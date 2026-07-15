@@ -65,6 +65,23 @@ export default function About() {
             <Link to="/seller/register-seller" className="btn-outline">Become a Seller</Link>
           </div>
         </section>
+
+        <section>
+          <h2 className="text-3xl font-bold text-center mb-8">Legal Compliance & Accreditation</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              { title: 'Philippine Data Privacy Act (RA 10173)', desc: 'We comply with Republic Act No. 10173, the Data Privacy Act of the Philippines. All personal data collected from users is processed lawfully, fairly, and透明ly. We implement appropriate organizational and technical security measures to protect personal data against unauthorized access, alteration, or destruction.' },
+              { title: 'WCAG 2.1 Level AA', desc: 'Inclusive Market is designed and developed to conform with the Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA. Our platform includes keyboard navigation, screen reader support, high contrast modes, text-to-speech, voice commands, and visual alerts to ensure equal access for all users.' },
+              { title: 'PWD-Accredited Products', desc: 'All products listed on Inclusive Market are crafted by registered Persons with Disabilities (PWDs) under the Area Vocational Rehabilitation Center (AVRC) Region IX, Zamboanga Peninsula. Each seller is verified to hold a valid PWD ID issued by the Department of Social Welfare and Development (DSWD).' },
+              { title: 'DSWD Accreditation', desc: 'Inclusive Market is accredited under the Department of Social Welfare and Development (DSWD). We operate in partnership with AVRC Region IX to provide sustainable livelihood opportunities for PWD entrepreneurs across the Zamboanga Peninsula region.' },
+            ].map(({ title, desc }) => (
+              <div key={title} className="card p-6">
+                <h3 className="font-bold text-lg mb-2">{title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   )

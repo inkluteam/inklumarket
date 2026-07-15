@@ -73,6 +73,30 @@ export default function Privacy() {
             <strong>+63 912 345 6789</strong>.
           </p>
         </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Compliance with Philippine Data Privacy Act (RA 10173)</h2>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            Inclusive Market operates in full compliance with <strong>Republic Act No. 10173</strong>, also known as the <strong>Data Privacy Act of 2012</strong> of the Philippines, and its Implementing Rules and Regulations.
+          </p>
+          <div className="space-y-3 text-gray-600 text-sm">
+            <p><strong>Data Controller:</strong> Inclusive Market is the data controller responsible for your personal data collected through this platform.</p>
+            <p><strong>Lawful Basis:</strong> We process your data based on (a) your consent when you create an account or make a purchase, (b) performance of a contract when fulfilling orders, and (c) legitimate interest in improving our services.</p>
+            <p><strong>Data Subject Rights:</strong> Under RA 10173, you have the right to:</p>
+            <ul className="list-disc list-inside ml-4 space-y-1">
+              <li>Be informed about how your personal data is collected and processed</li>
+              <li>Access your personal data held by us</li>
+              <li>Object to the processing of your personal data</li>
+              <li>Request erasure or blocking of your personal data</li>
+              <li>Rectify inaccurate or incomplete personal data</li>
+              <li>Data portability — request your data in a structured, commonly used format</li>
+              <li>File a complaint with the National Privacy Commission (NPC) if you believe your rights have been violated</li>
+            </ul>
+            <p><strong>Data Retention:</strong> Personal data is retained only for as long as necessary to fulfill the purposes for which it was collected, or as required by applicable law.</p>
+            <p><strong>Data Breach Notification:</strong> In the event of a data breach that may affect your personal data, we will notify you and the National Privacy Commission within 72 hours as required by RA 10173.</p>
+            <p><strong>Cross-Border Transfer:</strong> We do not transfer personal data outside the Philippines without adequate protection and your explicit consent.</p>
+          </div>
+        </section>
       </div>
     </div>
   )

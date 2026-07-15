@@ -49,6 +49,15 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} Inclusive Market. All rights reserved. Built with accessibility at its core.</p>
+          <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs text-gray-500">
+            <span>Compliant with RA 10173 (Data Privacy Act)</span>
+            <span>·</span>
+            <span>WCAG 2.1 Level AA</span>
+            <span>·</span>
+            <span>DSWD Accredited</span>
+            <span>·</span>
+            <span>AVRC Region IX</span>
+          </div>
         </div>
       </div>
     </footer>

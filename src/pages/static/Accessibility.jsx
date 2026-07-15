@@ -68,6 +68,42 @@ export default function AccessibilityPage() {
             <strong>Phone:</strong> +63 912 345 6789
           </p>
         </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">WCAG 2.1 Level AA Compliance</h2>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            Inclusive Market is designed, developed, and maintained to meet <strong>Web Content Accessibility Guidelines (WCAG) 2.1 Level AA</strong> standards. This international standard ensures our platform is accessible to people with a wide range of disabilities, including visual, auditory, motor, and cognitive impairments.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <strong>Perceivable</strong> — All content is presented in ways that all users can perceive, including text alternatives, captions, and adaptable layouts.
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <strong>Operable</strong> — All functionality is available via keyboard, with sufficient time and no content that causes seizures.
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <strong>Understandable</strong> — Text is readable, pages operate predictably, and input assistance is provided for forms.
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <strong>Robust</strong> — Content is compatible with current and future user agents, including assistive technologies.
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">PWD Accreditation & DSWD Partnership</h2>
+          <div className="space-y-4 text-gray-600 leading-relaxed">
+            <p>
+              All products listed on Inclusive Market are crafted by <strong>registered Persons with Disabilities (PWDs)</strong> under the <strong>Area Vocational Rehabilitation Center (AVRC) Region IX</strong>, Zamboanga Peninsula.
+            </p>
+            <p>
+              Inclusive Market is accredited under the <strong>Department of Social Welfare and Development (DSWD)</strong>. We work in direct partnership with AVRC Region IX to verify PWD seller status and provide sustainable livelihood opportunities for PWD entrepreneurs.
+            </p>
+            <p>
+              Each seller undergoes a verification process that includes validation of their PWD ID, DSWD accreditation, and business registration to ensure all products are authentically sourced from PWD-led enterprises.
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   )
