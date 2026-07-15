@@ -65,19 +65,24 @@ export function DataStoreProvider({ children }) {
   }, [])
 
   const addProduct = useCallback((product) => {
-    const newProduct = { ...product, id: String(Date.now()), rating: 0, reviews: 0, status: 'approved', dateAdded: new Date().toISOString().split('T')[0] }
+    const newProduct = { ...product, id: String(Date.now()), rating: 0, reviews: 0, status: 'pending_review', dateAdded: new Date().toISOString().split('T')[0] }
     setProducts(prev => {
       const next = [...prev, newProduct]
       persist('im_products', next)
       return next
     })
-    addActivityLog('Product listed', product.seller || 'Seller', 'product', `${product.name} added for review`)
+    addActivityLog('Product listed', product.seller || 'Seller', 'product', `${product.name} submitted for review`)
     return newProduct
   }, [addActivityLog])
 
   const updateProduct = useCallback((id, updates) => {
     setProducts(prev => {
-      const next = prev.map(p => p.id === id ? { ...p, ...updates } : p)
+      const next = prev.map(p => {
+        if (p.id !== id) return p
+        const substantiveFields = ['name', 'description', 'price', 'category']
+        const isSubstantive = p.status === 'approved' && substantiveFields.some(f => updates[f] !== undefined && updates[f] !== p[f])
+        return { ...p, ...updates, status: isSubstantive ? 'pending_review' : (updates.status || p.status) }
+      })
       persist('im_products', next)
       return next
     })

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Accessibility, Type, Contrast, ZoomIn, ZoomOut, X, Volume2, VolumeX, Mic, MicOff, Eye, BookOpen, Sparkles, Keyboard, Hand, HelpCircle, ChevronDown, ChevronUp, Languages } from 'lucide-react'
+import { Accessibility, Type, Contrast, ZoomIn, ZoomOut, X, Volume2, VolumeX, Mic, MicOff, Eye, BookOpen, Sparkles, Keyboard, Hand, HelpCircle, ChevronDown, ChevronUp, Languages, Disc } from 'lucide-react'
 import { useVoice } from '../context/VoiceContext'
 
 const SHORTCUTS = [
@@ -49,6 +49,7 @@ export default function AccessibilityToolbar() {
   const [highContrast, setHighContrast] = useState(() => localStorage.getItem('im_high_contrast') === 'true')
   const [visualAlerts, setVisualAlerts] = useState(() => localStorage.getItem('im_visual_alerts') === 'true')
   const [largeCursors, setLargeCursors] = useState(() => localStorage.getItem('im_large_cursors') === 'true')
+  const [dyslexiaFont, setDyslexiaFont] = useState(() => localStorage.getItem('im_dyslexia_font') === 'true')
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [showVoiceHelp, setShowVoiceHelp] = useState(false)
 
@@ -57,6 +58,7 @@ export default function AccessibilityToolbar() {
       setHighContrast(localStorage.getItem('im_high_contrast') === 'true')
       setVisualAlerts(localStorage.getItem('im_visual_alerts') === 'true')
       setLargeCursors(localStorage.getItem('im_large_cursors') === 'true')
+      setDyslexiaFont(localStorage.getItem('im_dyslexia_font') === 'true')
       setFontSize(localStorage.getItem('im_font_size') || '16')
     }
     window.addEventListener('storage', sync)
@@ -88,6 +90,12 @@ export default function AccessibilityToolbar() {
     else document.documentElement.classList.remove('large-cursors')
     localStorage.setItem('im_large_cursors', largeCursors)
   }, [largeCursors])
+
+  useEffect(() => {
+    if (dyslexiaFont) document.documentElement.classList.add('dyslexia-font')
+    else document.documentElement.classList.remove('dyslexia-font')
+    localStorage.setItem('im_dyslexia_font', dyslexiaFont)
+  }, [dyslexiaFont])
 
   const tabs = [
     { id: 'display', label: 'Display', icon: Eye },
@@ -186,6 +194,13 @@ export default function AccessibilityToolbar() {
                       onToggle={() => setVisualAlerts(!visualAlerts)}
                       label="Visual Alert Flash"
                       desc="Screen flash for deaf/hard-of-hearing users"
+                    />
+                    <ToggleButton
+                      active={dyslexiaFont}
+                      onToggle={() => setDyslexiaFont(!dyslexiaFont)}
+                      label="Dyslexia-Friendly Font"
+                      desc="Uses OpenDyslexic for easier reading"
+                      icon={<Disc className="w-4 h-4" />}
                     />
                   </div>
                 </div>
