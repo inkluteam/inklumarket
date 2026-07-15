@@ -44,6 +44,14 @@ export function DataStoreProvider({ children }) {
     const saved = localStorage.getItem('im_messages')
     return saved ? JSON.parse(saved) : []
   })
+  const [addresses, setAddresses] = useState(() => {
+    const saved = localStorage.getItem('im_addresses')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [refunds, setRefunds] = useState(() => {
+    const saved = localStorage.getItem('im_refunds')
+    return saved ? JSON.parse(saved) : []
+  })
 
   const persist = (key, data) => localStorage.setItem(key, JSON.stringify(data))
 
@@ -433,8 +441,85 @@ export function DataStoreProvider({ children }) {
     return alerts
   }, [products, orders, sellers, users])
 
+  const addAddress = useCallback((userId, address) => {
+    const newAddr = { ...address, id: 'addr-' + Date.now(), userId }
+    setAddresses(prev => {
+      let next = [...prev, newAddr]
+      if (address.isDefault) {
+        next = next.map(a => a.userId === userId && a.id !== newAddr.id ? { ...a, isDefault: false } : a)
+      }
+      persist('im_addresses', next)
+      return next
+    })
+    return newAddr
+  }, [])
+
+  const updateAddress = useCallback((userId, addressId, updates) => {
+    setAddresses(prev => {
+      let next = prev.map(a => a.id === addressId ? { ...a, ...updates } : a)
+      if (updates.isDefault) {
+        next = next.map(a => a.userId === userId && a.id !== addressId ? { ...a, isDefault: false } : a)
+      }
+      persist('im_addresses', next)
+      return next
+    })
+  }, [])
+
+  const deleteAddress = useCallback((addressId) => {
+    setAddresses(prev => {
+      const next = prev.filter(a => a.id !== addressId)
+      persist('im_addresses', next)
+      return next
+    })
+  }, [])
+
+  const setDefaultAddress = useCallback((userId, addressId) => {
+    setAddresses(prev => {
+      const next = prev.map(a => a.userId === userId ? { ...a, isDefault: a.id === addressId } : a)
+      persist('im_addresses', next)
+      return next
+    })
+  }, [])
+
+  const getAddressesByUser = useCallback((userId) => {
+    return addresses.filter(a => a.userId === userId)
+  }, [addresses])
+
+  const requestRefund = useCallback((refund) => {
+    const newRefund = { ...refund, id: 'REF-' + Date.now().toString().slice(-6), status: 'pending', createdAt: new Date().toISOString() }
+    setRefunds(prev => {
+      const next = [newRefund, ...prev]
+      persist('im_refunds', next)
+      return next
+    })
+    addActivityLog('Refund requested', refund.buyerName || 'Buyer', 'order', `Refund of ₱${refund.amount.toFixed(2)} for ${refund.orderId}`)
+    return newRefund
+  }, [addActivityLog])
+
+  const updateRefundStatus = useCallback((refundId, status, adminNote = '') => {
+    setRefunds(prev => {
+      const next = prev.map(r => r.id === refundId ? { ...r, status, adminNote, resolvedAt: new Date().toISOString() } : r)
+      persist('im_refunds', next)
+      return next
+    })
+    addActivityLog(`Refund ${status}`, 'Admin', 'order', `Refund ${refundId} ${status}`)
+  }, [addActivityLog])
+
+  const getRefundsByOrder = useCallback((orderId) => {
+    return refunds.filter(r => r.orderId === orderId)
+  }, [refunds])
+
+  const moderateReview = useCallback((reviewId, action) => {
+    setReviews(prev => {
+      const next = prev.map(r => r.id === reviewId ? { ...r, moderated: action === 'hide' ? true : false, flagged: action === 'flag' ? true : false } : r)
+      persist('im_reviews', next)
+      return next
+    })
+    addActivityLog('Review moderated', 'Admin', 'user', `Review ${reviewId} ${action}`)
+  }, [addActivityLog])
+
   const value = useMemo(() => ({
-    products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages,
+    products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -446,7 +531,10 @@ export function DataStoreProvider({ children }) {
     getTransactionStats, getSmartRecommendations, getLowStockProducts, getTrendingProducts, getNewArrivals, smartSearch, getSmartAlerts,
     getSellerMonthlySales, getSellerProductActivity, generateSellerReport,
     addActivityLog,
-  }), [products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages,
+    addAddress, updateAddress, deleteAddress, setDefaultAddress, getAddressesByUser,
+    requestRefund, updateRefundStatus, getRefundsByOrder,
+    moderateReview,
+  }), [products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -457,7 +545,10 @@ export function DataStoreProvider({ children }) {
     getProductReviews, getSellerProducts, getOrdersByBuyer, getOrdersBySeller,
     getTransactionStats, getSmartRecommendations, getLowStockProducts, getTrendingProducts, getNewArrivals, smartSearch, getSmartAlerts,
     getSellerMonthlySales, getSellerProductActivity, generateSellerReport,
-    addActivityLog])
+    addActivityLog,
+    addAddress, updateAddress, deleteAddress, setDefaultAddress, getAddressesByUser,
+    requestRefund, updateRefundStatus, getRefundsByOrder,
+    moderateReview])
 
   return (
     <DataStoreContext.Provider value={value}>

@@ -36,14 +36,17 @@ export default function SellerProducts() {
 
   const handleEdit = () => {
     if (!editProduct) return
+    const substantiveChanged = form.name !== editProduct.name || parseFloat(form.price) !== editProduct.price || form.description !== (editProduct.description || '') || form.category !== editProduct.category
     updateProduct(editProduct.id, {
       name: form.name, price: parseFloat(form.price), category: form.category,
       stock: parseInt(form.stock) || 0, description: form.description,
       accessibility: form.accessibility || editProduct.accessibility,
+      status: substantiveChanged ? 'pending_review' : editProduct.status,
+      previousStatus: substantiveChanged ? editProduct.status : undefined,
     })
     setEditProduct(null)
     resetForm()
-    toast.success('Product updated successfully!')
+    toast.success(substantiveChanged ? 'Product updated and resubmitted for admin review' : 'Product updated successfully!')
   }
 
   const handleDelete = (product) => {

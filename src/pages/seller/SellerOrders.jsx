@@ -127,6 +127,7 @@ export default function SellerOrders() {
                 <th className="px-6 py-3">Customer</th>
                 <th className="px-6 py-3">Items</th>
                 <th className="px-6 py-3">Total</th>
+                <th className="px-6 py-3">Your Payout</th>
                 <th className="px-6 py-3">Payment</th>
                 <th className="px-6 py-3">Status</th>
                 <th className="px-6 py-3">Date</th>
@@ -150,6 +151,7 @@ export default function SellerOrders() {
                     {order.items.map((item, i) => <p key={i} className="truncate max-w-[200px]">{item.name} × {item.qty}</p>)}
                   </td>
                   <td className="px-6 py-4 font-semibold text-emerald-600">{formatMoney(order.total)}</td>
+                  <td className="px-6 py-4 font-semibold text-blue-600 text-sm">{formatMoney(order.total * 0.95)}</td>
                   <td className="px-6 py-4 text-sm capitalize">{order.paymentMethod}</td>
                   <td className="px-6 py-4"><span className={`badge capitalize ${statusColors[order.status]}`}>{order.status}</span></td>
                   <td className="px-6 py-4 text-sm text-gray-500">{order.date}</td>
@@ -171,7 +173,7 @@ export default function SellerOrders() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan="9" className="px-6 py-12 text-center text-gray-500">No orders found</td></tr>
+                <tr><td colSpan="10" className="px-6 py-12 text-center text-gray-500">No orders found</td></tr>
               )}
             </tbody>
           </table>

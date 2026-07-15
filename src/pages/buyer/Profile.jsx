@@ -3,10 +3,11 @@ import { useAuth } from '../../context/AuthContext'
 import { useDataStore } from '../../context/DataStore'
 import { useToast } from '../../context/ToastContext'
 import { User, Mail, Phone, MapPin, Edit2, Save, X } from 'lucide-react'
+import AddressBook from '../../components/AddressBook'
 
 export default function Profile() {
   const { user, refreshUser } = useAuth()
-  const { updateUser } = useDataStore()
+  const { updateUser, addAddress, updateAddress, deleteAddress, setDefaultAddress, getAddressesByUser } = useDataStore()
   const toast = useToast()
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({
@@ -17,6 +18,8 @@ export default function Profile() {
     bio: user?.bio || 'Conscious consumer supporting inclusive businesses.',
   })
 
+  const userAddresses = getAddressesByUser(user?.id || '')
+
   const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }))
 
   const handleSave = () => {
@@ -24,6 +27,26 @@ export default function Profile() {
     refreshUser({ name: form.name, phone: form.phone, address: form.address, bio: form.bio })
     setEditing(false)
     toast.success('Profile updated successfully!')
+  }
+
+  const handleSaveAddress = (addr) => {
+    if (addr.id && userAddresses.find(a => a.id === addr.id)) {
+      updateAddress(user.id, addr.id, addr)
+      toast.success('Address updated')
+    } else {
+      addAddress(user.id, addr)
+      toast.success('Address added')
+    }
+  }
+
+  const handleDeleteAddress = (addrId) => {
+    deleteAddress(addrId)
+    toast.success('Address removed')
+  }
+
+  const handleSetDefault = (addrId) => {
+    setDefaultAddress(user.id, addrId)
+    toast.success('Default address updated')
   }
 
   return (
@@ -91,6 +114,15 @@ export default function Profile() {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <AddressBook
+          addresses={userAddresses}
+          onSave={handleSaveAddress}
+          onDelete={handleDeleteAddress}
+          onSetDefault={handleSetDefault}
+        />
       </div>
     </div>
   )

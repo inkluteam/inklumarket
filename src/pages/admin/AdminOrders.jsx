@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useDataStore } from '../../context/DataStore'
 import { useSettings } from '../../context/SettingsContext'
-import { Search, Eye, CheckCircle } from 'lucide-react'
+import { Search, Eye, CheckCircle, Download, RotateCcw } from 'lucide-react'
+import { exportOrdersCSV } from '../../utils/exportCSV'
 
-const statusColors = { pending: 'badge-yellow', processing: 'badge-blue', shipped: 'badge-blue', delivered: 'badge-green', cancelled: 'badge-red' }
+const statusColors = { pending: 'badge-yellow', processing: 'badge-blue', shipped: 'badge-blue', delivered: 'badge-green', cancelled: 'badge-red', refunded: 'badge-purple' }
 const paymentLabels = { cod: 'Cash on Delivery', gcash: 'GCash', bank: 'Bank Transfer' }
 
 export default function AdminOrders() {
-  const { orders, updateOrderStatus } = useDataStore()
+  const { orders, updateOrderStatus, refunds, updateRefundStatus } = useDataStore()
   const { formatMoney } = useSettings()
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [viewOrder, setViewOrder] = useState(null)
+  const [refundNote, setRefundNote] = useState('')
 
   useEffect(() => {
     if (!viewOrder) return
@@ -30,7 +32,12 @@ export default function AdminOrders() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="page-title mb-0">Order Management</h1>
-        <span className="text-sm text-gray-500">{filtered.length} order{filtered.length !== 1 ? 's' : ''}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">{filtered.length} order{filtered.length !== 1 ? 's' : ''}</span>
+          <button onClick={() => exportOrdersCSV(filtered, formatMoney, 'inclusive-market-filtered-orders.csv')} className="btn-secondary text-sm flex items-center gap-1.5">
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
+        </div>
       </div>
 
       <div className="card">
@@ -120,6 +127,40 @@ export default function AdminOrders() {
               {viewOrder.shippingAddress && (
                 <div><span className="text-gray-500 text-sm">Shipping Address</span><p className="text-sm">{viewOrder.shippingAddress}</p></div>
               )}
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-2 flex items-center gap-2"><RotateCcw className="w-4 h-4" /> Refund Management</h3>
+                {refunds.filter(r => r.orderId === viewOrder.id).length > 0 ? (
+                  <div className="space-y-2">
+                    {refunds.filter(r => r.orderId === viewOrder.id).map(ref => (
+                      <div key={ref.id} className={`p-3 rounded-lg text-sm ${ref.status === 'approved' ? 'bg-green-50' : ref.status === 'rejected' ? 'bg-red-50' : 'bg-yellow-50'}`}>
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium">{ref.id} — {formatMoney(ref.amount)}</p>
+                            <p className="text-gray-600 text-xs">{ref.reason}</p>
+                            {ref.adminNote && <p className="text-xs mt-1 text-gray-500">Admin: {ref.adminNote}</p>}
+                          </div>
+                          <span className={`badge capitalize ${ref.status === 'approved' ? 'badge-green' : ref.status === 'rejected' ? 'badge-red' : 'badge-yellow'}`}>{ref.status}</span>
+                        </div>
+                        {ref.status === 'pending' && (
+                          <div className="flex gap-2 mt-2">
+                            <input
+                              type="text"
+                              placeholder="Admin note (optional)"
+                              value={refundNote}
+                              onChange={(e) => setRefundNote(e.target.value)}
+                              className="input-field text-xs flex-1"
+                            />
+                            <button onClick={() => { updateRefundStatus(ref.id, 'approved', refundNote); setRefundNote('') }} className="px-3 py-1 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700">Approve</button>
+                            <button onClick={() => { updateRefundStatus(ref.id, 'rejected', refundNote); setRefundNote('') }} className="px-3 py-1 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700">Reject</button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No refund requests for this order.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>

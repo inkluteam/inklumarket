@@ -1,16 +1,17 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, ChevronLeft, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
 const links = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/categories', label: 'Categories', icon: Tags },
-  { to: '/admin/product-approvals', label: 'Product Approvals', icon: Package },
+  { to: '/admin/product-approvals', label: 'Approvals', icon: Package },
   { to: '/admin/admin-orders', label: 'Orders', icon: ShoppingCart },
   { to: '/admin/admin-transactions', label: 'Transactions', icon: DollarSign },
-  { to: '/admin/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/admin/activity-logs', label: 'Activity Logs', icon: Activity },
+  { to: '/admin/admin-reports', label: 'Reports', icon: BarChart3 },
+  { to: '/admin/review-moderation', label: 'Reviews', icon: MessageSquare },
+  { to: '/admin/activity-logs', label: 'Activity', icon: Activity },
   { to: '/admin/admin-settings', label: 'Settings', icon: Settings },
 ]
 

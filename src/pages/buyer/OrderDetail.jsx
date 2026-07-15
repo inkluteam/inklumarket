@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useSettings } from '../../context/SettingsContext'
 import { useDataStore } from '../../context/DataStore'
 import { useToast } from '../../context/ToastContext'
-import { ArrowLeft, Package, Truck, CheckCircle, Clock, Send, AlertTriangle, MessageSquare } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CheckCircle, Clock, Send, AlertTriangle, MessageSquare, RotateCcw } from 'lucide-react'
 
 const statusColors = { pending: 'badge-yellow', processing: 'badge-blue', shipped: 'badge-blue', delivered: 'badge-green', cancelled: 'badge-red' }
 const statusSteps = ['pending', 'processing', 'shipped', 'delivered']
@@ -20,13 +20,17 @@ export default function OrderDetail() {
   const { id } = useParams()
   const { user } = useAuth()
   const { formatMoney } = useSettings()
-  const { orders, products, addMessage, getMessagesByOrder, markMessagesRead } = useDataStore()
+  const { orders, products, addMessage, getMessagesByOrder, markMessagesRead, refunds, requestRefund } = useDataStore()
   const toast = useToast()
   const order = orders.find(o => o.id === id)
   const messagesEndRef = useRef(null)
   const [newMessage, setNewMessage] = useState('')
   const [isDispute, setIsDispute] = useState(false)
+  const [showRefundForm, setShowRefundForm] = useState(false)
+  const [refundReason, setRefundReason] = useState('')
+  const [refundAmount, setRefundAmount] = useState('')
 
+  const orderRefunds = order ? refunds.filter(r => r.orderId === order.id) : []
   const orderMessages = order ? getMessagesByOrder(order.id) : []
 
   useEffect(() => {
@@ -154,6 +158,91 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+
+      {/* Refund Request Section */}
+      {(order.status === 'delivered' || order.status === 'cancelled') && orderRefunds.length === 0 && (
+        <div className="card p-6 mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <RotateCcw className="w-5 h-5 text-orange-600" />
+            <h2 className="font-bold">Request a Refund</h2>
+          </div>
+          {!showRefundForm ? (
+            <button onClick={() => { setShowRefundForm(true); setRefundAmount(order.total) }} className="btn-secondary text-sm flex items-center gap-1.5">
+              <RotateCcw className="w-4 h-4" /> Request Refund
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Refund Amount (max {formatMoney(order.total)})</label>
+                <input
+                  type="number"
+                  min="0"
+                  max={order.total}
+                  step="0.01"
+                  value={refundAmount}
+                  onChange={(e) => setRefundAmount(Math.min(parseFloat(e.target.value) || 0, order.total))}
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Reason for Refund *</label>
+                <textarea
+                  value={refundReason}
+                  onChange={(e) => setRefundReason(e.target.value)}
+                  placeholder="Describe why you are requesting a refund..."
+                  rows={3}
+                  className="input-field resize-none"
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    if (!refundReason.trim()) return
+                    requestRefund({
+                      orderId: order.id,
+                      buyerId: user.id,
+                      buyerName: user.name,
+                      sellerId,
+                      amount: refundAmount,
+                      reason: refundReason.trim(),
+                    })
+                    setShowRefundForm(false)
+                    setRefundReason('')
+                    setRefundAmount(order.total)
+                    toast.success('Refund request submitted. Admin will review shortly.')
+                  }}
+                  disabled={!refundReason.trim()}
+                  className="btn-primary text-sm disabled:opacity-50"
+                >
+                  Submit Refund Request
+                </button>
+                <button onClick={() => { setShowRefundForm(false); setRefundReason('') }} className="btn-secondary text-sm">Cancel</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {orderRefunds.length > 0 && (
+        <div className="card p-6 mb-8">
+          <h2 className="font-bold mb-3 flex items-center gap-2"><RotateCcw className="w-5 h-5 text-orange-600" /> Refund Requests</h2>
+          <div className="space-y-2">
+            {orderRefunds.map(ref => (
+              <div key={ref.id} className={`p-4 rounded-lg text-sm ${ref.status === 'approved' ? 'bg-green-50 border border-green-200' : ref.status === 'rejected' ? 'bg-red-50 border border-red-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold">{ref.id} — {formatMoney(ref.amount)}</p>
+                    <p className="text-gray-600 mt-1">{ref.reason}</p>
+                    {ref.adminNote && <p className="text-xs mt-1 text-gray-500 italic">Admin note: {ref.adminNote}</p>}
+                  </div>
+                  <span className={`badge capitalize ${ref.status === 'approved' ? 'badge-green' : ref.status === 'rejected' ? 'badge-red' : 'badge-yellow'}`}>{ref.status}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Messaging / Dispute Section */}
       <div className="card">

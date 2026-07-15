@@ -1,6 +1,7 @@
-import { ArrowUp, ArrowDown, DollarSign, Users, Package, ShoppingCart } from 'lucide-react'
+import { ArrowUp, ArrowDown, DollarSign, Users, Package, ShoppingCart, Download } from 'lucide-react'
 import { useDataStore } from '../../context/DataStore'
 import { useSettings } from '../../context/SettingsContext'
+import { exportOrdersCSV, exportTransactionsCSV, exportProductsCSV, exportSellersCSV } from '../../utils/exportCSV'
 
 function LineChart({ data, width = 600, height = 240, color = '#059669', currencySymbol = '$' }) {
   const padding = { top: 20, right: 20, bottom: 40, left: 65 }
@@ -140,7 +141,23 @@ export default function AdminReports() {
 
   return (
     <div>
-      <h1 className="page-title">Reports & Analytics</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 className="page-title mb-0">Reports & Analytics</h1>
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => exportOrdersCSV(orders, formatMoney, 'inclusive-market-orders.csv')} className="btn-secondary text-sm flex items-center gap-1.5">
+            <Download className="w-4 h-4" /> Orders CSV
+          </button>
+          <button onClick={() => exportTransactionsCSV(transactions, formatMoney, 'inclusive-market-transactions.csv')} className="btn-secondary text-sm flex items-center gap-1.5">
+            <Download className="w-4 h-4" /> Transactions CSV
+          </button>
+          <button onClick={() => exportProductsCSV(products, formatMoney, 'inclusive-market-products.csv')} className="btn-secondary text-sm flex items-center gap-1.5">
+            <Download className="w-4 h-4" /> Products CSV
+          </button>
+          <button onClick={() => exportSellersCSV(sellers, formatMoney, 'inclusive-market-sellers.csv')} className="btn-secondary text-sm flex items-center gap-1.5">
+            <Download className="w-4 h-4" /> Sellers CSV
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[

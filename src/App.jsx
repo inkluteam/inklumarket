@@ -6,6 +6,7 @@ import { DataStoreProvider } from './context/DataStore'
 import { ToastProvider } from './context/ToastContext'
 import { VoiceProvider } from './context/VoiceContext'
 import { VisualAlertProvider } from './components/VisualAlert'
+import { CookieConsentBanner } from './components/CookieConsent'
 import { AuthGuard, GuestGuard } from './components/AuthGuard'
 import Layout from './components/Layout'
 import AdminLayout from './components/AdminLayout'
@@ -41,6 +42,7 @@ import ProductApprovals from './pages/admin/ProductApprovals'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminTransactions from './pages/admin/AdminTransactions'
 import AdminReports from './pages/admin/Reports'
+import ReviewModeration from './pages/admin/ReviewModeration'
 import ActivityLogs from './pages/admin/ActivityLogs'
 import AdminSettings from './pages/admin/AdminSettings'
 
@@ -96,7 +98,8 @@ export default function App() {
                         <Route path="product-approvals" element={<ProductApprovals />} />
                         <Route path="admin-orders" element={<AdminOrders />} />
                         <Route path="admin-transactions" element={<AdminTransactions />} />
-                        <Route path="reports" element={<AdminReports />} />
+                        <Route path="admin-reports" element={<AdminReports />} />
+                        <Route path="review-moderation" element={<ReviewModeration />} />
                         <Route path="activity-logs" element={<ActivityLogs />} />
                         <Route path="admin-settings" element={<AdminSettings />} />
                       </Route>
@@ -118,6 +121,7 @@ export default function App() {
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <AccessibilityToolbar />
+                  <CookieConsentBanner />
                 </VisualAlertProvider>
               </ToastProvider>
             </VoiceProvider>
