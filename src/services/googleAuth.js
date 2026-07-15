@@ -3,6 +3,10 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 let tokenClient = null
 let googleInitPromise = null
 
+export function isGoogleConfigured() {
+  return !!GOOGLE_CLIENT_ID
+}
+
 function loadGIS() {
   return new Promise((resolve, reject) => {
     if (document.getElementById('google-gis')) return resolve()
@@ -16,6 +20,7 @@ function loadGIS() {
 }
 
 export async function initGoogleAuth() {
+  if (!GOOGLE_CLIENT_ID) throw new Error('Google login is not configured. Please use email to register.')
   if (googleInitPromise) return googleInitPromise
   googleInitPromise = (async () => {
     await loadGIS()
