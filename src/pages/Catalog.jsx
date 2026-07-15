@@ -198,7 +198,7 @@ export default function Catalog() {
                     <div className="relative overflow-hidden">
                       <img src={product.image} alt={product.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                       {product.featured && <span className="badge badge-yellow absolute top-3 left-3">Featured</span>}
-                      {product.stock <= 5 && product.stock > 0 && <span className="badge badge-red absolute top-3 right-3">Low Stock</span>}
+                      {product.stock <= 5 && product.stock > 0 && <span className="badge badge-red absolute bottom-3 right-3">Low Stock</span>}
                     </div>
                   </Link>
                   <div className="p-4">

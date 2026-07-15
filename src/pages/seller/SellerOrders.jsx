@@ -3,17 +3,20 @@ import { useAuth } from '../../context/AuthContext'
 import { useDataStore } from '../../context/DataStore'
 import { useSettings } from '../../context/SettingsContext'
 import { useToast } from '../../context/ToastContext'
-import { Search, Truck, CheckCircle, Clock } from 'lucide-react'
+import { Search, Truck, CheckCircle, Clock, ChevronDown, X } from 'lucide-react'
 
 const statusColors = { pending: 'badge-yellow', processing: 'badge-blue', shipped: 'badge-blue', delivered: 'badge-green', cancelled: 'badge-red' }
 
 export default function SellerOrders() {
   const { user } = useAuth()
-  const { getOrdersBySeller, updateOrderStatus } = useDataStore()
+  const { getOrdersBySeller, updateOrderStatus, bulkUpdateOrderStatus } = useDataStore()
   const { formatMoney } = useSettings()
   const toast = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [selectedIds, setSelectedIds] = useState([])
+  const [bulkStatus, setBulkStatus] = useState('')
+  const [showBulkDropdown, setShowBulkDropdown] = useState(false)
 
   const sellerId = user?.sellerId
   const allOrders = getOrdersBySeller(sellerId)
@@ -23,10 +26,33 @@ export default function SellerOrders() {
     return matchSearch && matchStatus
   })
 
+  const toggleSelect = (orderId) => {
+    setSelectedIds(prev => prev.includes(orderId) ? prev.filter(id => id !== orderId) : [...prev, orderId])
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filtered.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(filtered.map(o => o.id))
+    }
+  }
+
+  const handleBulkUpdate = () => {
+    if (!bulkStatus || selectedIds.length === 0) return
+    bulkUpdateOrderStatus(selectedIds, bulkStatus)
+    toast.success(`${selectedIds.length} order(s) marked as ${bulkStatus}`)
+    setSelectedIds([])
+    setBulkStatus('')
+    setShowBulkDropdown(false)
+  }
+
   const handleStatusUpdate = (orderId, newStatus) => {
     updateOrderStatus(orderId, newStatus)
     toast.success(`Order ${orderId} marked as ${newStatus}`)
   }
+
+  const nextStatus = { pending: 'processing', processing: 'shipped', shipped: 'delivered' }
 
   return (
     <div>
@@ -50,10 +76,53 @@ export default function SellerOrders() {
           </select>
         </div>
 
+        {selectedIds.length > 0 && (
+          <div className="px-4 py-3 bg-blue-50 border-b flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium text-blue-700">{selectedIds.length} selected</span>
+            <button onClick={() => setSelectedIds([])} className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1">
+              <X className="w-3 h-3" /> Clear
+            </button>
+            <div className="relative ml-auto">
+              <button
+                onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                className="btn-primary text-sm !py-2 !px-4 flex items-center gap-2"
+              >
+                Bulk Update Status <ChevronDown className="w-4 h-4" />
+              </button>
+              {showBulkDropdown && (
+                <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 w-48">
+                  {['processing', 'shipped', 'delivered', 'cancelled'].map(status => (
+                    <button
+                      key={status}
+                      onClick={() => { setBulkStatus(status); setShowBulkDropdown(false) }}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 capitalize ${bulkStatus === status ? 'bg-blue-50 text-blue-700 font-medium' : ''}`}
+                    >
+                      Mark as {status}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {bulkStatus && (
+              <button onClick={handleBulkUpdate} className="btn-secondary text-sm !py-2 !px-4">
+                Apply: Mark {selectedIds.length} as {bulkStatus}
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="table-header">
+                <th className="px-6 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.length === filtered.length && filtered.length > 0}
+                    onChange={toggleSelectAll}
+                    className="w-4 h-4 rounded cursor-pointer"
+                  />
+                </th>
                 <th className="px-6 py-3">Order ID</th>
                 <th className="px-6 py-3">Customer</th>
                 <th className="px-6 py-3">Items</th>
@@ -66,7 +135,15 @@ export default function SellerOrders() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.map(order => (
-                <tr key={order.id} className="hover:bg-gray-50">
+                <tr key={order.id} className={`hover:bg-gray-50 ${selectedIds.includes(order.id) ? 'bg-blue-50' : ''}`}>
+                  <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(order.id)}
+                      onChange={() => toggleSelect(order.id)}
+                      className="w-4 h-4 rounded cursor-pointer"
+                    />
+                  </td>
                   <td className="px-6 py-4 font-medium text-sm">{order.id}</td>
                   <td className="px-6 py-4 text-sm">{order.buyer}</td>
                   <td className="px-6 py-4 text-sm">
@@ -78,19 +155,15 @@ export default function SellerOrders() {
                   <td className="px-6 py-4 text-sm text-gray-500">{order.date}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1">
-                      {order.status === 'pending' && (
-                        <button onClick={() => handleStatusUpdate(order.id, 'processing')} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded text-xs font-medium" title="Mark as Processing">
-                          <Clock className="w-4 h-4" />
-                        </button>
-                      )}
-                      {order.status === 'processing' && (
-                        <button onClick={() => handleStatusUpdate(order.id, 'shipped')} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded text-xs font-medium" title="Mark as Shipped">
-                          <Truck className="w-4 h-4" />
-                        </button>
-                      )}
-                      {order.status === 'shipped' && (
-                        <button onClick={() => handleStatusUpdate(order.id, 'delivered')} className="p-1.5 text-green-600 hover:bg-green-50 rounded text-xs font-medium" title="Mark as Delivered">
-                          <CheckCircle className="w-4 h-4" />
+                      {nextStatus[order.status] && (
+                        <button
+                          onClick={() => handleStatusUpdate(order.id, nextStatus[order.status])}
+                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded text-xs font-medium"
+                          title={`Mark as ${nextStatus[order.status]}`}
+                        >
+                          {order.status === 'pending' && <Clock className="w-4 h-4" />}
+                          {order.status === 'processing' && <Truck className="w-4 h-4" />}
+                          {order.status === 'shipped' && <CheckCircle className="w-4 h-4" />}
                         </button>
                       )}
                     </div>
@@ -98,7 +171,7 @@ export default function SellerOrders() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan="8" className="px-6 py-12 text-center text-gray-500">No orders found</td></tr>
+                <tr><td colSpan="9" className="px-6 py-12 text-center text-gray-500">No orders found</td></tr>
               )}
             </tbody>
           </table>

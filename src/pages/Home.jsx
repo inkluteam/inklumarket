@@ -13,7 +13,7 @@ function ProductCard({ product, formatMoney, onAddToCart }) {
           <img src={product.image} alt={product.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         </Link>
         <span className="badge badge-green absolute top-3 left-3">{product.accessibility}</span>
-        {product.featured && <span className="badge badge-yellow absolute top-3 right-3">Featured</span>}
+        {product.featured && <span className="badge badge-yellow absolute bottom-3 right-3">Featured</span>}
       </div>
       <div className="p-4">
         <Link to={`/product/${product.id}`}>
