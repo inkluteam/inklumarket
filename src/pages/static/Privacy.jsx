@@ -3,7 +3,7 @@ import { Shield, Lock, Eye, Database, UserCheck } from 'lucide-react'
 export default function Privacy() {
   return (
     <div>
-      <section className="bg-gradient-to-br from-blue-600 to-emerald-600 text-white py-20">
+      <section className="bg-gradient-to-br from-amber-600 to-green-600 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Shield className="w-16 h-16 mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
@@ -29,7 +29,7 @@ export default function Privacy() {
               { icon: Lock, title: 'PWD Verification', desc: 'PWD ID information for seller verification, stored securely and used only for verification purposes.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                <Icon className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
+                <Icon className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold">{title}</h3>
                   <p className="text-sm text-gray-600 mt-1">{desc}</p>
@@ -65,12 +65,12 @@ export default function Privacy() {
           </p>
         </section>
 
-        <section className="bg-blue-50 rounded-xl p-8">
+        <section className="bg-amber-50 rounded-xl p-8">
           <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
           <p className="text-gray-600">
             If you have questions about this Privacy Policy, please contact us at{' '}
             <strong>privacy@inclusivemarket.com</strong> or{' '}
-            <strong>+63 912 345 6789</strong>.
+            <strong>+63 62 991 2345</strong>.
           </p>
         </section>
 

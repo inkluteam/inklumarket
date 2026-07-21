@@ -141,7 +141,7 @@ export default function Login() {
                 <input type="checkbox" className="rounded border-gray-300" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
                 <span className="text-gray-600">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-blue-600 hover:text-blue-700">Forgot password?</Link>
+              <Link to="/forgot-password" className="text-amber-600 hover:text-amber-700">Forgot password?</Link>
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50">
@@ -151,11 +151,11 @@ export default function Login() {
 
           <p className="text-center text-gray-600 mt-6">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">Register here</Link>
+            <Link to="/register" className="text-amber-600 hover:text-amber-700 font-semibold">Register here</Link>
           </p>
         </div>
 
-        <div className="card p-5 mt-4 bg-gradient-to-br from-blue-50 to-emerald-50">
+        <div className="card p-5 mt-4 bg-gradient-to-br from-amber-50 to-green-50">
           <p className="text-sm font-bold text-gray-800 mb-3">Quick Login (Demo Accounts)</p>
           <div className="space-y-2">
             {demoAccounts.map(acc => (
@@ -163,7 +163,7 @@ export default function Login() {
                 type="button"
                 key={acc.email}
                 onClick={() => fillDemo(acc)}
-                className="w-full flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all text-left cursor-pointer"
+                className="w-full flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-amber-300 hover:shadow-sm transition-all text-left cursor-pointer"
               >
                 <span className="text-xl">{acc.role === 'admin' ? '🛡️' : acc.role === 'seller' ? '🏪' : '🛒'}</span>
                 <div className="flex-1 min-w-0">

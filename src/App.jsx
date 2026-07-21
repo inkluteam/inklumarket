@@ -7,7 +7,7 @@ import { ToastProvider } from './context/ToastContext'
 import { VoiceProvider } from './context/VoiceContext'
 import { VisualAlertProvider } from './components/VisualAlert'
 import { CookieConsentBanner } from './components/CookieConsent'
-import { AuthGuard, GuestGuard } from './components/AuthGuard'
+import { AuthGuard, GuestGuard, AdminGuard } from './components/AuthGuard'
 import Layout from './components/Layout'
 import AdminLayout from './components/AdminLayout'
 import SellerLayout from './components/SellerLayout'
@@ -88,9 +88,9 @@ export default function App() {
                       <Route path="/static/terms" element={<Terms />} />
                     </Route>
 
-                    {/* Admin routes */}
+                    {/* Admin routes — only admin can access */}
                     <Route element={<Layout />}>
-                      <Route path="/admin" element={<AuthGuard allowedRoles={['admin']}><AdminLayout /></AuthGuard>}>
+                      <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
                         <Route index element={<Navigate to="dashboard" replace />} />
                         <Route path="dashboard" element={<AdminDashboard />} />
                         <Route path="users" element={<AdminUsers />} />
@@ -105,7 +105,7 @@ export default function App() {
                       </Route>
                     </Route>
 
-                    {/* Seller routes */}
+                    {/* Seller routes — only sellers can access */}
                     <Route element={<Layout />}>
                       <Route path="/seller" element={<AuthGuard allowedRoles={['seller']}><SellerLayout /></AuthGuard>}>
                         <Route index element={<Navigate to="dashboard" replace />} />

@@ -1,11 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
 import { useSettings } from '../../context/SettingsContext'
 import { useDataStore } from '../../context/DataStore'
 import { useToast } from '../../context/ToastContext'
-import { CreditCard, Truck, CheckCircle, AlertCircle, Send, Loader2 } from 'lucide-react'
+import { CreditCard, Truck, CheckCircle, AlertCircle, Send, Loader2, MapPin, Save, ChevronDown, ChevronUp } from 'lucide-react'
 import { createGCashSource, createCardSource } from '../../services/paymongoService'
 import { createStripeCheckoutSession } from '../../services/stripeService'
 import { createPayPalOrder } from '../../services/paypalService'
@@ -23,7 +23,7 @@ export default function Checkout() {
   const { items, total, clearCart } = useCart()
   const { user } = useAuth()
   const { formatMoney } = useSettings()
-  const { addOrder, sellers } = useDataStore()
+  const { addOrder, sellers, getAddressesByUser, addAddress } = useDataStore()
   const toast = useToast()
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({
@@ -34,6 +34,33 @@ export default function Checkout() {
   const [processing, setProcessing] = useState(false)
   const [emailStatus, setEmailStatus] = useState(null)
   const [cardForm, setCardForm] = useState({ number: '', expMonth: '', expYear: '', cvc: '', name: '' })
+  const [showAddresses, setShowAddresses] = useState(false)
+  const [selectedAddressId, setSelectedAddressId] = useState(null)
+  const [saveNewAddress, setSaveNewAddress] = useState(false)
+  const [addressLabel, setAddressLabel] = useState('')
+
+  const savedAddresses = useMemo(() => user?.id ? getAddressesByUser(user.id) : [], [user, getAddressesByUser])
+
+  useEffect(() => {
+    if (savedAddresses.length > 0 && !selectedAddressId) {
+      const defaultAddr = savedAddresses.find(a => a.isDefault)
+      if (defaultAddr) {
+        selectAddress(defaultAddr)
+      }
+    }
+  }, [savedAddresses])
+
+  const selectAddress = (addr) => {
+    setSelectedAddressId(addr.id)
+    setForm(prev => ({
+      ...prev,
+      name: addr.label || prev.name,
+      address: [addr.street, addr.barangay].filter(Boolean).join(', '),
+      city: [addr.city, addr.province, addr.zip].filter(Boolean).join(', '),
+      phone: addr.phone || prev.phone,
+    }))
+    setShowAddresses(false)
+  }
 
   const enabledMethods = useMemo(() => getEnabledPaymentMethods(), [])
   const allMethods = useMemo(() => {
@@ -49,6 +76,24 @@ export default function Checkout() {
   const selectedMethod = allMethods.find(m => m.id === form.paymentMethod)
   const requiresCardInput = selectedMethod?.requiresApi && (form.paymentMethod.includes('card') || form.paymentMethod.includes('stripe-card') || form.paymentMethod.includes('paypal-card'))
   const requiresRedirect = selectedMethod?.requiresApi && !requiresCardInput
+
+  const getCardType = (number) => {
+    const num = number.replace(/\s/g, '')
+    if (/^4/.test(num)) return { type: 'Visa', color: 'bg-blue-600', textColor: 'text-white' }
+    if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) return { type: 'Mastercard', color: 'bg-orange-500', textColor: 'text-white' }
+    if (/^3[47]/.test(num)) return { type: 'Amex', color: 'bg-blue-400', textColor: 'text-white' }
+    if (/^6(?:011|5)/.test(num)) return { type: 'Discover', color: 'bg-orange-600', textColor: 'text-white' }
+    return null
+  }
+
+  const cardType = getCardType(cardForm.number)
+  const maskedCardNumber = cardForm.number ? cardForm.number.replace(/\d(?=.{4})/g, '•') : '•••• •••• •••• ••••'
+
+  useEffect(() => {
+    if (requiresCardInput && !cardForm.name && user?.name) {
+      setCardForm(prev => ({ ...prev, name: user.name }))
+    }
+  }, [requiresCardInput, user])
 
   const validateStep1 = () => {
     const e = {}
@@ -234,7 +279,7 @@ export default function Checkout() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">No items to checkout</h1>
-        <Link to="/catalog" className="text-blue-600 hover:text-blue-700">Browse Catalog</Link>
+        <Link to="/catalog" className="text-amber-600 hover:text-amber-700">Browse Catalog</Link>
       </div>
     )
   }
@@ -285,7 +330,7 @@ export default function Checkout() {
       <div className="flex items-center justify-center mb-8">
         {[{ n: 1, label: 'Shipping', icon: Truck }, { n: 2, label: 'Payment', icon: CreditCard }, { n: 3, label: 'Confirm', icon: CheckCircle }].map(({ n, label, icon: Icon }) => (
           <div key={n} className="flex items-center">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${step === n ? 'bg-blue-600 text-white' : step > n ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${step === n ? 'bg-amber-600 text-white' : step > n ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
               <Icon className="w-4 h-4" />
               <span className="text-sm font-semibold hidden sm:inline">{label}</span>
             </div>
@@ -299,6 +344,46 @@ export default function Checkout() {
           {step === 1 && (
             <div className="card p-6 space-y-4">
               <h2 className="text-xl font-bold flex items-center gap-2"><Truck className="w-5 h-5" /> Shipping Information</h2>
+
+              {savedAddresses.length > 0 && (
+                <div className="border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setShowAddresses(!showAddresses)}
+                    className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-sm font-medium"
+                  >
+                    <span className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-green-600" />
+                      Use a saved address ({savedAddresses.length} available)
+                    </span>
+                    {showAddresses ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
+                  {showAddresses && (
+                    <div className="p-3 space-y-2 border-t">
+                      {savedAddresses.map(addr => (
+                        <button
+                          key={addr.id}
+                          onClick={() => selectAddress(addr)}
+                          className={`w-full text-left p-3 rounded-lg border-2 transition-all text-sm ${selectedAddressId === addr.id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'}`}
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold">{addr.label || 'Address'}</span>
+                            {addr.isDefault && <span className="text-xs bg-green-100 text-emerald-700 px-2 py-0.5 rounded-full">Default</span>}
+                          </div>
+                          <p className="text-gray-600">{addr.street}</p>
+                          <p className="text-gray-500 text-xs">{[addr.barangay, addr.city, addr.province, addr.zip].filter(Boolean).join(', ')}</p>
+                          {addr.phone && <p className="text-gray-500 text-xs">Phone: {addr.phone}</p>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="relative flex items-center gap-3 my-2">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-xs text-gray-400 font-medium">or enter manually</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                 <input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} className="input-field" placeholder="Recipient name" />
@@ -321,7 +406,49 @@ export default function Checkout() {
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
               </div>
-              <button onClick={() => { if (validateStep1()) setStep(2) }} className="btn-primary w-full mt-4">Continue to Payment</button>
+
+              {user && (
+                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={saveNewAddress}
+                      onChange={(e) => setSaveNewAddress(e.target.checked)}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    <Save className="w-4 h-4 text-green-600" />
+                    Save this address for faster checkout next time
+                  </label>
+                  {saveNewAddress && (
+                    <input
+                      type="text"
+                      value={addressLabel}
+                      onChange={(e) => setAddressLabel(e.target.value)}
+                      className="input-field text-sm"
+                      placeholder="Label (e.g. Home, Office)"
+                    />
+                  )}
+                </div>
+              )}
+
+              <button onClick={() => {
+                if (validateStep1()) {
+                  if (saveNewAddress && user && form.address && form.city) {
+                    addAddress(user.id, {
+                      label: addressLabel || 'Shipping Address',
+                      street: form.address,
+                      barangay: '',
+                      city: form.city.split(',')[0]?.trim() || form.city,
+                      province: 'Zamboanga del Sur',
+                      zip: '7000',
+                      phone: form.phone,
+                      isDefault: savedAddresses.length === 0,
+                    })
+                    toast.success('Address saved for future checkouts!')
+                  }
+                  setStep(2)
+                }
+              }} className="btn-primary w-full mt-4">Continue to Payment</button>
             </div>
           )}
 
@@ -345,7 +472,7 @@ export default function Checkout() {
                   return (
                     <label
                       key={method.id}
-                      className={`flex items-center gap-3 p-4 border-2 rounded-lg transition-all ${disabled ? 'opacity-50 cursor-not-allowed border-gray-100 bg-gray-50' : `cursor-pointer ${form.paymentMethod === method.id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}`}
+                      className={`flex items-center gap-3 p-4 border-2 rounded-lg transition-all ${disabled ? 'opacity-50 cursor-not-allowed border-gray-100 bg-gray-50' : `cursor-pointer ${form.paymentMethod === method.id ? 'border-amber-600 bg-amber-50' : 'border-gray-200 hover:border-gray-300'}`}`}
                     >
                       <input
                         type="radio"
@@ -374,16 +501,44 @@ export default function Checkout() {
               {requiresCardInput && (
                 <div className="border-t pt-4 mt-4 space-y-3">
                   <h3 className="font-semibold text-sm text-gray-700">Card Payment Details</h3>
+
+                  <div className={`rounded-xl p-4 ${cardType ? cardType.color : 'bg-gradient-to-br from-gray-600 to-gray-800'} ${cardType ? cardType.textColor : 'text-white'} shadow-lg`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-7 bg-yellow-400/80 rounded" />
+                      {cardType && (
+                        <span className="text-xs font-bold uppercase tracking-wider opacity-90">{cardType.type}</span>
+                      )}
+                    </div>
+                    <p className="font-mono text-lg tracking-widest mb-3">{maskedCardNumber}</p>
+                    <div className="flex justify-between text-xs opacity-80">
+                      <div>
+                        <p className="uppercase text-[10px] opacity-60">Card Holder</p>
+                        <p className="font-medium">{cardForm.name || 'YOUR NAME'}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="uppercase text-[10px] opacity-60">Expires</p>
+                        <p className="font-medium">{cardForm.expMonth && cardForm.expYear ? `${cardForm.expMonth}/${cardForm.expYear}` : 'MM/YY'}</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
-                    <input
-                      type="text"
-                      value={cardForm.number}
-                      onChange={(e) => updateCard('number', e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().slice(0, 19))}
-                      className="input-field"
-                      placeholder="4242 4242 4242 4242"
-                      maxLength={19}
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={cardForm.number}
+                        onChange={(e) => updateCard('number', e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().slice(0, 19))}
+                        className="input-field pr-12"
+                        placeholder="4242 4242 4242 4242"
+                        maxLength={19}
+                      />
+                      {cardType && (
+                        <span className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold px-2 py-0.5 rounded ${cardType.color} ${cardType.textColor}`}>
+                          {cardType.type}
+                        </span>
+                      )}
+                    </div>
                     {errors.cardNumber && <p className="text-red-500 text-xs mt-1">{errors.cardNumber}</p>}
                   </div>
                   <div className="grid grid-cols-3 gap-3">
@@ -440,7 +595,7 @@ export default function Checkout() {
               {requiresRedirect && selectedMethod && (
                 <div className="border-t pt-4 mt-4 space-y-3">
                   <h3 className="font-semibold text-sm text-gray-700">{selectedMethod.label} Payment</h3>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                  <div className="bg-amber-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
                     <p className="font-semibold mb-1">{selectedMethod.icon} {selectedMethod.label} Redirect</p>
                     <p>You will be redirected to {selectedMethod.label} to complete your payment securely.</p>
                   </div>
@@ -492,7 +647,7 @@ export default function Checkout() {
                 ))}
               </div>
               <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                <div className="flex justify-between text-sm mb-1"><span>Shipping</span><span className="text-emerald-600">Free</span></div>
+                <div className="flex justify-between text-sm mb-1"><span>Shipping</span><span className="text-green-600">Free</span></div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Payment</span>
                   <span>{selectedMethod?.label || form.paymentMethod}</span>
@@ -501,7 +656,7 @@ export default function Checkout() {
               </div>
 
               {selectedMethod?.requiresApi && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                <div className="bg-amber-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
                   <p className="font-semibold">
                     {selectedMethod.icon} You will be redirected to {selectedMethod.label} to complete payment
                   </p>
@@ -541,7 +696,7 @@ export default function Checkout() {
           </div>
           <div className="border-t mt-4 pt-4 flex justify-between font-bold text-lg">
             <span>Total</span>
-            <span className="text-emerald-600">{formatMoney(total)}</span>
+            <span className="text-green-600">{formatMoney(total)}</span>
           </div>
 
           <div className="mt-4 pt-4 border-t">

@@ -143,25 +143,17 @@ export default function Register() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">I want to...</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => update('role', 'buyer')}
-                  className={`p-4 rounded-lg border-2 text-center transition-all ${form.role === 'buyer' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}
-                >
-                  <span className="text-2xl block mb-1">🛒</span>
-                  <span className="font-semibold">Shop</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => update('role', 'seller')}
-                  className={`p-4 rounded-lg border-2 text-center transition-all ${form.role === 'seller' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}
-                >
-                  <span className="text-2xl block mb-1">🏪</span>
-                  <span className="font-semibold">Sell</span>
-                </button>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🛒</span>
+                  <div>
+                    <span className="font-semibold text-amber-800">Buyer Account</span>
+                    <p className="text-xs text-amber-600 mt-0.5">Browse and purchase products from PWD-led enterprises</p>
+                  </div>
+                </div>
               </div>
+              <p className="text-xs text-gray-500 mt-2">Want to sell? <Link to="/seller/register-seller" className="text-amber-600 hover:text-amber-700 font-semibold">Register as a Seller</Link></p>
             </div>
 
             <div>
@@ -211,7 +203,7 @@ export default function Register() {
 
           <p className="text-center text-gray-600 mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:text-blue-700 font-semibold">Sign in</Link>
+            <Link to="/login" className="text-amber-600 hover:text-amber-700 font-semibold">Sign in</Link>
           </p>
         </div>
       </div>

@@ -208,10 +208,10 @@ export default function AdminReports() {
                     <span className="text-xs font-bold text-gray-400 w-4">#{i + 1}</span>
                     <span className="font-medium">{s.name}</span>
                   </span>
-                  <span className="text-emerald-600 font-semibold">{formatMoney(s.totalSales)}</span>
+                  <span className="text-green-600 font-semibold">{formatMoney(s.totalSales)}</span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                  <div className="bg-emerald-500 h-2.5 rounded-full transition-all" style={{ width: `${(s.totalSales / maxSales) * 100}%` }} />
+                  <div className="bg-green-500 h-2.5 rounded-full transition-all" style={{ width: `${(s.totalSales / maxSales) * 100}%` }} />
                 </div>
               </div>
             ))}
@@ -240,17 +240,17 @@ export default function AdminReports() {
         <div className="card p-6">
           <h2 className="font-bold text-lg mb-4">Financial Summary</h2>
           <div className="space-y-4">
-            <div className="p-4 bg-emerald-50 rounded-lg">
-              <p className="text-sm text-emerald-700 font-medium">Total Revenue</p>
-              <p className="text-2xl font-bold text-emerald-800">{formatMoney(totalRevenue)}</p>
+            <div className="p-4 bg-green-50 rounded-lg">
+              <p className="text-sm text-green-700 font-medium">Total Revenue</p>
+              <p className="text-2xl font-bold text-green-800">{formatMoney(totalRevenue)}</p>
             </div>
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700 font-medium">Platform Fees (5%)</p>
-              <p className="text-2xl font-bold text-blue-800">{formatMoney(totalFees)}</p>
+            <div className="p-4 bg-amber-50 rounded-lg">
+              <p className="text-sm text-amber-700 font-medium">Platform Fees (5%)</p>
+              <p className="text-2xl font-bold text-amber-800">{formatMoney(totalFees)}</p>
             </div>
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <p className="text-sm text-purple-700 font-medium">Seller Payouts</p>
-              <p className="text-2xl font-bold text-purple-800">{formatMoney(totalPayouts)}</p>
+            <div className="p-4 bg-amber-50 rounded-lg">
+              <p className="text-sm text-amber-700 font-medium">Seller Payouts</p>
+              <p className="text-2xl font-bold text-amber-800">{formatMoney(totalPayouts)}</p>
             </div>
           </div>
         </div>

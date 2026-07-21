@@ -3,7 +3,7 @@ import { Shield, Eye, Keyboard, Monitor, Volume2, Accessibility } from 'lucide-r
 export default function AccessibilityPage() {
   return (
     <div>
-      <section className="bg-gradient-to-br from-blue-600 to-emerald-600 text-white py-20">
+      <section className="bg-gradient-to-br from-amber-600 to-green-600 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Accessibility className="w-16 h-16 mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Accessibility Statement</h1>
@@ -33,7 +33,7 @@ export default function AccessibilityPage() {
               { icon: Accessibility, title: 'WCAG 2.1 AA', desc: 'Target compliance with Web Content Accessibility Guidelines.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                <Icon className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
+                <Icon className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold">{title}</h3>
                   <p className="text-sm text-gray-600 mt-1">{desc}</p>
@@ -58,14 +58,14 @@ export default function AccessibilityPage() {
           </ul>
         </section>
 
-        <section className="bg-blue-50 rounded-xl p-8">
+        <section className="bg-amber-50 rounded-xl p-8">
           <h2 className="text-2xl font-bold mb-4">Feedback</h2>
           <p className="text-gray-600 mb-4">
             We welcome your feedback on the accessibility of Inclusive Market. Please let us know if you encounter accessibility barriers or have suggestions for improvement.
           </p>
           <p className="text-gray-600">
             <strong>Email:</strong> accessibility@inclusivemarket.com<br />
-            <strong>Phone:</strong> +63 912 345 6789
+            <strong>Phone:</strong> +63 62 991 2345
           </p>
         </section>
 

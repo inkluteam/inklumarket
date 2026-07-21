@@ -41,8 +41,8 @@ export default function Orders() {
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <span className="text-xl font-bold text-emerald-600">{formatMoney(order.total)}</span>
-                  <Link to={`/buyer/order-detail/${order.id}`} className="flex items-center gap-1 text-blue-600 hover:text-blue-700 text-sm font-medium">
+                  <span className="text-xl font-bold text-green-600">{formatMoney(order.total)}</span>
+                  <Link to={`/buyer/order-detail/${order.id}`} className="flex items-center gap-1 text-amber-600 hover:text-amber-700 text-sm font-medium">
                     <Eye className="w-4 h-4" /> View Details
                   </Link>
                 </div>

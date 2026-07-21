@@ -17,7 +17,7 @@ export default function SellerLayout() {
     <div className="flex min-h-[calc(100vh-4rem)]">
       <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-white border-r transition-all duration-300 shrink-0 hidden md:block`}>
         <div className="p-4 border-b flex items-center justify-between">
-          {!collapsed && <h2 className="font-bold text-emerald-600">Seller Hub</h2>}
+          {!collapsed && <h2 className="font-bold text-green-600">Seller Hub</h2>}
           <button onClick={() => setCollapsed(!collapsed)} className="p-1.5 hover:bg-gray-100 rounded" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -28,7 +28,7 @@ export default function SellerLayout() {
               key={to}
               to={to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'} ${collapsed ? 'justify-center' : ''}`
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-green-50 text-green-600 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'} ${collapsed ? 'justify-center' : ''}`
               }
               title={collapsed ? label : undefined}
             >

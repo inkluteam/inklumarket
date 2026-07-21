@@ -66,7 +66,7 @@ export default function AdminCategories() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => openEdit(cat)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" aria-label="Edit category"><Edit2 className="w-4 h-4" /></button>
+                <button onClick={() => openEdit(cat)} className="p-1.5 text-amber-600 hover:bg-amber-50 rounded" aria-label="Edit category"><Edit2 className="w-4 h-4" /></button>
                 <button onClick={() => handleDelete(cat)} className="p-1.5 text-red-600 hover:bg-red-50 rounded" aria-label="Delete category"><Trash2 className="w-4 h-4" /></button>
               </div>
             </div>

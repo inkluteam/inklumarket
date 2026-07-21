@@ -70,8 +70,8 @@ export default function AdminUsers() {
                 <tr key={user.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
-                        <span className="text-blue-600 font-semibold">{user.name[0]}</span>
+                      <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center shrink-0">
+                        <span className="text-amber-600 font-semibold">{user.name[0]}</span>
                       </div>
                       <div>
                         <p className="font-medium">{user.name}</p>
@@ -85,7 +85,7 @@ export default function AdminUsers() {
                   <td className="px-6 py-4"><span className={`badge capitalize ${statusColors[user.status]}`}>{user.status}</span></td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => setViewUser(user)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" aria-label="View user"><Eye className="w-4 h-4" /></button>
+                      <button onClick={() => setViewUser(user)} className="p-1.5 text-amber-600 hover:bg-amber-50 rounded" aria-label="View user"><Eye className="w-4 h-4" /></button>
                       {user.status === 'active' && user.role !== 'admin' ? (
                         <button onClick={() => handleStatusChange(user.id, 'suspended')} className="p-1.5 text-red-600 hover:bg-red-50 rounded" aria-label="Suspend user"><Ban className="w-4 h-4" /></button>
                       ) : user.status === 'suspended' ? (

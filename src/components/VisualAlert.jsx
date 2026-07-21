@@ -47,7 +47,7 @@ export const useVisualAlert = () => useContext(VisualAlertContext)
 
 function VisualFlash({ type, message }) {
   const colorMap = {
-    success: 'from-green-500 to-emerald-500',
+    success: 'from-green-500 to-green-600',
     error: 'from-red-500 to-rose-500',
     warning: 'from-yellow-500 to-amber-500',
     info: 'from-blue-500 to-indigo-500',

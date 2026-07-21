@@ -78,13 +78,13 @@ export default function AdminOrders() {
                   <td className="px-6 py-4 text-sm">
                     {order.items.map((item, i) => <p key={i} className="truncate max-w-[200px]">{item.name} × {item.qty}</p>)}
                   </td>
-                  <td className="px-6 py-4 font-semibold text-emerald-600">{formatMoney(order.total)}</td>
+                  <td className="px-6 py-4 font-semibold text-green-600">{formatMoney(order.total)}</td>
                   <td className="px-6 py-4 text-sm capitalize">{paymentLabels[order.paymentMethod] || order.paymentMethod}</td>
                   <td className="px-6 py-4"><span className={`badge capitalize ${statusColors[order.status]}`}>{order.status}</span></td>
                   <td className="px-6 py-4 text-sm text-gray-500">{order.date}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => setViewOrder(order)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" aria-label="View order"><Eye className="w-4 h-4" /></button>
+                      <button onClick={() => setViewOrder(order)} className="p-1.5 text-amber-600 hover:bg-amber-50 rounded" aria-label="View order"><Eye className="w-4 h-4" /></button>
                       {order.status === 'pending' && (
                         <button onClick={() => { updateOrderStatus(order.id, 'processing') }} className="p-1.5 text-green-600 hover:bg-green-50 rounded" title="Approve"><CheckCircle className="w-4 h-4" /></button>
                       )}
@@ -122,7 +122,7 @@ export default function AdminOrders() {
                     <span className="font-medium">{formatMoney(item.price * item.qty)}</span>
                   </div>
                 ))}
-                <div className="flex justify-between font-bold mt-2"><span>Total</span><span className="text-emerald-600">{formatMoney(viewOrder.total)}</span></div>
+                <div className="flex justify-between font-bold mt-2"><span>Total</span><span className="text-green-600">{formatMoney(viewOrder.total)}</span></div>
               </div>
               {viewOrder.shippingAddress && (
                 <div><span className="text-gray-500 text-sm">Shipping Address</span><p className="text-sm">{viewOrder.shippingAddress}</p></div>

@@ -8,10 +8,10 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl">♿</span>
-              <span className="text-xl font-bold text-white">Inclusive Market</span>
+              <span className="text-xl font-bold text-white">Inclusive Market — AVRC Region IX</span>
             </div>
             <p className="text-sm leading-relaxed">
-              An accessible, community-driven marketplace empowering PWD-led enterprises by connecting local, high-quality products with conscious consumers.
+              An accessible, community-driven marketplace empowering PWD-led enterprises of AVRC Region IX by connecting Zamboanga Peninsula's local, high-quality products with conscious consumers.
             </p>
           </div>
 

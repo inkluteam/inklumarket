@@ -31,7 +31,7 @@ export default function Cart() {
             <div className="flex-1">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm text-blue-600">{item.seller}</p>
+                  <p className="text-sm text-amber-600">{item.seller}</p>
                   <h3 className="font-semibold text-gray-900">{item.name}</h3>
                 </div>
                 <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-700 p-1" aria-label={`Remove ${item.name}`}>
@@ -48,7 +48,7 @@ export default function Cart() {
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
-                <span className="text-lg font-bold text-emerald-600">{formatMoney(item.price * item.quantity)}</span>
+                <span className="text-lg font-bold text-green-600">{formatMoney(item.price * item.quantity)}</span>
               </div>
             </div>
           </div>
@@ -62,11 +62,11 @@ export default function Cart() {
         </div>
         <div className="flex justify-between items-center mb-4 text-sm text-gray-500">
           <span>Shipping</span>
-          <span className="text-emerald-600 font-semibold">Free</span>
+          <span className="text-green-600 font-semibold">Free</span>
         </div>
         <div className="border-t pt-4 flex justify-between items-center">
           <span className="text-lg font-bold">Total</span>
-          <span className="text-2xl font-bold text-emerald-600">{formatMoney(total)}</span>
+          <span className="text-2xl font-bold text-green-600">{formatMoney(total)}</span>
         </div>
         <div className="flex gap-3 mt-6">
           <button onClick={clearCart} className="btn-outline flex-1">Clear Cart</button>

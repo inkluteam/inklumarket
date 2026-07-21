@@ -55,8 +55,8 @@ export default function Profile() {
 
       <div className="card p-8">
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-            <User className="w-10 h-10 text-blue-600" />
+          <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
+            <User className="w-10 h-10 text-amber-600" />
           </div>
           <div>
             <h2 className="text-2xl font-bold">{form.name}</h2>
@@ -64,7 +64,7 @@ export default function Profile() {
           </div>
           <button
             onClick={() => setEditing(!editing)}
-            className={`ml-auto flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${editing ? 'bg-gray-100 text-gray-700' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
+            className={`ml-auto flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${editing ? 'bg-gray-100 text-gray-700' : 'bg-amber-50 text-amber-700 hover:bg-amber-100'}`}
           >
             {editing ? <><X className="w-4 h-4" /> Cancel</> : <><Edit2 className="w-4 h-4" /> Edit Profile</>}
           </button>

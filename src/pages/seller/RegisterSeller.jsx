@@ -68,7 +68,7 @@ export default function RegisterSeller() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="text-center mb-8">
-        <Store className="w-12 h-12 text-blue-600 mx-auto mb-3" />
+        <Store className="w-12 h-12 text-amber-600 mx-auto mb-3" />
         <h1 className="text-3xl font-bold">Become a Seller</h1>
         <p className="text-gray-600 mt-2">Join Inclusive Market and reach conscious consumers</p>
       </div>
@@ -76,7 +76,7 @@ export default function RegisterSeller() {
       <div className="flex items-center justify-center mb-8">
         {[1, 2, 3].map(s => (
           <div key={s} className="flex items-center">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${step === s ? 'bg-blue-600 text-white' : step > s ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${step === s ? 'bg-amber-600 text-white' : step > s ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
               {step > s ? <CheckCircle className="w-5 h-5" /> : s}
             </div>
             {s < 3 && <div className={`w-16 h-0.5 ${step > s ? 'bg-green-300' : 'bg-gray-200'}`} />}
@@ -97,7 +97,7 @@ export default function RegisterSeller() {
               <div className="grid grid-cols-3 gap-3">
                 {['individual', 'cooperative', 'organization'].map(type => (
                   <button key={type} type="button" onClick={() => update('businessType', type)}
-                    className={`p-3 rounded-lg border-2 text-center text-sm capitalize transition-all ${form.businessType === type ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}>
+                    className={`p-3 rounded-lg border-2 text-center text-sm capitalize transition-all ${form.businessType === type ? 'border-amber-600 bg-amber-50 text-amber-700' : 'border-gray-200 hover:border-gray-300'}`}>
                     {type}
                   </button>
                 ))}
@@ -118,7 +118,7 @@ export default function RegisterSeller() {
         {step === 2 && (
           <div className="space-y-5">
             <h2 className="text-xl font-bold">PWD Verification</h2>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
               This information helps us verify PWD-led enterprises and provide appropriate support.
             </div>
             <div>
@@ -140,7 +140,7 @@ export default function RegisterSeller() {
               />
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-amber-400 transition-colors cursor-pointer"
               >
                 {form.pwdFile ? (
                   <div className="flex items-center justify-center gap-2">
@@ -182,8 +182,8 @@ export default function RegisterSeller() {
               <label className="flex items-start gap-3">
                 <input type="checkbox" className="mt-1 rounded border-gray-300" required />
                 <span className="text-sm text-gray-600">
-                  I agree to the <Link to="/static/terms" className="text-blue-600 hover:underline">Terms of Service</Link> and{' '}
-                  <Link to="/static/accessibility" className="text-blue-600 hover:underline">Accessibility Standards</Link>.
+                  I agree to the <Link to="/static/terms" className="text-amber-600 hover:underline">Terms of Service</Link> and{' '}
+                  <Link to="/static/accessibility" className="text-amber-600 hover:underline">Accessibility Standards</Link>.
                 </span>
               </label>
             </div>

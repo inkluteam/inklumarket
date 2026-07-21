@@ -64,7 +64,7 @@ export default function ForgotPassword() {
             </form>
           )}
 
-          <Link to="/login" className="flex items-center justify-center gap-2 text-gray-600 hover:text-blue-600 mt-6 text-sm">
+          <Link to="/login" className="flex items-center justify-center gap-2 text-gray-600 hover:text-amber-600 mt-6 text-sm">
             <ArrowLeft className="w-4 h-4" /> Back to Login
           </Link>
         </div>

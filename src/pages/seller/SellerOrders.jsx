@@ -77,9 +77,9 @@ export default function SellerOrders() {
         </div>
 
         {selectedIds.length > 0 && (
-          <div className="px-4 py-3 bg-blue-50 border-b flex flex-wrap items-center gap-3">
-            <span className="text-sm font-medium text-blue-700">{selectedIds.length} selected</span>
-            <button onClick={() => setSelectedIds([])} className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1">
+          <div className="px-4 py-3 bg-amber-50 border-b flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium text-amber-700">{selectedIds.length} selected</span>
+            <button onClick={() => setSelectedIds([])} className="text-amber-500 hover:text-amber-700 text-sm flex items-center gap-1">
               <X className="w-3 h-3" /> Clear
             </button>
             <div className="relative ml-auto">
@@ -95,7 +95,7 @@ export default function SellerOrders() {
                     <button
                       key={status}
                       onClick={() => { setBulkStatus(status); setShowBulkDropdown(false) }}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 capitalize ${bulkStatus === status ? 'bg-blue-50 text-blue-700 font-medium' : ''}`}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 capitalize ${bulkStatus === status ? 'bg-amber-50 text-amber-700 font-medium' : ''}`}
                     >
                       Mark as {status}
                     </button>
@@ -136,7 +136,7 @@ export default function SellerOrders() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.map(order => (
-                <tr key={order.id} className={`hover:bg-gray-50 ${selectedIds.includes(order.id) ? 'bg-blue-50' : ''}`}>
+                <tr key={order.id} className={`hover:bg-gray-50 ${selectedIds.includes(order.id) ? 'bg-amber-50' : ''}`}>
                   <td className="px-6 py-4">
                     <input
                       type="checkbox"
@@ -150,8 +150,8 @@ export default function SellerOrders() {
                   <td className="px-6 py-4 text-sm">
                     {order.items.map((item, i) => <p key={i} className="truncate max-w-[200px]">{item.name} × {item.qty}</p>)}
                   </td>
-                  <td className="px-6 py-4 font-semibold text-emerald-600">{formatMoney(order.total)}</td>
-                  <td className="px-6 py-4 font-semibold text-blue-600 text-sm">{formatMoney(order.total * 0.95)}</td>
+                  <td className="px-6 py-4 font-semibold text-green-600">{formatMoney(order.total)}</td>
+                  <td className="px-6 py-4 font-semibold text-amber-600 text-sm">{formatMoney(order.total * 0.95)}</td>
                   <td className="px-6 py-4 text-sm capitalize">{order.paymentMethod}</td>
                   <td className="px-6 py-4"><span className={`badge capitalize ${statusColors[order.status]}`}>{order.status}</span></td>
                   <td className="px-6 py-4 text-sm text-gray-500">{order.date}</td>
@@ -160,7 +160,7 @@ export default function SellerOrders() {
                       {nextStatus[order.status] && (
                         <button
                           onClick={() => handleStatusUpdate(order.id, nextStatus[order.status])}
-                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded text-xs font-medium"
+                          className="p-1.5 text-amber-600 hover:bg-amber-50 rounded text-xs font-medium"
                           title={`Mark as ${nextStatus[order.status]}`}
                         >
                           {order.status === 'pending' && <Clock className="w-4 h-4" />}

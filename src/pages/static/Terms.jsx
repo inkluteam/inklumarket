@@ -3,7 +3,7 @@ import { FileText, AlertTriangle, CheckCircle } from 'lucide-react'
 export default function Terms() {
   return (
     <div>
-      <section className="bg-gradient-to-br from-blue-600 to-emerald-600 text-white py-20">
+      <section className="bg-gradient-to-br from-amber-600 to-green-600 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <FileText className="w-16 h-16 mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Terms of Service</h1>
@@ -83,7 +83,7 @@ export default function Terms() {
           </div>
         </section>
 
-        <section className="bg-blue-50 rounded-xl p-8">
+        <section className="bg-amber-50 rounded-xl p-8">
           <h2 className="text-2xl font-bold mb-4">Contact</h2>
           <p className="text-gray-600">
             For questions about these Terms, contact <strong>legal@inclusivemarket.com</strong>

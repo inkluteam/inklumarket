@@ -49,7 +49,7 @@ export default function ProductDetail() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <Link to="/catalog" className="text-blue-600 hover:text-blue-700">Back to Catalog</Link>
+        <Link to="/catalog" className="text-amber-600 hover:text-amber-700">Back to Catalog</Link>
       </div>
     )
   }
@@ -59,7 +59,7 @@ export default function ProductDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main" aria-label="Product details">
-      <Link to="/catalog" className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-6">
+      <Link to="/catalog" className="inline-flex items-center gap-2 text-gray-600 hover:text-amber-600 mb-6">
         <ArrowLeft className="w-4 h-4" /> Back to Catalog
       </Link>
 
@@ -73,7 +73,7 @@ export default function ProductDetail() {
         </div>
 
         <div>
-          <p className="text-blue-600 font-semibold">{product.seller}</p>
+          <p className="text-amber-600 font-semibold">{product.seller}</p>
           <div className="flex items-center gap-3 mt-2">
             <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
             <SpeakButton
@@ -91,7 +91,7 @@ export default function ProductDetail() {
             <span className="text-gray-600">{product.rating} ({product.reviews} reviews)</span>
           </div>
 
-          <p className="text-4xl font-bold text-emerald-600 mt-6">{formatMoney(product.price)}</p>
+          <p className="text-4xl font-bold text-green-600 mt-6">{formatMoney(product.price)}</p>
           <p className="text-gray-600 mt-4 leading-relaxed" aria-label="Product description">{product.description}</p>
 
           <div className="mt-6 flex items-center gap-2 text-sm text-gray-500" role="status" aria-live="polite">
@@ -101,9 +101,9 @@ export default function ProductDetail() {
 
           <div className="mt-6 flex items-center gap-4">
             <div className="flex items-center border border-gray-300 rounded-lg" role="group" aria-label="Quantity selector">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Decrease quantity"><Minus className="w-4 h-4" /></button>
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500" aria-label="Decrease quantity"><Minus className="w-4 h-4" /></button>
               <span className="px-4 font-semibold" aria-live="polite" aria-label={`Quantity: ${quantity}`}>{quantity}</span>
-              <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="p-3 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Increase quantity"><Plus className="w-4 h-4" /></button>
+              <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="p-3 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500" aria-label="Increase quantity"><Plus className="w-4 h-4" /></button>
             </div>
           </div>
 
@@ -117,9 +117,9 @@ export default function ProductDetail() {
           </div>
 
           <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600"><Truck className="w-5 h-5 text-blue-600" /><span>Free local delivery</span></div>
-            <div className="flex items-center gap-2 text-sm text-gray-600"><Shield className="w-5 h-5 text-blue-600" /><span>Secure checkout</span></div>
-            <div className="flex items-center gap-2 text-sm text-gray-600"><Heart className="w-5 h-5 text-blue-600" /><span>Support PWD sellers</span></div>
+            <div className="flex items-center gap-2 text-sm text-gray-600"><Truck className="w-5 h-5 text-green-600" /><span>Free local delivery</span></div>
+            <div className="flex items-center gap-2 text-sm text-gray-600"><Shield className="w-5 h-5 text-amber-600" /><span>Secure checkout</span></div>
+            <div className="flex items-center gap-2 text-sm text-gray-600"><Heart className="w-5 h-5 text-red-500" /><span>Support PWD sellers</span></div>
           </div>
         </div>
       </div>
@@ -132,8 +132,8 @@ export default function ProductDetail() {
             {reviews.map(review => (
               <div key={review.id} className="card p-6">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 font-semibold text-sm">{review.userName[0]}</span>
+                  <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                    <span className="text-amber-600 font-semibold text-sm">{review.userName[0]}</span>
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{review.userName}</p>
@@ -158,7 +158,7 @@ export default function ProductDetail() {
       {recommendations.length > 0 && (
         <section className="mt-16">
           <div className="flex items-center gap-2 mb-6">
-            <Brain className="w-6 h-6 text-purple-600" />
+            <Brain className="w-6 h-6 text-amber-600" />
             <h2 className="text-2xl font-bold">You Might Also Like</h2>
             <span className="badge badge-blue flex items-center gap-1"><Sparkles className="w-3 h-3" /> Smart Picks</span>
           </div>
@@ -170,14 +170,14 @@ export default function ProductDetail() {
                 </Link>
                 <div className="p-4">
                   <Link to={`/product/${p.id}`}>
-                    <h3 className="font-semibold hover:text-blue-600 transition-colors">{p.name}</h3>
+                    <h3 className="font-semibold hover:text-amber-600 transition-colors">{p.name}</h3>
                   </Link>
                   <div className="flex items-center gap-1 mt-1">
                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                     <span className="text-xs text-gray-500">{p.rating}</span>
                   </div>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-lg font-bold text-emerald-600">{formatMoney(p.price)}</span>
+                    <span className="text-lg font-bold text-green-600">{formatMoney(p.price)}</span>
                     <button onClick={() => handleAddToCart(p)} className="btn-primary text-sm !py-1.5 !px-3" aria-label={`Add ${p.name} to cart`}>
                       Add to Cart
                     </button>

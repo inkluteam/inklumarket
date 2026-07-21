@@ -62,7 +62,7 @@ export default function SellerPayouts() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <div className="card p-6">
           <p className="text-sm text-gray-500">Available Balance</p>
-          <p className="text-3xl font-bold text-emerald-600">{formatMoney(availableBalance)}</p>
+          <p className="text-3xl font-bold text-green-600">{formatMoney(availableBalance)}</p>
           <button onClick={() => setShowRequestModal(true)} className="btn-primary text-sm mt-3 w-full">Request Payout</button>
         </div>
         <div className="card p-6">
@@ -80,7 +80,7 @@ export default function SellerPayouts() {
       <div className="card">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="font-bold text-lg">Payout History</h2>
-          <button onClick={handleExportCSV} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium">
+          <button onClick={handleExportCSV} className="flex items-center gap-2 text-amber-600 hover:text-amber-700 text-sm font-medium">
             <Download className="w-4 h-4" /> Export CSV
           </button>
         </div>
@@ -100,7 +100,7 @@ export default function SellerPayouts() {
               {myPayouts.map(p => (
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 font-medium">{p.id}</td>
-                  <td className="px-6 py-4 font-semibold text-emerald-600">{formatMoney(p.amount)}</td>
+                  <td className="px-6 py-4 font-semibold text-green-600">{formatMoney(p.amount)}</td>
                   <td className="px-6 py-4">{p.method}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{p.accountName}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{p.date}</td>
@@ -123,7 +123,7 @@ export default function SellerPayouts() {
               <button onClick={() => setShowRequestModal(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-800">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-sm text-amber-800">
               <p className="font-semibold">Available: {formatMoney(availableBalance)}</p>
               <p className="text-xs mt-1">Minimum payout: {formatMoney(100)}</p>
             </div>

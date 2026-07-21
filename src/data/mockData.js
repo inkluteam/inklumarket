@@ -8,16 +8,16 @@ export const categories = [
 ]
 
 export const sellers = [
-  { id: 's1', name: 'Hope Bakery', email: 'hope@bakery.com', phone: '+63 917 123 4567', joined: '2025-06-15', status: 'active', rating: 4.8, totalSales: 1250, bio: 'PWD-owned bakery producing artisan breads and pastries using organic ingredients.', disabilityType: 'Physical', location: 'Quezon City, Metro Manila', verified: true },
-  { id: 's2', name: 'CraftAbility Co-op', email: 'info@craftability.com', phone: '+63 918 234 5678', joined: '2025-07-20', status: 'active', rating: 4.6, totalSales: 890, bio: 'Cooperative of visually impaired artisans creating handwoven bamboo and rattan products.', disabilityType: 'Visual', location: 'Baguio City, Benguet', verified: true },
-  { id: 's3', name: 'Wellness Roots', email: 'wellness@roots.com', phone: '+63 919 345 6789', joined: '2025-08-10', status: 'active', rating: 4.9, totalSales: 2100, bio: 'Producing organic herbal teas and natural wellness products from locally sourced ingredients.', disabilityType: 'Hearing', location: 'Davao City, Davao del Sur', verified: true },
-  { id: 's4', name: 'EcoThreads', email: 'hello@ecothreads.ph', phone: '+63 920 456 7890', joined: '2025-09-01', status: 'active', rating: 4.5, totalSales: 670, bio: 'Sustainable fashion from recycled fabrics, employing workers with mobility impairments.', disabilityType: 'Mobility', location: 'Cebu City, Cebu', verified: true },
-  { id: 's5', name: 'LightUp Studios', email: 'create@lightup.ph', phone: '+63 921 567 8901', joined: '2025-09-15', status: 'active', rating: 4.7, totalSales: 1450, bio: 'Hand-poured soy candles and aromatherapy products made by deaf artisans.', disabilityType: 'Hearing', location: 'Makati City, Metro Manila', verified: true },
-  { id: 's6', name: 'SkillUp Academy', email: 'learn@skillup.ph', phone: '+63 922 678 9012', joined: '2025-10-05', status: 'active', rating: 4.8, totalSales: 3200, bio: 'Digital skills training and workshops for PWD entrepreneurs, with sign language interpretation.', disabilityType: 'Hearing', location: 'Taguig City, Metro Manila', verified: true },
-  { id: 's7', name: 'Clay Dreams', email: 'clay@dreams.ph', phone: '+63 923 789 0123', joined: '2025-10-20', status: 'active', rating: 4.4, totalSales: 420, bio: 'Hand-thrown ceramic planters and home decor, designed with easy-grip features.', disabilityType: 'Physical', location: 'Pampanga, Central Luzon', verified: true },
-  { id: 's8', name: 'Farm Fresh Direct', email: 'orders@farmfresh.ph', phone: '+63 924 890 1234', joined: '2025-11-01', status: 'active', rating: 4.6, totalSales: 1800, bio: 'Direct-from-farm organic produce delivered with accessible logistics.', disabilityType: 'Visual', location: 'Laguna, Calabarzon', verified: true },
-  { id: 's9', name: 'Ink & Soul', email: 'art@inkandsoul.ph', phone: '+63 925 901 2345', joined: '2025-11-10', status: 'pending', rating: 0, totalSales: 0, bio: 'Digital art prints and custom illustrations by a PWD graphic designer.', disabilityType: 'Physical', location: 'Pasig City, Metro Manila', verified: false },
-  { id: 's10', name: 'Breezy Knits', email: 'knit@breezy.ph', phone: '+63 926 012 3456', joined: '2025-12-01', status: 'active', rating: 4.3, totalSales: 340, bio: 'Handknitted scarves, beanies, and accessories made by seniors with hearing impairments.', disabilityType: 'Hearing', location: 'Iloilo City, Iloilo', verified: true },
+  { id: 's1', name: 'Hope Bakery', email: 'hope@bakery.com', phone: '+63 917 123 4567', joined: '2025-06-15', status: 'active', rating: 4.8, totalSales: 1250, bio: 'PWD-owned bakery producing artisan breads and pastries using organic ingredients from Zamboanga.', disabilityType: 'Physical', location: 'Mampang, Zamboanga City', verified: true },
+  { id: 's2', name: 'CraftAbility Co-op', email: 'info@craftability.com', phone: '+63 918 234 5678', joined: '2025-07-20', status: 'active', rating: 4.6, totalSales: 890, bio: 'Cooperative of visually impaired artisans creating handwoven bamboo and rattan products from local materials.', disabilityType: 'Visual', location: 'Tetuan, Zamboanga City', verified: true },
+  { id: 's3', name: 'Wellness Roots', email: 'wellness@roots.com', phone: '+63 919 345 6789', joined: '2025-08-10', status: 'active', rating: 4.9, totalSales: 2100, bio: 'Producing organic herbal teas and natural wellness products from locally sourced ingredients in Zamboanga Peninsula.', disabilityType: 'Hearing', location: 'Pagadian City, Zamboanga del Sur', verified: true },
+  { id: 's4', name: 'EcoThreads', email: 'hello@ecothreads.ph', phone: '+63 920 456 7890', joined: '2025-09-01', status: 'active', rating: 4.5, totalSales: 670, bio: 'Sustainable fashion from recycled fabrics, employing workers with mobility impairments from AVRC Region IX.', disabilityType: 'Mobility', location: 'Ipil, Zamboanga Sibugay', verified: true },
+  { id: 's5', name: 'LightUp Studios', email: 'create@lightup.ph', phone: '+63 921 567 8901', joined: '2025-09-15', status: 'active', rating: 4.7, totalSales: 1450, bio: 'Hand-poured soy candles and aromatherapy products made by deaf artisans from Zamboanga.', disabilityType: 'Hearing', location: 'Baliwasan, Zamboanga City', verified: true },
+  { id: 's6', name: 'SkillUp Academy', email: 'learn@skillup.ph', phone: '+63 922 678 9012', joined: '2025-10-05', status: 'active', rating: 4.8, totalSales: 3200, bio: 'Digital skills training and workshops for PWD entrepreneurs in Region IX, with sign language interpretation.', disabilityType: 'Hearing', location: 'Sta. Maria, Zamboanga City', verified: true },
+  { id: 's7', name: 'Clay Dreams', email: 'clay@dreams.ph', phone: '+63 923 789 0123', joined: '2025-10-20', status: 'active', rating: 4.4, totalSales: 420, bio: 'Hand-thrown ceramic planters and home decor, designed with easy-grip features for accessibility.', disabilityType: 'Physical', location: 'Dipolog City, Zamboanga del Norte', verified: true },
+  { id: 's8', name: 'Farm Fresh Direct', email: 'orders@farmfresh.ph', phone: '+63 924 890 1234', joined: '2025-11-01', status: 'active', rating: 4.6, totalSales: 1800, bio: 'Direct-from-farm organic produce from Zamboanga Peninsula farms, delivered with accessible logistics.', disabilityType: 'Visual', location: 'Molave, Zamboanga del Norte', verified: true },
+  { id: 's9', name: 'Ink & Soul', email: 'art@inkandsoul.ph', phone: '+63 925 901 2345', joined: '2025-11-10', status: 'pending', rating: 0, totalSales: 0, bio: 'Digital art prints and custom illustrations by a PWD graphic designer from Zamboanga.', disabilityType: 'Physical', location: 'San Jose, Zamboanga City', verified: false },
+  { id: 's10', name: 'Breezy Knits', email: 'knit@breezy.ph', phone: '+63 926 012 3456', joined: '2025-12-01', status: 'active', rating: 4.3, totalSales: 340, bio: 'Handknitted scarves, beanies, and accessories made by seniors with hearing impairments from AVRC.', disabilityType: 'Hearing', location: 'Talisayan, Zamboanga del Norte', verified: true },
 ]
 
 export const products = [
@@ -61,18 +61,18 @@ export const users = [
 ]
 
 export const orders = [
-  { id: 'ORD-1001', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '1', name: 'Artisan Sourdough Bread', qty: 2, price: 8.50 }, { productId: '3', name: 'Organic Herbal Tea Set', qty: 1, price: 22.00 }], total: 39.00, status: 'delivered', date: '2026-01-05', paymentMethod: 'cod', shippingAddress: '123 Rizal Ave, Quezon City', trackingNumber: 'TRK-20260105' },
-  { id: 'ORD-1002', buyer: 'James Liu', buyerId: 'u5', items: [{ productId: '2', name: 'Handwoven Bamboo Basket', qty: 1, price: 35.00 }], total: 35.00, status: 'shipped', date: '2026-01-07', paymentMethod: 'gcash', shippingAddress: '456 Makati Ave, Makati City', trackingNumber: 'TRK-20260107' },
-  { id: 'ORD-1003', buyer: 'Ana Garcia', buyerId: 'u6', items: [{ productId: '4', name: 'Recycled Fabric Tote Bag', qty: 3, price: 18.00 }, { productId: '5', name: 'Handmade Soy Candle Set', qty: 2, price: 28.00 }], total: 110.00, status: 'processing', date: '2026-01-08', paymentMethod: 'bank', shippingAddress: '789 Cebu IT Park, Cebu City' },
+  { id: 'ORD-1001', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '1', name: 'Artisan Sourdough Bread', qty: 2, price: 8.50 }, { productId: '3', name: 'Organic Herbal Tea Set', qty: 1, price: 22.00 }], total: 39.00, status: 'delivered', date: '2026-01-05', paymentMethod: 'cod', shippingAddress: '123 Rizal Ave, Zamboanga City', trackingNumber: 'TRK-20260105' },
+  { id: 'ORD-1002', buyer: 'James Liu', buyerId: 'u5', items: [{ productId: '2', name: 'Handwoven Bamboo Basket', qty: 1, price: 35.00 }], total: 35.00, status: 'shipped', date: '2026-01-07', paymentMethod: 'gcash', shippingAddress: '456 Veterans Ave, Zamboanga City', trackingNumber: 'TRK-20260107' },
+  { id: 'ORD-1003', buyer: 'Ana Garcia', buyerId: 'u6', items: [{ productId: '4', name: 'Recycled Fabric Tote Bag', qty: 3, price: 18.00 }, { productId: '5', name: 'Handmade Soy Candle Set', qty: 2, price: 28.00 }], total: 110.00, status: 'processing', date: '2026-01-08', paymentMethod: 'bank', shippingAddress: '789 Governor Camins Ave, Zamboanga City' },
   { id: 'ORD-1004', buyer: 'David Kim', buyerId: 'u8', items: [{ productId: '6', name: 'Digital Marketing Workshop', qty: 1, price: 49.00 }], total: 49.00, status: 'delivered', date: '2026-01-03', paymentMethod: 'gcash', shippingAddress: 'Online (Zoom)' },
-  { id: 'ORD-1005', buyer: 'Sarah Johnson', buyerId: 'u10', items: [{ productId: '8', name: 'Fresh Fruit Box', qty: 2, price: 30.00 }, { productId: '7', name: 'Ceramic Planter Set', qty: 1, price: 42.00 }], total: 102.00, status: 'pending', date: '2026-01-10', paymentMethod: 'cod', shippingAddress: '321 Bonifacio Global City, Taguig' },
-  { id: 'ORD-1006', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '9', name: 'Organic Honey Jar', qty: 2, price: 15.00 }, { productId: '12', name: 'Lavender Essential Oil', qty: 1, price: 12.00 }], total: 42.00, status: 'delivered', date: '2026-01-02', paymentMethod: 'cod', shippingAddress: '123 Rizal Ave, Quezon City', trackingNumber: 'TRK-20260102' },
-  { id: 'ORD-1007', buyer: 'Roberto Cruz', buyerId: 'u12', items: [{ productId: '11', name: 'Woven Rattan Bag', qty: 1, price: 55.00 }], total: 55.00, status: 'shipped', date: '2026-01-09', paymentMethod: 'gcash', shippingAddress: '555 Ortigas Center, Pasig City', trackingNumber: 'TRK-20260109' },
-  { id: 'ORD-1008', buyer: 'Lisa Tan', buyerId: 'u14', items: [{ productId: '13', name: 'Crochet Beanie', qty: 2, price: 20.00 }, { productId: '10', name: 'Bamboo Utensil Set', qty: 1, price: 25.00 }], total: 65.00, status: 'processing', date: '2026-01-11', paymentMethod: 'bank', shippingAddress: '888 Alabang Town Center, Muntinlupa' },
+  { id: 'ORD-1005', buyer: 'Sarah Johnson', buyerId: 'u10', items: [{ productId: '8', name: 'Fresh Fruit Box', qty: 2, price: 30.00 }, { productId: '7', name: 'Ceramic Planter Set', qty: 1, price: 42.00 }], total: 102.00, status: 'pending', date: '2026-01-10', paymentMethod: 'cod', shippingAddress: '321 San Jose Road, Zamboanga City' },
+  { id: 'ORD-1006', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '9', name: 'Organic Honey Jar', qty: 2, price: 15.00 }, { productId: '12', name: 'Lavender Essential Oil', qty: 1, price: 12.00 }], total: 42.00, status: 'delivered', date: '2026-01-02', paymentMethod: 'cod', shippingAddress: '123 Rizal Ave, Zamboanga City', trackingNumber: 'TRK-20260102' },
+  { id: 'ORD-1007', buyer: 'Roberto Cruz', buyerId: 'u12', items: [{ productId: '11', name: 'Woven Rattan Bag', qty: 1, price: 55.00 }], total: 55.00, status: 'shipped', date: '2026-01-09', paymentMethod: 'gcash', shippingAddress: '555 Tetuan, Zamboanga City', trackingNumber: 'TRK-20260109' },
+  { id: 'ORD-1008', buyer: 'Lisa Tan', buyerId: 'u14', items: [{ productId: '13', name: 'Crochet Beanie', qty: 2, price: 20.00 }, { productId: '10', name: 'Bamboo Utensil Set', qty: 1, price: 25.00 }], total: 65.00, status: 'processing', date: '2026-01-11', paymentMethod: 'bank', shippingAddress: '888 Santa Maria, Zamboanga City' },
   { id: 'ORD-1009', buyer: 'James Liu', buyerId: 'u5', items: [{ productId: '14', name: 'Social Media Masterclass', qty: 1, price: 35.00 }], total: 35.00, status: 'delivered', date: '2025-12-28', paymentMethod: 'gcash', shippingAddress: 'Online (Pre-recorded)' },
-  { id: 'ORD-1010', buyer: 'David Kim', buyerId: 'u8', items: [{ productId: '1', name: 'Artisan Sourdough Bread', qty: 3, price: 8.50 }, { productId: '5', name: 'Handmade Soy Candle Set', qty: 1, price: 28.00 }], total: 53.50, status: 'pending', date: '2026-01-12', paymentMethod: 'cod', shippingAddress: '222 Katipunan Ave, Quezon City' },
-  { id: 'ORD-1011', buyer: 'Lisa Tan', buyerId: 'u14', items: [{ productId: '15', name: 'Coconut Oil Cold-Pressed', qty: 3, price: 10.00 }], total: 30.00, status: 'delivered', date: '2025-12-30', paymentMethod: 'cod', shippingAddress: '888 Alabang Town Center, Muntinlupa', trackingNumber: 'TRK-20251230' },
-  { id: 'ORD-1012', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '16', name: 'Macrame Wall Hanging', qty: 1, price: 38.00 }], total: 38.00, status: 'shipped', date: '2026-01-11', paymentMethod: 'gcash', shippingAddress: '123 Rizal Ave, Quezon City', trackingNumber: 'TRK-20260111' },
+  { id: 'ORD-1010', buyer: 'David Kim', buyerId: 'u8', items: [{ productId: '1', name: 'Artisan Sourdough Bread', qty: 3, price: 8.50 }, { productId: '5', name: 'Handmade Soy Candle Set', qty: 1, price: 28.00 }], total: 53.50, status: 'pending', date: '2026-01-12', paymentMethod: 'cod', shippingAddress: '222 Baliwasan, Zamboanga City' },
+  { id: 'ORD-1011', buyer: 'Lisa Tan', buyerId: 'u14', items: [{ productId: '15', name: 'Coconut Oil Cold-Pressed', qty: 3, price: 10.00 }], total: 30.00, status: 'delivered', date: '2025-12-30', paymentMethod: 'cod', shippingAddress: '888 Santa Maria, Zamboanga City', trackingNumber: 'TRK-20251230' },
+  { id: 'ORD-1012', buyer: 'Maria Santos', buyerId: 'u2', items: [{ productId: '16', name: 'Macrame Wall Hanging', qty: 1, price: 38.00 }], total: 38.00, status: 'shipped', date: '2026-01-11', paymentMethod: 'gcash', shippingAddress: '123 Rizal Ave, Zamboanga City', trackingNumber: 'TRK-20260111' },
 ]
 
 export const reviews = [
@@ -91,18 +91,18 @@ export const reviews = [
 ]
 
 export const activityLogs = [
-  { id: 'a1', action: 'User registered', user: 'Sarah Johnson', type: 'user', time: '2 hours ago', icon: 'User', details: 'New buyer account created' },
+  { id: 'a1', action: 'User registered', user: 'Sarah Johnson', type: 'user', time: '2 hours ago', icon: 'User', details: 'New buyer account created from Zamboanga City' },
   { id: 'a2', action: 'Product listed', user: 'Breezy Knits', type: 'product', time: '3 hours ago', icon: 'Package', details: 'Crochet Beanie added for review' },
-  { id: 'a3', action: 'Order placed', user: 'Lisa Tan', type: 'order', time: '4 hours ago', icon: 'ShoppingCart', details: 'ORD-1008 for ₱65.00' },
-  { id: 'a4', action: 'Product approved', user: 'Admin User', type: 'product', time: '5 hours ago', icon: 'Package', details: 'Crochet Beanie approved' },
-  { id: 'a5', action: 'Seller application', user: 'Ink & Soul', type: 'user', time: '6 hours ago', icon: 'User', details: 'New seller application pending review' },
-  { id: 'a6', action: 'Order delivered', user: 'System', type: 'order', time: '8 hours ago', icon: 'ShoppingCart', details: 'ORD-1011 marked as delivered' },
-  { id: 'a7', action: 'Settings updated', user: 'Admin User', type: 'system', time: '1 day ago', icon: 'Settings', details: 'Platform fee changed to 5%' },
+  { id: 'a3', action: 'Order placed', user: 'Lisa Tan', type: 'order', time: '4 hours ago', icon: 'ShoppingCart', details: 'ORD-1008 for ₱65.00 — Zamboanga City delivery' },
+  { id: 'a4', action: 'Product approved', user: 'Admin User', type: 'product', time: '5 hours ago', icon: 'Package', details: 'Crochet Beanie approved for AVRC seller' },
+  { id: 'a5', action: 'Seller application', user: 'Ink & Soul', type: 'user', time: '6 hours ago', icon: 'User', details: 'New seller application from San Jose, Zamboanga City' },
+  { id: 'a6', action: 'Order delivered', user: 'System', type: 'order', time: '8 hours ago', icon: 'ShoppingCart', details: 'ORD-1011 marked as delivered to Santa Maria' },
+  { id: 'a7', action: 'Settings updated', user: 'Admin User', type: 'system', time: '1 day ago', icon: 'Settings', details: 'Platform fee changed to 5% for AVRC sellers' },
   { id: 'a8', action: 'User suspended', user: 'Admin User', type: 'user', time: '1 day ago', icon: 'AlertTriangle', details: 'Ana Garcia account suspended for policy violation' },
   { id: 'a9', action: 'Payout processed', user: 'System', type: 'system', time: '2 days ago', icon: 'Settings', details: '₱850.00 paid to Hope Bakery via bank transfer' },
-  { id: 'a10', action: 'Product rejected', user: 'Admin User', type: 'product', time: '2 days ago', icon: 'Package', details: 'Counterfeit listing removed' },
-  { id: 'a11', action: 'New seller registered', user: 'Breezy Knits', type: 'user', time: '3 days ago', icon: 'User', details: 'Seller account activated' },
-  { id: 'a12', action: 'Order placed', user: 'Roberto Cruz', type: 'order', time: '3 days ago', icon: 'ShoppingCart', details: 'ORD-1007 for ₱55.00' },
+  { id: 'a10', action: 'Product rejected', user: 'Admin User', type: 'product', time: '2 days ago', icon: 'Package', details: 'Counterfeit listing removed from marketplace' },
+  { id: 'a11', action: 'New seller registered', user: 'Breezy Knits', type: 'user', time: '3 days ago', icon: 'User', details: 'Seller account activated — AVRC Region IX client' },
+  { id: 'a12', action: 'Order placed', user: 'Roberto Cruz', type: 'order', time: '3 days ago', icon: 'ShoppingCart', details: 'ORD-1007 for ₱55.00 — Zamboanga City delivery' },
 ]
 
 export const payouts = [
@@ -130,8 +130,8 @@ export const transactions = [
 ]
 
 export const siteSettings = {
-  siteName: 'Inclusive Market',
-  siteDescription: 'An accessible, community-driven marketplace empowering PWD-led enterprises by connecting local, high-quality products directly with conscious consumers.',
+  siteName: 'Inclusive Market — AVRC Region IX',
+  siteDescription: 'An accessible, community-driven marketplace empowering PWD-led enterprises of AVRC Region IX by connecting Zamboanga Peninsula\'s local, high-quality products directly with conscious consumers.',
   platformFee: 5,
   currency: 'PHP',
   emailNotifications: true,
@@ -141,6 +141,6 @@ export const siteSettings = {
   registrationOpen: true,
   theme: 'light',
   contactEmail: 'support@inclusivemarket.com',
-  contactPhone: '+63 912 345 6789',
-  address: 'Manila, Philippines',
+  contactPhone: '+63 62 991 2345',
+  address: 'Mampang, Zamboanga City, Region IX, Philippines',
 }

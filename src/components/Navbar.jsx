@@ -112,7 +112,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-2" aria-label="Inclusive Market Home">
             <span className="text-2xl">♿</span>
-            <span className="text-xl font-bold text-blue-600">Inclusive Market</span>
+            <span className="text-xl font-bold text-amber-600">Inclusive Market</span>
           </Link>
 
           <div ref={searchRef} className="hidden md:flex flex-1 max-w-lg mx-8 relative">
@@ -126,7 +126,7 @@ export default function Navbar() {
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onFocus={() => setShowSuggestions(true)}
                 onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 aria-label="Search products"
                 aria-autocomplete="list"
                 aria-expanded={showSuggestions}
@@ -147,7 +147,7 @@ export default function Navbar() {
                         key={p.id}
                         id={`search-item-${idx}`}
                         onClick={() => selectSuggestion(p)}
-                        className={`w-full flex items-center gap-3 px-4 py-2 transition-colors text-left ${activeIndex === idx ? 'bg-blue-100' : 'hover:bg-blue-50'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-2 transition-colors text-left ${activeIndex === idx ? 'bg-amber-100' : 'hover:bg-amber-50'}`}
                         role="option"
                         aria-selected={activeIndex === idx}
                       >
@@ -156,12 +156,12 @@ export default function Navbar() {
                           <p className="font-medium text-sm truncate">{highlightMatch(p.name, searchQuery)}</p>
                           <p className="text-xs text-gray-500">{p.seller} · {p.category}</p>
                         </div>
-                        <span className="text-sm font-bold text-emerald-600">{formatMoney(p.price)}</span>
+                        <span className="text-sm font-bold text-green-600">{formatMoney(p.price)}</span>
                       </button>
                     ))}
                     <Link
                       to={`/catalog?search=${encodeURIComponent(searchQuery)}`}
-                      className="block text-center py-2 text-sm text-blue-600 hover:bg-blue-50 font-medium border-t"
+                      className="block text-center py-2 text-sm text-amber-600 hover:bg-amber-50 font-medium border-t"
                       onClick={() => { saveRecentSearch(searchQuery); setShowSuggestions(false) }}
                     >
                       View all results for &quot;{searchQuery}&quot;
@@ -174,10 +174,10 @@ export default function Navbar() {
                   <>
                     <div className="p-2 text-xs text-gray-500 font-semibold uppercase tracking-wider px-4 pt-3 flex items-center justify-between">
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Recent Searches</span>
-                      <button onClick={clearRecent} className="text-blue-500 hover:text-blue-700 normal-case tracking-normal">Clear</button>
+                      <button onClick={clearRecent} className="text-amber-500 hover:text-amber-700 normal-case tracking-normal">Clear</button>
                     </div>
                     {recentSearches.map((query, idx) => (
-                      <button key={idx} onClick={() => selectRecent(query)} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center gap-2">
+                      <button key={idx} onClick={() => selectRecent(query)} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 flex items-center gap-2">
                         <Clock className="w-3 h-3 text-gray-400" /> {query}
                       </button>
                     ))}
@@ -191,13 +191,13 @@ export default function Navbar() {
                       <TrendingUp className="w-3 h-3" /> Trending Now
                     </div>
                     {trendingProducts.map(p => (
-                      <button key={p.id} onClick={() => selectSuggestion(p)} className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition-colors text-left">
+                      <button key={p.id} onClick={() => selectSuggestion(p)} className="w-full flex items-center gap-3 px-4 py-2 hover:bg-amber-50 transition-colors text-left">
                         <img src={p.image} alt="" className="w-10 h-10 rounded object-cover" />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{p.name}</p>
                           <p className="text-xs text-gray-500">{p.seller} · ★ {p.rating}</p>
                         </div>
-                        <span className="text-sm font-bold text-emerald-600">{formatMoney(p.price)}</span>
+                        <span className="text-sm font-bold text-green-600">{formatMoney(p.price)}</span>
                       </button>
                     ))}
                   </>
@@ -211,27 +211,37 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Link to="/catalog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Catalog</Link>
+            <Link to="/catalog" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Catalog</Link>
 
             {user ? (
               <>
-                {user.role === 'seller' && <Link to="/seller/dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Seller Hub</Link>}
-                {user.role === 'admin' && <Link to="/admin/dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Admin</Link>}
-                <Link to="/buyer/cart" className="relative text-gray-700 hover:text-blue-600 transition-colors" aria-label={`Shopping cart with ${count} items`}>
-                  <ShoppingCart className="w-6 h-6" />
-                  {count > 0 && <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" aria-hidden="true">{count}</span>}
-                </Link>
-                <div className="flex items-center gap-2">
-                  <Link to="/buyer/profile" className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
-                    <User className="w-5 h-5" />
-                    <span className="text-sm font-medium">{user.name}</span>
+                {user.role === 'seller' && <Link to="/seller/dashboard" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Seller Hub</Link>}
+                {user.role === 'admin' && <Link to="/admin/dashboard" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Admin</Link>}
+                {user.role === 'buyer' && (
+                  <Link to="/buyer/cart" className="relative text-gray-700 hover:text-amber-600 transition-colors" aria-label={`Shopping cart with ${count} items`}>
+                    <ShoppingCart className="w-6 h-6" />
+                    {count > 0 && <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" aria-hidden="true">{count}</span>}
                   </Link>
-                  <button onClick={() => { logout(); navigate('/') }} className="text-sm text-gray-500 hover:text-red-600 transition-colors">Logout</button>
-                </div>
+                )}
+                {user.role === 'buyer' && (
+                  <div className="flex items-center gap-2">
+                    <Link to="/buyer/profile" className="flex items-center gap-2 text-gray-700 hover:text-amber-600 transition-colors">
+                      <User className="w-5 h-5" />
+                      <span className="text-sm font-medium">{user.name}</span>
+                    </Link>
+                    <button onClick={() => { logout(); navigate('/') }} className="text-sm text-gray-500 hover:text-red-600 transition-colors">Logout</button>
+                  </div>
+                )}
+                {user.role !== 'buyer' && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                    <button onClick={() => { logout(); navigate('/') }} className="text-sm text-gray-500 hover:text-red-600 transition-colors">Logout</button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex items-center gap-3">
-                <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Login</Link>
+                <Link to="/login" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Login</Link>
                 <Link to="/register" className="btn-primary text-sm !py-2 !px-4">Register</Link>
               </div>
             )}
@@ -248,14 +258,14 @@ export default function Navbar() {
           <form onSubmit={handleSearch} role="search">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input type="search" placeholder="Search products..." value={searchQuery} onChange={(e) => handleSearchChange(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Search products" />
+              <input type="search" placeholder="Search products..." value={searchQuery} onChange={(e) => handleSearchChange(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500" aria-label="Search products" />
             </div>
           </form>
           <Link to="/catalog" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Catalog</Link>
           {user ? (
             <>
-              <Link to="/buyer/cart" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Cart ({count})</Link>
-              <Link to="/buyer/profile" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Profile</Link>
+              {user.role === 'buyer' && <Link to="/buyer/cart" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Cart ({count})</Link>}
+              {user.role === 'buyer' && <Link to="/buyer/profile" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Profile</Link>}
               {user.role === 'seller' && <Link to="/seller/dashboard" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Seller Hub</Link>}
               {user.role === 'admin' && <Link to="/admin/dashboard" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Admin</Link>}
               <button onClick={() => { logout(); navigate('/'); setMobileOpen(false) }} className="block py-2 text-red-600 font-medium">Logout</button>
@@ -263,7 +273,7 @@ export default function Navbar() {
           ) : (
             <>
               <Link to="/login" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Login</Link>
-              <Link to="/register" className="block py-2 text-blue-600 font-medium" onClick={() => setMobileOpen(false)}>Register</Link>
+              <Link to="/register" className="block py-2 text-amber-600 font-medium" onClick={() => setMobileOpen(false)}>Register</Link>
             </>
           )}
         </div>

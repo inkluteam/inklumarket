@@ -93,7 +93,7 @@ export default function AdminSettings() {
       <div className="space-y-6">
         <div className="card p-6">
           <h2 className="text-lg font-bold flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-blue-600" /> General Settings
+            <Globe className="w-5 h-5 text-amber-600" /> General Settings
           </h2>
           <div className="space-y-4">
             <div>
@@ -133,7 +133,7 @@ export default function AdminSettings() {
 
         <div className="card p-6">
           <h2 className="text-lg font-bold flex items-center gap-2 mb-4">
-            <CreditCard className="w-5 h-5 text-purple-600" /> Payment Providers
+            <CreditCard className="w-5 h-5 text-amber-600" /> Payment Providers
           </h2>
 
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -141,7 +141,7 @@ export default function AdminSettings() {
               <button
                 key={id}
                 onClick={() => setActiveProvider(id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${activeProvider === id ? 'bg-purple-600 text-white shadow' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${activeProvider === id ? 'bg-amber-600 text-white shadow' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
               >
                 <span>{PROVIDER_ICONS[id]}</span>
                 <span>{provider.name}</span>
@@ -228,7 +228,7 @@ export default function AdminSettings() {
                     href={PROVIDER_DOCS[activeProvider]}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 ml-auto"
+                    className="flex items-center gap-1 text-sm text-amber-600 hover:text-amber-700 ml-auto"
                   >
                     Get API Keys <ExternalLink className="w-3 h-3" />
                   </a>
@@ -323,7 +323,7 @@ export default function AdminSettings() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+            <div className="bg-amber-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
               <p className="font-semibold">How it works:</p>
               <p>When a buyer places an order, the system uses Gmail API with OAuth2 to send branded HTML confirmation emails to both the buyer and the relevant seller.</p>
             </div>
@@ -344,7 +344,7 @@ export default function AdminSettings() {
                 <span className="text-sm font-medium">{opt.label}</span>
                 <button
                   onClick={() => update(opt.key, !settings[opt.key])}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${settings[opt.key] ? 'bg-blue-600' : 'bg-gray-300'}`}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${settings[opt.key] ? 'bg-amber-600' : 'bg-gray-300'}`}
                   role="switch"
                   aria-checked={settings[opt.key]}
                 >
@@ -368,7 +368,7 @@ export default function AdminSettings() {
                 <span className="text-sm font-medium">{opt.label}</span>
                 <button
                   onClick={() => update(opt.key, !settings[opt.key])}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${settings[opt.key] ? 'bg-blue-600' : 'bg-gray-300'}`}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${settings[opt.key] ? 'bg-amber-600' : 'bg-gray-300'}`}
                   role="switch"
                   aria-checked={settings[opt.key]}
                 >

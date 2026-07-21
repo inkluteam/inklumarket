@@ -30,7 +30,7 @@ export default function ReviewModeration() {
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Total Reviews', value: stats.total, color: 'bg-blue-50 text-blue-700' },
+          { label: 'Total Reviews', value: stats.total, color: 'bg-amber-50 text-amber-700' },
           { label: 'Active', value: stats.active, color: 'bg-green-50 text-green-700' },
           { label: 'Flagged', value: stats.flagged, color: 'bg-yellow-50 text-yellow-700' },
           { label: 'Hidden', value: stats.hidden, color: 'bg-red-50 text-red-700' },
@@ -50,7 +50,7 @@ export default function ReviewModeration() {
           </div>
           <div className="flex gap-2">
             {['all', 'active', 'flagged', 'hidden'].map(f => (
-              <button key={f} onClick={() => setFilter(f)} className={`px-3 py-2 text-sm rounded-lg font-medium capitalize transition ${filter === f ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+              <button key={f} onClick={() => setFilter(f)} className={`px-3 py-2 text-sm rounded-lg font-medium capitalize transition ${filter === f ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                 {f}
               </button>
             ))}

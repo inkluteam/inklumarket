@@ -112,7 +112,7 @@ export default function SellerProducts() {
                   <td className="px-6 py-4"><span className="badge badge-green capitalize">{product.status}</span></td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <button onClick={() => openEdit(product)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" aria-label="Edit"><Edit2 className="w-4 h-4" /></button>
+                      <button onClick={() => openEdit(product)} className="p-1.5 text-amber-600 hover:bg-amber-50 rounded" aria-label="Edit"><Edit2 className="w-4 h-4" /></button>
                       <button onClick={() => handleDelete(product)} className="p-1.5 text-red-600 hover:bg-red-50 rounded" aria-label="Delete"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </td>

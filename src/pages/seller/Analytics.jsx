@@ -87,7 +87,7 @@ export default function SellerAnalytics() {
         <h1 className="page-title mb-0">Analytics</h1>
         <div className="flex gap-2">
           {['7d', '30d', '6m', '1y'].map(range => (
-            <button key={range} onClick={() => setTimeRange(range)} className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors cursor-pointer ${timeRange === range ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+            <button key={range} onClick={() => setTimeRange(range)} className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors cursor-pointer ${timeRange === range ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
               {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : range === '6m' ? '6 Months' : '1 Year'}
             </button>
           ))}

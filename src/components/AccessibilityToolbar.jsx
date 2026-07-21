@@ -108,7 +108,7 @@ export default function AccessibilityToolbar() {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300"
+        className="fixed bottom-6 left-6 z-50 bg-amber-600 text-white p-3 rounded-full shadow-lg hover:bg-amber-700 transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300"
         aria-label={open ? 'Close accessibility settings' : 'Open accessibility settings'}
         title="Accessibility settings (Alt+A)"
       >
@@ -122,9 +122,9 @@ export default function AccessibilityToolbar() {
           aria-label="Accessibility settings"
           aria-modal="false"
         >
-          <div className="flex justify-between items-center px-5 py-4 border-b bg-gradient-to-r from-blue-50 to-emerald-50">
+          <div className="flex justify-between items-center px-5 py-4 border-b bg-gradient-to-r from-amber-50 to-emerald-50">
             <h2 className="font-bold text-gray-900 flex items-center gap-2 text-lg">
-              <Accessibility className="w-5 h-5 text-blue-600" /> Accessibility
+              <Accessibility className="w-5 h-5 text-amber-600" /> Accessibility
             </h2>
             <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100" aria-label="Close accessibility panel">
               <X className="w-5 h-5" />
@@ -136,7 +136,7 @@ export default function AccessibilityToolbar() {
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold transition-colors ${tab === t.id ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold transition-colors ${tab === t.id ? 'text-amber-600 border-b-2 border-amber-600 bg-amber-50' : 'text-gray-500 hover:text-gray-700'}`}
                 role="tab"
                 aria-selected={tab === t.id}
                 aria-controls={`panel-${t.id}`}
@@ -156,18 +156,18 @@ export default function AccessibilityToolbar() {
                     <Type className="w-4 h-4" /> Font Size
                   </label>
                   <div className="flex items-center gap-3">
-                    <button onClick={() => setFontSize(String(Math.max(12, Number(fontSize) - 2)))} className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Decrease font size" disabled={Number(fontSize) <= 12}>
+                    <button onClick={() => setFontSize(String(Math.max(12, Number(fontSize) - 2)))} className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500" aria-label="Decrease font size" disabled={Number(fontSize) <= 12}>
                       <ZoomOut className="w-4 h-4" />
                     </button>
                     <span className="text-sm font-bold w-16 text-center bg-gray-50 py-1 rounded">{fontSize}px</span>
-                    <button onClick={() => setFontSize(String(Math.min(28, Number(fontSize) + 2)))} className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Increase font size" disabled={Number(fontSize) >= 28}>
+                    <button onClick={() => setFontSize(String(Math.min(28, Number(fontSize) + 2)))} className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500" aria-label="Increase font size" disabled={Number(fontSize) >= 28}>
                       <ZoomIn className="w-4 h-4" />
                     </button>
-                    <button onClick={() => setFontSize('16')} className="text-xs text-blue-600 hover:text-blue-700 font-medium underline">Reset</button>
+                    <button onClick={() => setFontSize('16')} className="text-xs text-amber-600 hover:text-amber-700 font-medium underline">Reset</button>
                   </div>
                   <div className="flex gap-1 mt-2">
                     {[12, 14, 16, 18, 20, 24, 28].map(size => (
-                      <button key={size} onClick={() => setFontSize(String(size))} className={`text-xs px-2 py-1 rounded ${Number(fontSize) === size ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{size}</button>
+                      <button key={size} onClick={() => setFontSize(String(size))} className={`text-xs px-2 py-1 rounded ${Number(fontSize) === size ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{size}</button>
                     ))}
                   </div>
                 </div>
@@ -234,7 +234,7 @@ export default function AccessibilityToolbar() {
                           step="0.1"
                           value={speechRate}
                           onChange={(e) => setSpeechRate(Number(e.target.value))}
-                          className="flex-1 accent-blue-600"
+                          className="flex-1 accent-amber-600"
                           aria-label="Speech rate"
                         />
                         <span className="text-sm font-bold w-10 text-center">{speechRate}x</span>
@@ -269,7 +269,7 @@ export default function AccessibilityToolbar() {
                     <div className="space-y-2">
                       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Quick Actions</p>
                       <div className="grid grid-cols-2 gap-2">
-                        <button onClick={speakPageTitle} className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
+                        <button onClick={speakPageTitle} className="flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors">
                           <Volume2 className="w-4 h-4" /> Read Title
                         </button>
                         <button onClick={stopSpeaking} className="flex items-center gap-2 px-3 py-2 bg-red-50 text-red-700 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
@@ -305,14 +305,14 @@ export default function AccessibilityToolbar() {
                       </div>
                       <button
                         onClick={startVoiceCommands}
-                        className={`p-2 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`}
+                        className={`p-2 rounded-lg transition-colors ${isListening ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-amber-100 text-amber-600 hover:bg-amber-200'}`}
                         aria-label={isListening ? 'Stop listening' : 'Start listening'}
                       >
                         {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                       </button>
                     </div>
 
-                    <button onClick={() => setShowVoiceHelp(!showVoiceHelp)} className="flex items-center justify-between w-full text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                    <button onClick={() => setShowVoiceHelp(!showVoiceHelp)} className="flex items-center justify-between w-full text-sm font-semibold text-gray-700 hover:text-amber-600 transition-colors">
                       <span className="flex items-center gap-2"><Sparkles className="w-4 h-4" /> Available Voice Commands</span>
                       {showVoiceHelp ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </button>
@@ -320,7 +320,7 @@ export default function AccessibilityToolbar() {
                       <div className="space-y-1.5 bg-gray-50 rounded-lg p-3">
                         {VOICE_COMMANDS_HELP.map((cmd, i) => (
                           <div key={i} className="flex items-start gap-2 text-xs">
-                            <code className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-mono shrink-0">{cmd.cmd}</code>
+                            <code className="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-mono shrink-0">{cmd.cmd}</code>
                             <span className="text-gray-600">{cmd.desc}</span>
                           </div>
                         ))}
@@ -334,11 +334,11 @@ export default function AccessibilityToolbar() {
             {/* Help Tab */}
             {tab === 'help' && (
               <div id="panel-help" role="tabpanel" className="space-y-5">
-                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                  <h3 className="font-bold text-blue-900 text-sm mb-2 flex items-center gap-2">
+                <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                  <h3 className="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
                     <Hand className="w-4 h-4" /> For Blind / Low Vision Users
                   </h3>
-                  <ul className="text-xs text-blue-800 space-y-1.5 list-disc list-inside">
+                  <ul className="text-xs text-amber-800 space-y-1.5 list-disc list-inside">
                     <li>Enable <strong>Text-to-Speech</strong> to hear page content</li>
                     <li>Enable <strong>Reading Mode</strong> — hover over any element to hear it</li>
                     <li>Enable <strong>Voice Commands</strong> to navigate hands-free</li>
@@ -362,7 +362,7 @@ export default function AccessibilityToolbar() {
                 </div>
 
                 <div>
-                  <button onClick={() => setShowShortcuts(!showShortcuts)} className="flex items-center justify-between w-full text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                  <button onClick={() => setShowShortcuts(!showShortcuts)} className="flex items-center justify-between w-full text-sm font-semibold text-gray-700 hover:text-amber-600 transition-colors">
                     <span className="flex items-center gap-2"><Keyboard className="w-4 h-4" /> Keyboard Shortcuts</span>
                     {showShortcuts ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
@@ -380,7 +380,7 @@ export default function AccessibilityToolbar() {
 
                 <button
                   onClick={() => { speak('Accessibility help panel. This panel provides information about text to speech, voice commands, visual alerts, and keyboard shortcuts for blind and deaf users.') }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors"
                   aria-label="Hear help information"
                 >
                   <Volume2 className="w-4 h-4" /> Hear This Help
@@ -402,17 +402,17 @@ function ToggleButton({ active, onToggle, label, desc, icon }) {
   return (
     <button
       onClick={onToggle}
-      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${active ? 'bg-blue-50 border-blue-300 ring-1 ring-blue-200' : 'bg-white border-gray-200 hover:border-gray-300'}`}
+      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${active ? 'bg-amber-50 border-amber-300 ring-1 ring-amber-200' : 'bg-white border-gray-200 hover:border-gray-300'}`}
       role="switch"
       aria-checked={active}
       aria-label={`${label}: ${active ? 'on' : 'off'}`}
     >
-      {icon && <span className={`${active ? 'text-blue-600' : 'text-gray-400'}`}>{icon}</span>}
+      {icon && <span className={`${active ? 'text-amber-600' : 'text-gray-400'}`}>{icon}</span>}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-semibold ${active ? 'text-blue-900' : 'text-gray-700'}`}>{label}</p>
+        <p className={`text-sm font-semibold ${active ? 'text-amber-900' : 'text-gray-700'}`}>{label}</p>
         {desc && <p className="text-xs text-gray-500 mt-0.5">{desc}</p>}
       </div>
-      <div className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${active ? 'bg-blue-600' : 'bg-gray-300'}`}>
+      <div className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${active ? 'bg-amber-600' : 'bg-gray-300'}`}>
         <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow ${active ? 'translate-x-5' : ''}`} />
       </div>
     </button>

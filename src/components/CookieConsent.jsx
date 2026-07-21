@@ -79,7 +79,7 @@ export function CookieConsentBanner() {
                       checked={prefs.analytics}
                       onChange={(e) => setPrefs(p => ({ ...p, analytics: e.target.checked }))}
                     />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+                    <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
                   </label>
                 </div>
                 <div className="flex items-center justify-between">
@@ -94,25 +94,25 @@ export function CookieConsentBanner() {
                       checked={prefs.marketing}
                       onChange={(e) => setPrefs(p => ({ ...p, marketing: e.target.checked }))}
                     />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+                    <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
                   </label>
                 </div>
               </div>
             )}
 
             <div className="flex flex-wrap items-center gap-2">
-              <button onClick={acceptAll} className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition">
+              <button onClick={acceptAll} className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition">
                 Accept All
               </button>
               <button onClick={rejectOptional} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition">
                 Reject Optional
               </button>
               {detailsOpen ? (
-                <button onClick={acceptSelected} className="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition">
+                <button onClick={acceptSelected} className="px-4 py-2 bg-amber-100 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-200 transition">
                   Save My Choices
                 </button>
               ) : (
-                <button onClick={() => setDetailsOpen(true)} className="px-4 py-2 text-emerald-600 text-sm font-medium hover:underline">
+                <button onClick={() => setDetailsOpen(true)} className="px-4 py-2 text-green-600 text-sm font-medium hover:underline">
                   Customize
                 </button>
               )}

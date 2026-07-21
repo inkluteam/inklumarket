@@ -53,10 +53,10 @@ export default function SellerDashboard() {
   const productActivity = useMemo(() => getSellerProductActivity(sellerId), [getSellerProductActivity, sellerId])
 
   const stats = [
-    { label: 'Total Products', value: sellerProducts.length, icon: Package, color: 'bg-blue-500', change: `${sellerProducts.filter(p => p.status === 'approved').length} approved` },
-    { label: 'Total Revenue', value: formatMoney(totalRevenue), icon: DollarSign, color: 'bg-emerald-500', change: `${sellerOrders.length} orders` },
-    { label: 'Total Orders', value: sellerOrders.length, icon: ShoppingCart, color: 'bg-amber-500', change: `${sellerOrders.filter(o => o.status === 'pending').length} pending` },
-    { label: 'Avg. Rating', value: sellerProducts.length > 0 ? (sellerProducts.reduce((s, p) => s + p.rating, 0) / sellerProducts.length).toFixed(1) : '0.0', icon: TrendingUp, color: 'bg-purple-500', change: 'Based on reviews' },
+    { label: 'Total Products', value: sellerProducts.length, icon: Package, color: 'bg-amber-500', change: `${sellerProducts.filter(p => p.status === 'approved').length} approved` },
+    { label: 'Total Revenue', value: formatMoney(totalRevenue), icon: DollarSign, color: 'bg-green-500', change: `${sellerOrders.length} orders` },
+    { label: 'Total Orders', value: sellerOrders.length, icon: ShoppingCart, color: 'bg-cyan-500', change: `${sellerOrders.filter(o => o.status === 'pending').length} pending` },
+    { label: 'Avg. Rating', value: sellerProducts.length > 0 ? (sellerProducts.reduce((s, p) => s + p.rating, 0) / sellerProducts.length).toFixed(1) : '0.0', icon: TrendingUp, color: 'bg-amber-600', change: 'Based on reviews' },
   ]
 
   const handleDownloadReport = () => {
@@ -120,11 +120,11 @@ export default function SellerDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="card p-6">
           <h2 className="font-bold text-lg mb-4">Monthly Sales Performance</h2>
-          <BarChart data={monthlySales} height={200} color="#059669" label="revenue" />
+          <BarChart data={monthlySales} height={200} color="#16A34A" label="revenue" />
         </div>
         <div className="card p-6">
           <h2 className="font-bold text-lg mb-4">Product Listings Activity</h2>
-          <BarChart data={productActivity} height={200} color="#8b5cf6" label="products" />
+          <BarChart data={productActivity} height={200} color="#D97706" label="products" />
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export default function SellerDashboard() {
         <div className="card p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-bold text-lg">Recent Orders</h2>
-            <Link to="/seller/seller-orders" className="text-blue-600 hover:text-blue-700 text-sm font-medium">View All</Link>
+            <Link to="/seller/seller-orders" className="text-amber-600 hover:text-amber-700 text-sm font-medium">View All</Link>
           </div>
           <div className="space-y-3">
             {sellerOrders.slice(0, 5).map(order => (
@@ -142,7 +142,7 @@ export default function SellerDashboard() {
                   <p className="text-xs text-gray-500">{order.buyer}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-emerald-600">{formatMoney(order.total)}</p>
+                  <p className="font-semibold text-green-600">{formatMoney(order.total)}</p>
                   <span className={`badge text-xs ${order.status === 'delivered' ? 'badge-green' : order.status === 'pending' ? 'badge-yellow' : 'badge-blue'}`}>{order.status}</span>
                 </div>
               </div>
@@ -154,7 +154,7 @@ export default function SellerDashboard() {
         <div className="card p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-bold text-lg">My Products</h2>
-            <Link to="/seller/products" className="text-blue-600 hover:text-blue-700 text-sm font-medium">View All</Link>
+            <Link to="/seller/products" className="text-amber-600 hover:text-amber-700 text-sm font-medium">View All</Link>
           </div>
           <div className="space-y-3">
             {sellerProducts.slice(0, 5).map(product => (
@@ -174,19 +174,19 @@ export default function SellerDashboard() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Link to="/seller/products" className="card p-4 text-center hover:scale-105 transition-transform">
-          <Package className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+          <Package className="w-8 h-8 text-amber-600 mx-auto mb-2" />
           <span className="text-sm font-semibold">Products</span>
         </Link>
         <Link to="/seller/seller-orders" className="card p-4 text-center hover:scale-105 transition-transform">
-          <ShoppingCart className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+          <ShoppingCart className="w-8 h-8 text-green-600 mx-auto mb-2" />
           <span className="text-sm font-semibold">Orders</span>
         </Link>
         <Link to="/seller/analytics" className="card p-4 text-center hover:scale-105 transition-transform">
-          <TrendingUp className="w-8 h-8 text-amber-600 mx-auto mb-2" />
+          <TrendingUp className="w-8 h-8 text-cyan-600 mx-auto mb-2" />
           <span className="text-sm font-semibold">Analytics</span>
         </Link>
         <Link to="/seller/payouts" className="card p-4 text-center hover:scale-105 transition-transform">
-          <DollarSign className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+          <DollarSign className="w-8 h-8 text-amber-600 mx-auto mb-2" />
           <span className="text-sm font-semibold">Payouts</span>
         </Link>
       </div>
