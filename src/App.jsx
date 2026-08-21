@@ -7,6 +7,7 @@ import { ToastProvider } from './context/ToastContext'
 import { VoiceProvider } from './context/VoiceContext'
 import { VisualAlertProvider } from './components/VisualAlert'
 import { CookieConsentBanner } from './components/CookieConsent'
+import SeoTitle from './components/SeoTitle'
 import { AuthGuard, GuestGuard, AdminGuard } from './components/AuthGuard'
 import Layout from './components/Layout'
 import AdminLayout from './components/AdminLayout'
@@ -71,6 +72,7 @@ export default function App() {
             <VoiceProvider>
               <ToastProvider>
                 <VisualAlertProvider>
+                  <SeoTitle />
                   <a href="#main-content" className="skip-link">
                     Skip to main content
                   </a>

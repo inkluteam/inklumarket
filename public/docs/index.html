@@ -146,14 +146,14 @@
   .deck-top .dk{font-weight:800;letter-spacing:2px;font-size:12.5px;text-transform:uppercase;color:var(--gold)}
   .deck-top .dt{font-weight:700;font-size:17px}
   .deck-top .spacer{flex:1}
-  .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:18px 40px;overflow:hidden}
-  .slide{width:min(1250px,100%);height:100%;display:none;flex-direction:column}
+  .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 14px;overflow:hidden}
+  .slide{width:min(1800px,100%);height:100%;display:none;flex-direction:column}
   .slide.on{display:flex;animation:fadein .35s ease}
   @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .slide h3{font-size:31px;margin-bottom:4px}
-  .slide .sk{color:var(--gold);font-weight:800;font-size:13px;letter-spacing:2.5px;text-transform:uppercase}
+  .slide h3{font-size:34px;margin-bottom:4px}
+  .slide .sk{color:var(--gold);font-weight:800;font-size:13.5px;letter-spacing:2.5px;text-transform:uppercase}
   .slide .sc{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;
-    background:#fff;border-radius:16px;margin-top:14px;padding:16px;overflow:auto}
+    background:#fff;border-radius:16px;margin-top:12px;padding:12px;overflow:auto}
   .slide .sc svg{max-width:100%;height:auto;max-height:100%;margin:0 auto;display:block}
   .slide ul.sl{list-style:none;margin-top:16px;display:grid;gap:12px}
   .slide ul.sl li{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);
@@ -171,6 +171,17 @@
     letter-spacing:1.5px;padding:5px 14px;border-radius:999px;animation:pulse 1.2s infinite}
   #autoBadge.on{display:inline-block}
   @keyframes pulse{50%{opacity:.55}}
+  /* ── Light (white) deck theme ───────────────────────────── */
+  #deck.light{background:#FDF6EE;color:#0f172a}
+  #deck.light .deck-top,#deck.light .deck-bot{background:rgba(15,23,42,.05);border-color:rgba(15,23,42,.14)}
+  #deck.light .slide h3{color:#0b1f3f}
+  #deck.light .slide ul.sl li{background:#fff;border-color:#e2e8f0;border-left-color:var(--blue);color:#334155;box-shadow:0 2px 8px rgba(15,23,42,.06)}
+  #deck.light .slide ul.sl li b{color:var(--blue-dark)}
+  #deck.light .nav-arrow{background:rgba(15,23,42,.08);border-color:rgba(15,23,42,.25);color:#0f172a}
+  #deck.light .nav-arrow:hover{background:var(--blue);color:#fff}
+  #deck.light .progress{background:rgba(15,23,42,.15)}
+  #deck.light .counter{color:#334155}
+  #deck.light .btn-ghost{background:rgba(15,23,42,.06);color:#0f172a;border-color:rgba(15,23,42,.3)}
   @media(max-width:1000px){
     nav.toc{display:none} main{padding:22px 18px 80px}
     .doc-hero h1{font-size:30px} .doc-hero::after{font-size:110px}
@@ -489,6 +500,8 @@
     <span class="dt" id="deckTitle">Design &amp; Methodology</span>
     <span id="autoBadge">● AUTO</span>
     <div class="spacer"></div>
+    <button class="btn btn-ghost" id="themeBtn" onclick="toggleDeckTheme()" title="Switch deck background">◐ Dark</button>
+    <button class="btn btn-ghost" onclick="toggleFullscreen()" title="Toggle fullscreen">⛶ Fullscreen</button>
     <button class="btn btn-gold" id="playBtn" onclick="toggleAuto()">▶ Auto-play</button>
     <button class="btn btn-red" onclick="closeDeck()">✕ Exit</button>
   </div>
@@ -1155,7 +1168,12 @@
   window.step = n => { stopAuto(); show(cur + n); };
   window.openDeck = i => {
     buildSlides(); show(i ?? 0);
-    document.getElementById('deck').classList.add('open');
+    const deck = document.getElementById('deck');
+    if (localStorage.getItem('im_deck_theme') === 'light') {
+      deck.classList.add('light');
+      document.getElementById('themeBtn').textContent = '◑ White';
+    }
+    deck.classList.add('open');
     document.body.style.overflow = 'hidden';
   };
   window.closeDeck = () => {
@@ -1177,6 +1195,17 @@
   }
   window.toggleAuto = () => timer ? stopAuto() : startAuto();
   window.presentAll = () => { cur = 0; startAuto(); };
+  window.toggleDeckTheme = () => {
+    const deck = document.getElementById('deck');
+    deck.classList.toggle('light');
+    const light = deck.classList.contains('light');
+    document.getElementById('themeBtn').textContent = light ? '◑ White' : '◐ Dark';
+    localStorage.setItem('im_deck_theme', light ? 'light' : 'dark');
+  };
+  window.toggleFullscreen = () => {
+    if (!document.fullscreenElement) document.getElementById('deck').requestFullscreen?.().catch(() => {});
+    else document.exitFullscreen?.();
+  };
 
   document.addEventListener('keydown', e => {
     const deckOpen = document.getElementById('deck').classList.contains('open');

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useDataStore } from '../context/DataStore'
 import { useSettings } from '../context/SettingsContext'
-import { ShoppingCart, User, Menu, X, Search, Clock, TrendingUp, Sparkles, ChevronDown, LayoutDashboard, Store, UserCircle, Building2, BookOpen, ShoppingBag } from 'lucide-react'
+import { ShoppingCart, Menu, X, Search, Clock, TrendingUp, Sparkles, ChevronDown, LayoutDashboard, Store, UserCircle, Building2, BookOpen, ShoppingBag, Heart, LogOut, LogIn, UserPlus } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 
 const RECENT_KEY = 'im_recent_searches'
@@ -53,14 +53,17 @@ export default function Navbar() {
   const [recentSearches, setRecentSearches] = useState(getRecentSearches)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [openMenu, setOpenMenu] = useState(null) // 'shop' | 'company' | null
+  const [acctOpen, setAcctOpen] = useState(false)
   const searchRef = useRef(null)
   const inputRef = useRef(null)
   const menuRef = useRef(null)
+  const acctRef = useRef(null)
 
   useEffect(() => {
     const handleClick = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false)
       if (menuRef.current && !menuRef.current.contains(e.target)) setOpenMenu(null)
+      if (acctRef.current && !acctRef.current.contains(e.target)) setAcctOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
@@ -241,28 +244,81 @@ export default function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              {user ? (
-                <>
-                  {user.role === 'buyer' && (
-                    <Link to="/buyer/cart" className="relative text-gray-700 hover:text-pink-700 transition-colors" aria-label={`Shopping cart with ${count} items`}>
-                      <ShoppingCart className="w-6 h-6" />
-                      {count > 0 && <span className="absolute -top-2 -right-2 bg-[#E6397E] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" aria-hidden="true">{count}</span>}
-                    </Link>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <Link to={accountTo} className="flex items-center gap-2 text-gray-700 hover:text-pink-700 transition-colors">
-                      <User className="w-5 h-5" />
-                      <span className="text-sm font-medium">{user.name}</span>
-                    </Link>
-                    <button onClick={() => { logout(); navigate('/') }} className="text-sm text-gray-500 hover:text-[#E6397E] transition-colors">Logout</button>
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <Link to="/login" className="text-gray-700 hover:text-pink-700 font-medium transition-colors">Login</Link>
-                  <Link to="/register" className="btn-primary text-sm !py-2 !px-4">Register</Link>
-                </div>
+              {user?.role === 'buyer' && (
+                <Link to="/buyer/cart" className="relative text-gray-700 hover:text-pink-700 transition-colors" aria-label={`Shopping cart with ${count} items`}>
+                  <ShoppingCart className="w-6 h-6" />
+                  {count > 0 && <span className="absolute -top-2 -right-2 bg-[#E6397E] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" aria-hidden="true">{count}</span>}
+                </Link>
               )}
+
+              {/* ── Unified Account control ─────────────────── */}
+              <div className="relative" ref={acctRef}>
+                <button
+                  onClick={() => setAcctOpen(!acctOpen)}
+                  aria-expanded={acctOpen}
+                  aria-haspopup="menu"
+                  className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-rose-100/70 transition-colors"
+                >
+                  {user ? (
+                    <>
+                      <span
+                        className="w-9 h-9 rounded-full grid place-items-center text-white font-extrabold text-base overflow-hidden ring-2 ring-[#F2B705] shadow-sm"
+                        style={{ background: 'linear-gradient(135deg,#E6397E,#F4795B)' }}
+                        aria-hidden="true"
+                      >
+                        {user.avatar_url
+                          ? <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                          : (user.name || 'U').trim().charAt(0).toUpperCase()}
+                      </span>
+                      <span className="text-sm font-semibold text-gray-800 max-w-[110px] truncate">{(user.name || 'Account').split(' ')[0]}</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserCircle className="w-7 h-7 text-gray-700" />
+                      <span className="text-sm font-semibold text-gray-800">Account</span>
+                    </>
+                  )}
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${acctOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {acctOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-60 bg-[#FFFBF8] rounded-xl shadow-xl border border-rose-100 py-2 z-50" role="menu">
+                    {user ? (
+                      <>
+                        <div className="px-4 py-2 border-b border-rose-100">
+                          <p className="text-sm font-bold text-gray-800 truncate">{user.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                          <span className="inline-block mt-1 badge badge-blue capitalize">{user.role}</span>
+                        </div>
+                        <Link to={dashboardTo} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                          <LayoutDashboard className="w-4 h-4" /> Dashboard
+                        </Link>
+                        <Link to={accountTo} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                          <UserCircle className="w-4 h-4" /> My Profile
+                        </Link>
+                        {user.role === 'buyer' && (
+                          <Link to="/buyer/wishlist" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                            <Heart className="w-4 h-4" /> Wishlist
+                          </Link>
+                        )}
+                        <div className="border-t border-rose-100 my-1.5" />
+                        <button onClick={() => { logout(); navigate('/'); setAcctOpen(false) }} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#E6397E] hover:bg-rose-50">
+                          <LogOut className="w-4 h-4" /> Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                          <LogIn className="w-4 h-4" /> Login
+                        </Link>
+                        <Link to="/register" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                          <UserPlus className="w-4 h-4" /> Register
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             <button className="md:hidden p-2 text-gray-700" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen}>
