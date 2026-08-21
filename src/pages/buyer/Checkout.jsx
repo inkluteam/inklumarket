@@ -237,7 +237,13 @@ export default function Checkout() {
     }
   }
 
+  const [codConfirmed, setCodConfirmed] = useState(false)
+
   const handlePlaceOrder = async () => {
+    if (form.paymentMethod === 'cod' && !codConfirmed) {
+      toast.error('Please confirm the Cash on Delivery terms before placing your order.')
+      return
+    }
     setProcessing(true)
     try {
       const orderItems = items.map(item => ({ productId: item.id, name: item.name, qty: item.quantity, price: item.price, image: item.image, sellerId: item.sellerId }))
@@ -660,6 +666,17 @@ export default function Checkout() {
                   <p className="font-semibold">
                     {selectedMethod.icon} You will be redirected to {selectedMethod.label} to complete payment
                   </p>
+                </div>
+              )}
+
+              {form.paymentMethod === 'cod' && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3.5 text-sm" role="group" aria-label="Cash on Delivery verification">
+                  <p className="font-semibold text-green-800 mb-1.5">✅ Cash on Delivery verification</p>
+                  <label className="flex items-start gap-2 cursor-pointer text-gray-700">
+                    <input type="checkbox" checked={codConfirmed} onChange={e => setCodConfirmed(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 accent-green-600" />
+                    <span>I confirm I will be available at the delivery address and pay the exact amount in cash upon arrival. Repeated failed COD deliveries may limit the option on my account.</span>
+                  </label>
                 </div>
               )}
 

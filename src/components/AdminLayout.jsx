@@ -1,10 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, MessageSquare, CreditCard, Palette, ShieldCheck, ChevronLeft, ChevronRight, LifeBuoy, Wallet } from 'lucide-react'
+import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, MessageSquare, CreditCard, Palette, ShieldCheck, ChevronLeft, ChevronRight, LifeBuoy, Wallet, Ban } from 'lucide-react'
 import { useState } from 'react'
 
 const links = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/admin/users', label: 'Users', icon: Users },
+  { to: '/admin/blocklist', label: 'Blocklist', icon: Ban },
   { to: '/admin/categories', label: 'Categories', icon: Tags },
   { to: '/admin/product-approvals', label: 'Approvals', icon: Package },
   { to: '/admin/admin-orders', label: 'Orders', icon: ShoppingCart },

@@ -74,6 +74,19 @@ export default function Contact() {
                 </div>
               </div>
             ))}
+
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('im:open-chat'))}
+              className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-blue-100 bg-blue-50/60 hover:bg-blue-50 transition-colors text-left"
+            >
+              <span className="p-2 rounded-lg text-white" style={{ background: 'linear-gradient(135deg,#0047AB,#E6397E)' }}>
+                <Bot size={20} />
+              </span>
+              <span>
+                <span className="block font-bold text-sm">Chat with IncluBot</span>
+                <span className="block text-xs text-gray-500">Instant answers · escalates to a human ticket</span>
+              </span>
+            </button>
           </div>
 
           <div className="lg:col-span-2">
