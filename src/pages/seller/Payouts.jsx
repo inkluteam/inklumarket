@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 
 export default function SellerPayouts() {
-  const { payouts, sellers, addPayout } = useDataStore()
+  const { payouts, sellers, requestPayout, getSellerWallet } = useDataStore()
   const { formatMoney } = useSettings()
   const { user } = useAuth()
   const toast = useToast()
@@ -15,10 +15,11 @@ export default function SellerPayouts() {
 
   const seller = sellers.find(s => s.email === user.email)
   const myPayouts = payouts.filter(p => p.sellerId === (seller?.id || 's1'))
-  const totalPaid = myPayouts.reduce((s, p) => s + p.amount, 0)
+  const totalPaid = myPayouts.filter(p => p.status !== 'pending').reduce((s, p) => s + p.amount, 0)
 
-  const availableBalance = 1245
-  const pendingClearance = 380
+  const wallet = getSellerWallet ? getSellerWallet(seller?.id || 's1') : { available: 0, pendingClearance: 0, lifetime: 0, instantThreshold: 500 }
+  const availableBalance = wallet.available
+  const pendingClearance = wallet.pendingClearance
 
   const handleRequestPayout = () => {
     const amount = parseFloat(payoutForm.amount)
@@ -27,17 +28,20 @@ export default function SellerPayouts() {
     if (!payoutForm.accountName.trim()) { toast.error('Account name is required'); return }
     if (!payoutForm.accountNumber.trim()) { toast.error('Account number is required'); return }
 
-    addPayout({
+    const res = requestPayout({
       sellerId: seller?.id || 's1',
       sellerName: seller?.name || user?.name || 'Seller',
       amount,
       method: payoutForm.method === 'bank' ? 'Bank Transfer' : 'GCash',
       accountName: payoutForm.accountName,
     })
+    if (!res.ok) { toast.error(res.error); return }
 
     setShowRequestModal(false)
     setPayoutForm({ amount: '', method: 'bank', accountName: '', accountNumber: '' })
-    toast.success('Payout request submitted! It will be processed in 3-5 business days.')
+    toast.success(res.instant
+      ? `Instant payout released! ${formatMoney(amount)} is on its way.`
+      : 'Payout request submitted! It will be processed in 3-5 business days.')
   }
 
   const handleExportCSV = () => {

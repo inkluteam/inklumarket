@@ -40,7 +40,13 @@ function BarChart({ data, height = 200, color = '#2563eb', label = 'Value' }) {
 
 export default function SellerDashboard() {
   const { user } = useAuth()
-  const { getSellerProducts, getOrdersBySeller, getLowStockProducts, getSellerMonthlySales, getSellerProductActivity, generateSellerReport } = useDataStore()
+  const { getSellerProducts, getOrdersBySeller, getLowStockProducts, getSellerMonthlySales, getSellerProductActivity, generateSellerReport, sellers, setSellerKyc } = useDataStore()
+  const mySeller = (sellers || []).find(s => s.id === sellerId || s.email === user?.email)
+  const kyc = mySeller ? (mySeller.kycStatus || (mySeller.verified ? 'verified' : 'unverified')) : 'unverified'
+  function requestVerification() {
+    setSellerKyc(mySeller.id, 'pending')
+    toast.success('Verification request sent! Admins will review your account.')
+  }
   const { formatMoney } = useSettings()
   const toast = useToast()
   const sellerId = user?.sellerId
@@ -75,6 +81,23 @@ export default function SellerDashboard() {
 
   return (
     <div>
+      {kyc !== 'verified' && (
+        <div className={`mb-6 p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center gap-3 ${kyc === 'pending' ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-200'}`} role="status">
+          <div className="flex-1">
+            <p className="font-bold text-sm">
+              {kyc === 'pending' ? '🪪 ID Verification in review' : '🪪 Get verified to boost buyer trust'}
+            </p>
+            <p className="text-xs text-gray-600 mt-0.5">
+              {kyc === 'pending'
+                ? 'Admins are reviewing your seller credentials. You will be notified of the decision.'
+                : 'Verified sellers earn a badge, rank higher in search and unlock instant payouts.'}
+            </p>
+          </div>
+          {kyc !== 'pending' && (
+            <button onClick={requestVerification} className="btn-primary text-sm !py-2 !px-4 shrink-0">Submit for Verification</button>
+          )}
+        </div>
+      )}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="page-title mb-1">Seller Dashboard</h1>

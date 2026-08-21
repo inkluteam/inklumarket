@@ -14,6 +14,7 @@ export default function Catalog() {
   const [viewMode, setViewMode] = useState('grid')
   const [priceRange, setPriceRange] = useState([0, 10000])
   const [minRating, setMinRating] = useState(0)
+  const [onlyAvailable, setOnlyAvailable] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const { addItem } = useCart()
   const { user } = useAuth()
@@ -43,7 +44,8 @@ export default function Catalog() {
       const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1]
       const matchesRating = p.rating >= minRating
       const notBlocked = !blockedSellerIds.includes(p.sellerId)
-      return matchesSearch && matchesCategory && matchesPrice && matchesRating && notBlocked
+      const matchesStock = !onlyAvailable || p.stock === undefined || Number(p.stock) > 0
+      return matchesSearch && matchesCategory && matchesPrice && matchesRating && notBlocked && matchesStock
     }).sort((a, b) => {
       switch (sortBy) {
         case 'price-low': return a.price - b.price
@@ -55,7 +57,7 @@ export default function Catalog() {
         default: return (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
       }
     })
-  }, [products, searchQuery, selectedCategory, sortBy, priceRange, minRating])
+  }, [products, searchQuery, selectedCategory, sortBy, priceRange, minRating, onlyAvailable, blockedSellerIds])
 
   const hasActiveFilters = selectedCategory || minRating > 0 || priceRange[0] > 0 || priceRange[1] < 10000
 
@@ -110,6 +112,16 @@ export default function Catalog() {
                 <input type="range" min="0" max={maxPrice} value={priceRange[1]} onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])} className="w-full" />
                 <p className="text-xs text-gray-500">{formatMoney(priceRange[0])} - {formatMoney(priceRange[1])}</p>
               </div>
+            </div>
+
+            {/* Availability Filter */}
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-3">Availability</h3>
+              <label className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" checked={onlyAvailable} onChange={e => setOnlyAvailable(e.target.checked)}
+                  className="w-4 h-4 accent-amber-600" />
+                <span>In-stock items only</span>
+              </label>
             </div>
 
             {/* Rating Filter */}

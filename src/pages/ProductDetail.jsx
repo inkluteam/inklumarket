@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useSettings } from '../context/SettingsContext'
 import { useDataStore } from '../context/DataStore'
 import { useToast } from '../context/ToastContext'
-import { Star, ShoppingCart, ArrowLeft, Truck, Shield, Heart, Minus, Plus, Sparkles, Brain } from 'lucide-react'
+import { Star, ShoppingCart, ArrowLeft, Truck, Shield, Heart, Minus, Plus, Sparkles, Brain, Flag } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import SpeakButton from '../components/SpeakButton'
 
@@ -14,7 +14,7 @@ function getWishlist() {
 
 export default function ProductDetail() {
   const { id } = useParams()
-  const { products, getProductReviews, getSmartRecommendations } = useDataStore()
+  const { products, getProductReviews, getSmartRecommendations, createTicket } = useDataStore()
   const product = products.find(p => p.id === id)
   const { addItem } = useCart()
   const { user } = useAuth()
@@ -23,6 +23,9 @@ export default function ProductDetail() {
   const toast = useToast()
   const [quantity, setQuantity] = useState(1)
   const [wishlisted, setWishlisted] = useState(() => getWishlist().includes(id))
+  const [showReport, setShowReport] = useState(false)
+  const [reportReason, setReportReason] = useState('Counterfeit or misreported item')
+  const [reportNote, setReportNote] = useState('')
 
   const toggleWishlist = useCallback(() => {
     if (!user) { navigate('/login'); return }
@@ -115,6 +118,36 @@ export default function ProductDetail() {
               <Heart className={`w-5 h-5 ${wishlisted ? 'fill-red-500 text-red-500' : ''}`} />
             </button>
           </div>
+
+          {user && (
+            <button onClick={() => setShowReport(true)} className="mt-3 text-xs text-gray-400 hover:text-red-600 inline-flex items-center gap-1 transition-colors" aria-label="Report this product">
+              <Flag size={12} /> Report this product
+            </button>
+          )}
+          {showReport && (
+            <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4" onClick={() => setShowReport(false)}>
+              <div className="bg-white rounded-xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()} role="dialog" aria-label="Report product">
+                <h2 className="font-bold mb-1 flex items-center gap-2"><Flag size={16} className="text-red-600" /> Report “{product.name}”</h2>
+                <p className="text-xs text-gray-500 mb-3">Our admin team will mediate. False reports may affect your account.</p>
+                <select value={reportReason} onChange={e => setReportReason(e.target.value)} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2" aria-label="Report reason">
+                  <option>Counterfeit or misreported item</option>
+                  <option>Inappropriate content or images</option>
+                  <option>Overpriced / price gouging</option>
+                  <option>Suspected scam seller</option>
+                  <option>Other (explain below)</option>
+                </select>
+                <textarea value={reportNote} onChange={e => setReportNote(e.target.value)} rows={3} placeholder="Additional details…" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3" aria-label="Additional details" />
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setShowReport(false)} className="btn-secondary text-sm">Cancel</button>
+                  <button onClick={() => {
+                    createTicket({ userId: user.id, userName: user.name || user.email, subject: `[REPORT] ${product.name}`, description: `Product: ${product.name} (#${product.id}) · Seller: ${product.seller}\nCategory: ${reportReason}\n${reportNote}`, priority: 'high' })
+                    setShowReport(false); setReportNote('')
+                    toast.success('Report submitted — admins notified.')
+                  }} className="btn-primary text-sm !bg-red-600">Submit Report</button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="mt-8 grid grid-cols-3 gap-4">
             <div className="flex items-center gap-2 text-sm text-gray-600"><Truck className="w-5 h-5 text-green-600" /><span>Free local delivery</span></div>

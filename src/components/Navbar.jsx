@@ -147,8 +147,8 @@ export default function Navbar() {
             <Link to="/" className="flex items-center gap-2.5" aria-label="Inclusive Market Home">
               <VintaMark />
               <span>
-                <span className="block text-xl font-extrabold leading-tight" style={{ color: '#9D174D' }}>Inclusive Market</span>
-                <span className="block text-[10.5px] font-bold tracking-[0.18em] uppercase" style={{ color: '#0E7490' }}>Zamboanga · Asia's Latin City</span>
+<span className="block text-lg font-extrabold leading-tight" style={{ color: '#9D174D' }}>PWD Seller - Inclusive Market</span>
+<span className="block text-[10.5px] font-bold tracking-[0.18em] uppercase" style={{ color: '#0E7490' }}>Zamboanga · Asia's Latin City</span>
               </span>
             </Link>
 

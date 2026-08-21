@@ -6,10 +6,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">♿</span>
-              <span className="text-xl font-bold text-white">Inclusive Market — AVRC Region IX</span>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-2xl">🛍️</span>
+              <span className="text-xl font-bold text-white">PWD Seller - Inclusive Market</span>
             </div>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#67e8f9' }}>Zamboanga · Asia's Latin City</p>
             <p className="text-sm leading-relaxed">
               An accessible, community-driven marketplace empowering PWD-led enterprises of AVRC Region IX by connecting Zamboanga Peninsula's local, high-quality products with conscious consumers.
             </p>

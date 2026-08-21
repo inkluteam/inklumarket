@@ -4,9 +4,10 @@ import { useDataStore } from '../../context/DataStore'
 
 const TAB_AUDIT = 'audit'
 const TAB_CONSENT = 'consent'
+const TAB_KYC = 'kyc'
 
 export default function AdminCompliance() {
-  const { activityLogs, consentLogs, users } = useDataStore()
+  const { activityLogs, consentLogs, users, sellers, setSellerKyc } = useDataStore()
   const [tab, setTab] = useState(TAB_AUDIT)
   const [search, setSearch] = useState('')
 
@@ -47,10 +48,12 @@ export default function AdminCompliance() {
       {/* Tabs */}
       <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '1.25rem' }}>
         <TabBtn value={TAB_AUDIT} label="Audit Log" icon={FileText} />
+        <TabBtn value={TAB_KYC} label="ID Verification" icon={ShieldCheck} />
         <TabBtn value={TAB_CONSENT} label="Consent Log" icon={Eye} />
       </div>
 
-      {/* Search + Export */}
+      {/* Search + Export (hidden on KYC tab) */}
+      {tab !== TAB_KYC && (
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: 220 }}>
           <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
@@ -61,6 +64,7 @@ export default function AdminCompliance() {
           <Download size={14} /> Export CSV
         </button>
       </div>
+      )}
 
       {/* Audit log table */}
       {tab === TAB_AUDIT && (
@@ -132,6 +136,65 @@ export default function AdminCompliance() {
             </tbody>
           </table>
           <div style={{ padding: '0.75rem 0.875rem', fontSize: '0.8rem', color: '#9ca3af', borderTop: '1px solid #f3f4f6' }}>{filteredConsent.length} record{filteredConsent.length !== 1 ? 's' : ''}</div>
+        </div>
+      )}
+
+      {/* KYC / ID Verification queue */}
+      {tab === TAB_KYC && (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }} role="table" aria-label="Seller ID verification queue">
+            <thead>
+              <tr style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                {['Seller', 'Location', 'Category', 'KYC Status', 'Actions'].map(h => (
+                  <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 600, whiteSpace: 'nowrap', color: '#374151' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(sellers || []).length === 0 && (
+                <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>No sellers registered.</td></tr>
+              )}
+              {(sellers || []).map(s => {
+                const kyc = s.kycStatus || (s.verified ? 'verified' : 'unverified')
+                const badge = {
+                  verified: { bg: '#d1fae5', fg: '#065f46', label: 'VERIFIED' },
+                  pending: { bg: '#fef3c7', fg: '#92400e', label: 'PENDING REVIEW' },
+                  rejected: { bg: '#fee2e2', fg: '#991b1b', label: 'REJECTED' },
+                  unverified: { bg: '#f3f4f6', fg: '#4b5563', label: 'NOT SUBMITTED' }
+                }[kyc] || { bg: '#f3f4f6', fg: '#374151', label: kyc.toUpperCase() }
+                return (
+                  <tr key={s.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                    <td style={{ padding: '0.625rem 0.875rem' }}>
+                      <span style={{ fontWeight: 600 }}>{s.name}</span>
+                      <span style={{ display: 'block', fontSize: '0.75rem', color: '#9ca3af' }}>{s.email}</span>
+                    </td>
+                    <td style={{ padding: '0.625rem 0.875rem', color: '#374151' }}>{s.location}</td>
+                    <td style={{ padding: '0.625rem 0.875rem', color: '#374151' }}>{s.disabilityType}</td>
+                    <td style={{ padding: '0.625rem 0.875rem' }}>
+                      <span style={{ background: badge.bg, color: badge.fg, borderRadius: 4, padding: '0.15rem 0.5rem', fontSize: '0.72rem', fontWeight: 700, whiteSpace: 'nowrap' }}>{badge.label}</span>
+                    </td>
+                    <td style={{ padding: '0.625rem 0.875rem', whiteSpace: 'nowrap' }}>
+                      {kyc === 'pending' ? (
+                        <>
+                          <button onClick={() => setSellerKyc(s.id, 'verified')} className="btn-secondary" style={{ padding: '0.3rem 0.7rem', fontSize: '0.78rem', marginRight: 6 }}>Approve</button>
+                          <button onClick={() => setSellerKyc(s.id, 'rejected', 'Documents unreadable or mismatched')} className="btn-secondary" style={{ padding: '0.3rem 0.7rem', fontSize: '0.78rem', color: '#dc2626', borderColor: '#fecaca' }}>Reject</button>
+                        </>
+                      ) : kyc === 'unverified' ? (
+                        <span style={{ fontSize: '0.78rem', color: '#9ca3af' }}>Waiting for seller submission</span>
+                      ) : kyc === 'rejected' ? (
+                        <button onClick={() => setSellerKyc(s.id, 'unverified')} className="btn-secondary" style={{ padding: '0.3rem 0.7rem', fontSize: '0.78rem' }}>Reset</button>
+                      ) : (
+                        <span style={{ fontSize: '0.78rem', color: '#059669', fontWeight: 600 }}>✓ Cleared</span>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <div style={{ padding: '0.75rem 0.875rem', fontSize: '0.8rem', color: '#9ca3af', borderTop: '1px solid #f3f4f6' }}>
+            Sellers request verification from their dashboard; decisions notify the seller and land in the Audit Log.
+          </div>
         </div>
       )}
     </main>

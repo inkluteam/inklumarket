@@ -175,7 +175,7 @@ export function DataStoreProvider({ children }) {
   }, [addActivityLog])
 
   const addOrder = useCallback((order) => {
-    const newOrder = { ...order, id: 'ORD-' + Date.now().toString().slice(-6), date: new Date().toISOString().split('T')[0] }
+    const newOrder = { ...order, id: 'ORD-' + Date.now().toString().slice(-6), date: new Date().toISOString().split('T')[0], createdAt: new Date().toISOString() }
     setOrders(prev => {
       const next = [newOrder, ...prev]
       persist('im_orders', next)
@@ -184,9 +184,18 @@ export function DataStoreProvider({ children }) {
     addActivityLog('Order placed', order.buyer || 'Buyer', 'order', `${newOrder.id} Â· ${String(order.paymentMethod || 'cod').toUpperCase()}`, Number(order.total) || 0)
     const sellerUserIds = [...new Set((order.items || []).map(it => products.find(p => p.id === it.productId)?.sellerId).filter(Boolean))]
       .map(sid => users.find(u => u.sellerId === sid)?.id).filter(Boolean)
-    sellerUserIds.forEach(uid => addNotification(uid, 'order', `New order ${newOrder.id} â€” please prepare for processing`, '/seller/seller-orders'))
+    sellerUserIds.forEach(uid => addNotification(uid, 'order', `New order ${newOrder.id} — please prepare for processing`, '/seller/seller-orders'))
+    // Fraud detection: velocity flag (≥3 orders by same buyer within 1 hour)
+    if (order.buyerEmail) {
+      const hourAgo = Date.now() - 3600000
+      const recent = orders.filter(o => o.buyerEmail === order.buyerEmail && o.createdAt && new Date(o.createdAt).getTime() >= hourAgo).length
+      if (recent + 1 >= 3) {
+        addActivityLog('Fraud alert', 'System', 'order', `${newOrder.id}: ${recent + 1} orders in 1h by ${order.buyerEmail} — review recommended`, Number(order.total) || 0)
+        users.filter(u => u.role === 'admin').forEach(a => addNotification(a.id, 'system', `⚠ Possible fraud: ${recent + 1} orders in 1 hour from ${order.buyerEmail}`, '/admin/financial-records'))
+      }
+    }
     return newOrder
-  }, [addActivityLog, products, users, addNotification])
+  }, [addActivityLog, products, users, addNotification, orders])
 
   const updateOrderStatus = useCallback((orderId, status) => {
     setOrders(prev => {
@@ -702,6 +711,50 @@ export function DataStoreProvider({ children }) {
   const blockedIdsFor = useCallback((userId) => blocklist.filter(b => b.userId === userId).map(b => b.blockedId), [blocklist])
   const isBlockedBy = useCallback((ownerId, targetId) => blocklist.some(b => b.userId === ownerId && b.blockedId === targetId), [blocklist])
 
+  // ── Seller Wallet / Payouts / KYC ─────────────────────────────────────────
+  const getSellerWallet = useCallback((sellerId) => {
+    const mine = orders.filter(o => (o.items || []).some(it => it.sellerId === sellerId))
+    const settled = mine.filter(o => o.status === 'delivered' || o.status === 'completed')
+    const clearing = mine.filter(o => o.status === 'processing' || o.status === 'shipped')
+    const grossOf = list => list.reduce((s, o) => s + (o.items || []).filter(it => it.sellerId === sellerId).reduce((x, it) => x + (Number(it.price) || 0) * (Number(it.qty) || 0), 0), 0)
+    const lifetime = grossOf(settled) * 0.95
+    const pendingClearance = grossOf(clearing) * 0.95
+    const myPayouts = payouts.filter(p => p.sellerId === sellerId)
+    const paidOut = myPayouts.filter(p => p.status === 'completed' || p.status === 'paid').reduce((s, p) => s + (Number(p.amount) || 0), 0)
+    const requested = myPayouts.filter(p => p.status === 'pending').reduce((s, p) => s + (Number(p.amount) || 0), 0)
+    return {
+      lifetime,
+      pendingClearance,
+      paidOut,
+      onHold: requested,
+      available: Math.max(0, lifetime - paidOut - requested),
+      instantThreshold: 500
+    }
+  }, [orders, payouts])
+
+  const requestPayout = useCallback((payload) => {
+    const wallet = getSellerWallet(payload.sellerId)
+    const amount = Number(payload.amount) || 0
+    if (amount <= 0 || amount > wallet.available) return { ok: false, error: 'Amount exceeds available balance' }
+    const instant = amount <= wallet.instantThreshold
+    const p = addPayout({ ...payload, status: instant ? 'completed' : 'pending' })
+    addActivityLog(instant ? 'Instant payout released' : 'Payout requested', payload.sellerName || 'Seller', 'order', `${p.id} · ${String(payload.method || '')} · ${instant ? 'auto-approved ≤ threshold' : 'awaiting admin approval'}`, amount)
+    return { ok: true, payout: p, instant }
+  }, [getSellerWallet, addPayout, addActivityLog])
+
+  const setSellerKyc = useCallback((sellerId, kycStatus, note = '') => {
+    setSellers(prev => {
+      const next = prev.map(s => s.id === sellerId ? { ...s, kycStatus, verified: kycStatus === 'verified', kycNote: note || s.kycNote } : s)
+      persist('im_sellers', next)
+      return next
+    })
+    const su = users.find(u => u.sellerId === sellerId)
+    if (su) addNotification(su.id, 'system', kycStatus === 'pending'
+      ? 'Verification request received — admins will review your documents.'
+      : `Your ID verification was ${kycStatus}${note ? `: ${note}` : '.'}`, '/seller/dashboard')
+    addActivityLog('KYC ' + kycStatus, kycStatus === 'pending' ? 'Seller' : 'Admin', 'user', `Seller ${sellerId} verification ${kycStatus}${note ? ` · ${note}` : ''}`)
+  }, [users, addNotification, addActivityLog])
+
   // â”€â”€ Flash Sales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const addFlashSale = useCallback((sale) => {
     const newSale = { ...sale, id: 'fs-' + Date.now(), createdAt: new Date().toISOString() }
@@ -823,6 +876,7 @@ export function DataStoreProvider({ children }) {
     createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
     addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
     blocklist, toggleBlockUser, blockedIdsFor, isBlockedBy,
+    getSellerWallet, requestPayout, setSellerKyc,
     addFlashSale, removeFlashSale, getActiveFlashSales,
     addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
     addConsentLog, getConsentLogsByUser,
@@ -849,6 +903,7 @@ export function DataStoreProvider({ children }) {
     createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
     addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
     blocklist, toggleBlockUser, blockedIdsFor, isBlockedBy,
+    getSellerWallet, requestPayout, setSellerKyc,
     addFlashSale, removeFlashSale, getActiveFlashSales,
     addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
     addConsentLog, getConsentLogsByUser,

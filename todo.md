@@ -78,7 +78,7 @@
       
 - [ ] **Blocklist panel** â€” admin view of all blocks; user view of own blocks + unblock
 - [ ] **ID Verification** â€” seller KYC status machine: pending â†’ verified/rejected;
-      admin verification queue page reusing PWD-ID upload
+      admin queue in Compliance → ID Verification tab; seller "Submit for Verification" banner on dashboard; decisions notify seller + audit log
 - [ ] **COD Verification** â€” OTP or confirm-step before COD order placement
 - [ ] **Review Integrity** â€” only buyers with delivered order can review; 1 review/order/item;
       duplicate detection; admin moderation queue exists (link it)
