@@ -148,7 +148,7 @@
   .deck-top .spacer{flex:1}
   .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 14px;overflow:hidden}
   .slide{width:min(1800px,100%);height:100%;display:none;flex-direction:column}
-  .slide.on{display:flex;animation:fadeSlide .35s ease}
+  .slide.on{display:flex;flex-direction:column;justify-content:center;animation:fadeSlide .35s ease}
   @keyframes fadeSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
   @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .slide h3{
@@ -163,9 +163,9 @@
   .slide .sc svg{height:auto;display:block}
   .diagram .body{text-align:center}
   .diagram .body svg{margin-left:auto !important;margin-right:auto !important}
-  .slide ul.sl{list-style:none;margin:18px auto 0;display:grid;gap:14px;
-    grid-template-columns:repeat(auto-fit,minmax(400px,1fr));justify-content:center;width:100%}
-  .slide ul.sl li{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  .slide ul.sl{list-style:none;margin:18px auto 0;display:flex;flex-wrap:wrap;
+    justify-content:center;align-items:stretch;gap:14px;width:100%}
+  .slide ul.sl li{flex:0 1 430px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
     border-left:4px solid var(--gold);border-radius:10px;padding:16px 20px;font-size:17.5px;line-height:1.55}
   .slide ul.sl li b{color:#ffd700;display:block;font-size:.86em;margin-bottom:3px}
   .deck-bot{display:flex;align-items:center;gap:18px;padding:12px 26px;
