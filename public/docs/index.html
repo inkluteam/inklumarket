@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IncluMarket — Chapter 3 · Design &amp; Methodology</title>
+<meta name="description" content="Documentation preview: system architecture, ERD, flowcharts, UML, database schema and requirements for IncluMarket." />
+<style>
+  :root{
+    --blue:#0047AB; --blue-dark:#003380; --red:#C8102E; --gold:#FFD700;
+    --ink:#0f172a; --ink-soft:#334155; --line:#cbd5e1; --bg:#f8fafc;
+    --card:#ffffff; --ok:#15803d; --warn:#b45309;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); font-size:17px; line-height:1.6;
+  }
+  /* ── Top bar ─────────────────────────────────────────────── */
+  .topbar{
+    position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;
+    padding:12px 24px;background:linear-gradient(90deg,var(--blue-dark),var(--blue));
+    color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.3px}
+  .brand .logo{
+    width:34px;height:34px;border-radius:9px;background:var(--gold);color:var(--blue-dark);
+    display:grid;place-items:center;font-size:18px;font-weight:900;
+  }
+  .brand small{display:block;font-size:11.5px;font-weight:600;opacity:.85;letter-spacing:1.4px;text-transform:uppercase}
+  .topbar .spacer{flex:1}
+  .mode-btns{display:flex;gap:10px}
+  .btn{
+    border:none;cursor:pointer;font-weight:700;font-size:15px;border-radius:10px;
+    padding:10px 18px;transition:.15s;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-ghost{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.45)}
+  .btn-ghost:hover{background:rgba(255,255,255,.28)}
+  .btn-gold{background:var(--gold);color:#1e293b;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .btn-gold:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .btn-blue{background:var(--blue);color:#fff}
+  .btn-blue:hover{background:var(--blue-dark)}
+  .btn-red{background:var(--red);color:#fff}
+  /* ── Layout ──────────────────────────────────────────────── */
+  .shell{display:flex;max-width:1500px;margin:0 auto;gap:0}
+  nav.toc{
+    width:290px;flex-shrink:0;position:sticky;top:63px;height:calc(100vh - 63px);
+    overflow-y:auto;background:#0b1f3f;color:#dbeafe;padding:20px 0 40px;
+  }
+  nav.toc h4{padding:6px 22px;font-size:11.5px;letter-spacing:2px;text-transform:uppercase;color:#93c5fd;margin-bottom:8px}
+  nav.toc a{
+    display:flex;align-items:center;gap:10px;padding:9px 22px;color:#cbd5e1;
+    text-decoration:none;font-size:15px;font-weight:600;border-left:4px solid transparent;
+  }
+  nav.toc a .num{
+    width:26px;height:26px;border-radius:7px;background:#1e3a8a;color:#bfdbfe;
+    display:grid;place-items:center;font-size:12.5px;font-weight:800;flex-shrink:0;
+  }
+  nav.toc a:hover{background:#13294f;color:#fff}
+  nav.toc a.active{background:#16305c;color:#fff;border-left-color:var(--gold)}
+  nav.toc a.active .num{background:var(--gold);color:#1e293b}
+  main{flex:1;min-width:0;padding:34px 44px 120px}
+  /* ── Document hero ───────────────────────────────────────── */
+  .doc-hero{
+    background:linear-gradient(135deg,#0b1f3f 0%,var(--blue) 60%,#1d4ed8 100%);
+    border-radius:18px;padding:46px 48px;color:#fff;margin-bottom:38px;
+    box-shadow:0 10px 30px rgba(0,71,171,.35);position:relative;overflow:hidden;
+  }
+  .doc-hero::after{
+    content:"§3";position:absolute;right:30px;top:-30px;font-size:190px;font-weight:900;
+    color:rgba(255,215,0,.14);font-family:Georgia,serif;line-height:1;
+  }
+  .doc-hero .kicker{
+    display:inline-block;background:var(--gold);color:#1e293b;font-weight:800;
+    font-size:13px;letter-spacing:2.5px;padding:5px 14px;border-radius:999px;margin-bottom:16px;
+  }
+  .doc-hero h1{font-size:42px;line-height:1.15;letter-spacing:-.5px}
+  .doc-hero p{margin-top:14px;max-width:720px;font-size:18px;color:#dbeafe}
+  .doc-hero .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
+    padding:6px 14px;border-radius:999px;font-size:13.5px;font-weight:600}
+  /* ── Sections ────────────────────────────────────────────── */
+  section.doc{margin-bottom:64px;scroll-margin-top:80px}
+  .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  .sec-badge{
+    width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+    font-weight:900;font-size:21px;color:#fff;flex-shrink:0;box-shadow:0 4px 10px rgba(0,0,0,.18);
+  }
+  .sec-head h2{font-size:30px;letter-spacing:-.4px}
+  .sec-sub{color:var(--ink-soft);margin:2px 0 22px;padding-left:68px;font-size:16.5px}
+  .hl{border-left:6px solid var(--gold);background:#fffbeb;border-radius:0 14px 14px 0;
+      padding:16px 20px;margin:0 0 22px;font-size:16.5px}
+  .hl strong{color:#92400e}
+  /* ── Figure cards (diagrams) ─────────────────────────────── */
+  figure.diagram{
+    background:var(--card);border:2px solid var(--line);border-radius:16px;
+    padding:22px 22px 14px;margin:0 0 30px;box-shadow:0 4px 18px rgba(15,23,42,.07);
+  }
+  figure.diagram .fig-cap{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-bottom:16px;
+  }
+  .fig-cap .t{font-weight:800;font-size:16.5px;color:var(--blue-dark)}
+  .fig-cap .tag{
+    font-size:11.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+    background:#eff6ff;color:var(--blue);border:1.5px solid #bfdbfe;border-radius:999px;padding:3px 12px;
+  }
+  .diagram .body{overflow-x:auto;padding:6px 2px 10px}
+  .diagram svg{max-width:100%;height:auto}
+  .zoom-note{font-size:12.5px;color:#64748b;text-align:right;margin-top:4px}
+  /* ── Tables ──────────────────────────────────────────────── */
+  .tbl-wrap{overflow-x:auto;background:#fff;border:2px solid var(--line);border-radius:14px;margin-bottom:26px}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th{background:var(--blue);color:#fff;text-align:left;padding:11px 14px;font-size:13.5px;
+     letter-spacing:.6px;text-transform:uppercase;position:sticky;top:0}
+  td{padding:10px 14px;border-top:1px solid #e2e8f0;vertical-align:top}
+  tbody tr:nth-child(even){background:#f1f5f9}
+  td.id{font-weight:800;color:var(--blue-dark);white-space:nowrap}
+  .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px}
+  .pill.b{background:#dbeafe;color:#1e40af}.pill.r{background:#fee2e2;color:#991b1b}
+  .pill.g{background:#dcfce7;color:#166534}.pill.y{background:#fef9c3;color:#854d0e}
+  /* ── Info grid cards ─────────────────────────────────────── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:26px}
+  .info-card{background:#fff;border:2px solid var(--line);border-left:6px solid var(--blue);
+    border-radius:12px;padding:16px 18px}
+  .info-card h5{font-size:15.5px;margin-bottom:6px}
+  .info-card p{font-size:14.5px;color:var(--ink-soft)}
+  .info-card.gold{border-left-color:var(--gold)} .info-card.red{border-left-color:var(--red)}
+  .info-card.green{border-left-color:var(--ok)}
+  code.k{background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;padding:1px 7px;
+    font-family:Consolas,monospace;font-size:13.5px;color:#3730a3}
+  pre.sql{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:18px 20px;overflow:auto;
+    font-family:Consolas,monospace;font-size:13.5px;line-height:1.55;margin-bottom:26px}
+  pre.sql .kw{color:#93c5fd;font-weight:700} pre.sql .cm{color:#64748b}
+  footer.docfoot{border-top:2px solid var(--line);margin-top:70px;padding-top:24px;
+    color:var(--ink-soft);font-size:14.5px}
+  /* ═══ PRESENTATION MODE (separate view of the whole) ═════ */
+  #deck{
+    position:fixed;inset:0;z-index:100;background:#0b1220;display:none;
+    flex-direction:column;color:#f8fafc;
+  }
+  #deck.open{display:flex}
+  .deck-top{display:flex;align-items:center;gap:14px;padding:14px 26px;
+    background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.12)}
+  .deck-top .dk{font-weight:800;letter-spacing:2px;font-size:12.5px;text-transform:uppercase;color:var(--gold)}
+  .deck-top .dt{font-weight:700;font-size:17px}
+  .deck-top .spacer{flex:1}
+  .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:18px 40px;overflow:hidden}
+  .slide{width:min(1250px,100%);height:100%;display:none;flex-direction:column}
+  .slide.on{display:flex;animation:fadein .35s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .slide h3{font-size:31px;margin-bottom:4px}
+  .slide .sk{color:var(--gold);font-weight:800;font-size:13px;letter-spacing:2.5px;text-transform:uppercase}
+  .slide .sc{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+    background:#fff;border-radius:16px;margin-top:14px;padding:16px;overflow:auto}
+  .slide .sc svg{max-width:100%;height:auto;max-height:100%}
+  .slide ul.sl{list-style:none;margin-top:16px;display:grid;gap:12px}
+  .slide ul.sl li{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);
+    border-left:5px solid var(--gold);border-radius:10px;padding:12px 18px;font-size:17.5px}
+  .slide ul.sl li b{color:#ffd700}
+  .deck-bot{display:flex;align-items:center;gap:18px;padding:12px 26px;
+    background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.12)}
+  .progress{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#fb923c);transition:width .3s}
+  .counter{font-weight:800;font-size:15px;letter-spacing:1px}
+  .nav-arrow{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#fff;
+    width:44px;height:44px;border-radius:50%;font-size:19px;cursor:pointer}
+  .nav-arrow:hover{background:var(--blue)}
+  #autoBadge{display:none;background:var(--red);color:#fff;font-weight:800;font-size:12.5px;
+    letter-spacing:1.5px;padding:5px 14px;border-radius:999px;animation:pulse 1.2s infinite}
+  #autoBadge.on{display:inline-block}
+  @keyframes pulse{50%{opacity:.55}}
+  @media(max-width:1000px){
+    nav.toc{display:none} main{padding:22px 18px 80px}
+    .doc-hero h1{font-size:30px} .doc-hero::after{font-size:110px}
+  }
+  @media print{ .topbar,nav.toc,#deck{display:none!important} main{padding:0} }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">IM</div>
+    <div>IncluMarket<small>Chapter 3 · Design &amp; Methodology</small></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="mode-btns">
+    <button class="btn btn-ghost" onclick="openDeck(0)" title="Open the full slide deck">▤ Presentation</button>
+    <button class="btn btn-gold" onclick="presentAll()" title="Auto-play every slide as a live demo">▶ Present&nbsp;All</button>
+  </div>
+</header>
+
+<div class="shell">
+<nav class="toc" aria-label="Table of contents">
+  <h4>Contents</h4>
+  <a href="#s1"><span class="num">1</span>System Architecture</a>
+  <a href="#s2"><span class="num">2</span>Use Cases</a>
+  <a href="#s3"><span class="num">3</span>Process Flowcharts</a>
+  <a href="#s4"><span class="num">4</span>Entity-Relationship (ERD)</a>
+  <a href="#s5"><span class="num">5</span>Database Schema</a>
+  <a href="#s6"><span class="num">6</span>UML · Component &amp; Class</a>
+  <a href="#s7"><span class="num">7</span>Sequence Diagrams</a>
+  <a href="#s8"><span class="num">8</span>State Machines</a>
+  <a href="#s9"><span class="num">9</span>Functional Requirements</a>
+  <a href="#s10"><span class="num">10</span>Non-Functional Reqs</a>
+  <a href="#s11"><span class="num">11</span>Technology Stack</a>
+  <a href="#s12"><span class="num">12</span>Glossary</a>
+</nav>
+
+<main id="main">
+
+<div class="doc-hero">
+  <span class="kicker">INCLUMARKET · DOCUMENTATION PREVIEW</span>
+  <h1>Chapter 3<br/>Design &amp; Methodology</h1>
+  <p>PWD-livelihood marketplace for Zamboanga City — full engineering reference:
+     architecture, use cases, process flows, entity-relationship model, database schema,
+     UML, sequences, state machines and requirements. Rendered live from the running system.</p>
+  <div class="chips">
+    <span class="chip">⚛ React 19 + Vite 6 SPA</span>
+    <span class="chip">🟢 Supabase Postgres + Auth (RLS)</span>
+    <span class="chip">▲ Vercel Edge hosting</span>
+    <span class="chip">♿ WCAG 2.1 AA</span>
+    <span class="chip">₱ PHP · DSWD tokens</span>
+  </div>
+</div>
+
+<!-- ══ 1 ARCHITECTURE ═══════════════════════════════════════ -->
+<section class="doc" id="s1">
+  <div class="sec-head"><div class="sec-badge" style="background:var(--blue)">1</div><h2>System Architecture</h2></div>
+  <p class="sec-sub">Runtime services and integrations of the deployed application.</p>
+  <div class="hl"><strong>Highlighted:</strong> the browser runs a React single-page app served by Vercel.
+    All state flows through React Context providers into <code class="k">supabase-js</code>, which talks to
+    Supabase Postgres guarded by Row Level Security. Sessions are JWTs issued by Supabase Auth.</div>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 1.1 — Deployment &amp; runtime architecture</span><span class="tag">Flowchart</span></div>
+    <div class="body" data-d="arch"></div><div class="zoom-note">scroll horizontally to pan · Ctrl+ to zoom</div></figure>
+  <div class="grid">
+    <div class="info-card"><h5>Presentation layer</h5><p>React Router v7 pages (public, buyer, seller, admin), Layout shells, AccessibilityToolbar, ChatWidget.</p></div>
+    <div class="info-card gold"><h5>Application layer</h5><p>Contexts: AuthContext (Supabase session), CartContext, DataStore, Toast, Voice. Payment provider service modules (GCash, Maya, PayMongo, Stripe, PayPal scaffolds).</p></div>
+    <div class="info-card red"><h5>Data layer</h5><p><code class="k">src/lib/db.js</code> typed query wrappers over 27 <code class="k">im_*</code> tables/views/RPC — every call returns <code class="k">{data,error}</code>.</p></div>
+    <div class="info-card green"><h5>Infrastructure</h5><p>Vercel CDN (SPA rewrites), Supabase managed Postgres + Auth, RLS policies as defense-in-depth.</p></div>
+  </div>
+</section>
+
+<!-- ══ 2 USE CASES ══════════════════════════════════════════ -->
+<section class="doc" id="s2">
+  <div class="sec-head"><div class="sec-badge" style="background:var(--red)">2</div><h2>Use Cases</h2></div>
+  <p class="sec-sub">Actors: Guest, Buyer, Seller, Admin — mapped to real routes.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 2.1 — Actor-goal map</span><span class="tag">Use cases</span></div>
+    <div class="body" data-d="uc"></div></figure>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>Actor</th><th>Use case</th><th>Route / action</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-01</td><td><span class="pill y">Guest</span></td><td>Browse catalog, search, filter</td><td><code class="k">/catalog</code></td></tr>
+      <tr><td class="id">UC-02</td><td><span class="pill y">Guest</span></td><td>View product detail</td><td><code class="k">/product/:id</code></td></tr>
+      <tr><td class="id">UC-03</td><td><span class="pill y">Guest</span></td><td>Floating chatbot</td><td>ChatWidget</td></tr>
+      <tr><td class="id">UC-04</td><td><span class="pill y">Guest</span></td><td>Accessibility toolbar (TTS, contrast, font)</td><td>a11y prefs</td></tr>
+      <tr><td class="id">UC-05</td><td><span class="pill y">Guest</span></td><td>Sign up / sign in</td><td><code class="k">/login</code>, <code class="k">/register</code></td></tr>
+      <tr><td class="id">UC-06</td><td><span class="pill b">Buyer</span></td><td>Cart, wishlist, checkout</td><td><code class="k">/buyer/cart</code>, <code class="k">/buyer/checkout</code></td></tr>
+      <tr><td class="id">UC-07</td><td><span class="pill b">Buyer</span></td><td>Track orders + status history</td><td><code class="k">/buyer/orders</code></td></tr>
+      <tr><td class="id">UC-08</td><td><span class="pill b">Buyer</span></td><td>Review product (1–5)</td><td>product page</td></tr>
+      <tr><td class="id">UC-09</td><td><span class="pill b">Buyer</span></td><td>Message seller</td><td><code class="k">/buyer/messages</code></td></tr>
+      <tr><td class="id">UC-10</td><td><span class="pill b">Buyer</span></td><td>Support tickets</td><td><code class="k">/buyer/support</code></td></tr>
+      <tr><td class="id">UC-11</td><td><span class="pill g">Seller</span></td><td>Create/edit products + variants</td><td><code class="k">/seller/products</code></td></tr>
+      <tr><td class="id">UC-12</td><td><span class="pill g">Seller</span></td><td>Fulfill orders (processing→shipped→delivered)</td><td><code class="k">/seller/seller-orders</code></td></tr>
+      <tr><td class="id">UC-13</td><td><span class="pill g">Seller</span></td><td>View reviews &amp; analytics</td><td><code class="k">/seller/reviews</code></td></tr>
+      <tr><td class="id">UC-14</td><td><span class="pill g">Seller</span></td><td>Request payout</td><td><code class="k">/seller/payouts</code></td></tr>
+      <tr><td class="id">UC-15</td><td><span class="pill r">Admin</span></td><td>Manage users &amp; account status</td><td><code class="k">/admin/users</code></td></tr>
+      <tr><td class="id">UC-16</td><td><span class="pill r">Admin</span></td><td>Moderate products (approve/flag)</td><td><code class="k">/admin/product-approvals</code></td></tr>
+      <tr><td class="id">UC-17</td><td><span class="pill r">Admin</span></td><td>Resolve tickets</td><td>tickets module</td></tr>
+      <tr><td class="id">UC-18</td><td><span class="pill r">Admin</span></td><td>Export reports (.xlsx/.csv)</td><td><code class="k">/admin/admin-reports</code></td></tr>
+      <tr><td class="id">UC-19</td><td><span class="pill r">Admin</span></td><td>Configure payment providers</td><td><code class="k">/admin/payments</code></td></tr>
+      <tr><td class="id">UC-20</td><td><span class="pill r">Admin</span></td><td>Customize theme tokens</td><td><code class="k">/admin/theme</code></td></tr>
+      <tr><td class="id">UC-21</td><td><span class="pill r">Admin</span></td><td>Compliance / audit trail</td><td><code class="k">/admin/compliance</code>, <code class="k">/admin/activity-logs</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ══ 3 FLOWCHARTS ═════════════════════════════════════════ -->
+<section class="doc" id="s3">
+  <div class="sec-head"><div class="sec-badge" style="background:#7c3aed">3</div><h2>Process Flowcharts</h2></div>
+  <p class="sec-sub">The three core business processes end-to-end.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 3.1 — Buyer purchase flow</span><span class="tag">Flowchart</span></div>
+    <div class="body" data-d="flowBuy"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 3.2 — Seller listing &amp; fulfillment</span><span class="tag">Flowchart</span></div>
+    <div class="body" data-d="flowSell"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 3.3 — Admin moderation console</span><span class="tag">Flowchart</span></div>
+    <div class="body" data-d="flowAdmin"></div></figure>
+</section>
+
+<!-- ══ 4 ERD ════════════════════════════════════════════════ -->
+<section class="doc" id="s4">
+  <div class="sec-head"><div class="sec-badge" style="background:var(--ok)">4</div><h2>Entity-Relationship Model</h2></div>
+  <p class="sec-sub">Three domains. All tables carry the <code class="k">im_</code> prefix; profiles link to <code class="k">auth.users</code> via <code class="k">auth_user_id</code>.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 4.1 — Commerce domain</span><span class="tag">ERD</span></div>
+    <div class="body" data-d="erdCommerce"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 4.2 — Messaging &amp; support domain</span><span class="tag">ERD</span></div>
+    <div class="body" data-d="erdMsg"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 4.3 — Platform, payments &amp; accessibility domain</span><span class="tag">ERD</span></div>
+    <div class="body" data-d="erdPlatform"></div></figure>
+</section>
+
+<!-- ══ 5 DATABASE SCHEMA ════════════════════════════════════ -->
+<section class="doc" id="s5">
+  <div class="sec-head"><div class="sec-badge" style="background:#0e7490">5</div><h2>Database Schema</h2></div>
+  <p class="sec-sub">Live object inventory — migrations <code class="k">0001_inclumarket_schema.sql</code> + <code class="k">0002_spec_alignment.sql</code>.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Object</th><th>Type</th><th>Purpose</th><th>Security</th></tr></thead>
+    <tbody>
+      <tr><td class="id">im_profiles</td><td><span class="pill b">table</span></td><td>Buyer/seller/admin identities, PWD attributes, status</td><td>RLS · own row + admin</td></tr>
+      <tr><td class="id">im_categories</td><td><span class="pill b">table</span></td><td>Catalog taxonomy with product counts</td><td>RLS · world read</td></tr>
+      <tr><td class="id">im_products</td><td><span class="pill b">table</span></td><td>Listings: price ₱, stock, moderation status</td><td>RLS · approved public</td></tr>
+      <tr><td class="id">im_product_variants</td><td><span class="pill b">table</span></td><td>Sellable SKUs (color, size, stock_qty, sku_code)</td><td>RLS</td></tr>
+      <tr><td class="id">im_product_images</td><td><span class="pill b">table</span></td><td>Product gallery URLs</td><td>RLS</td></tr>
+      <tr><td class="id">im_cart</td><td><span class="pill g">0002</span></td><td>Server-side cart lines (user × product × variant)</td><td>RLS · strict owner</td></tr>
+      <tr><td class="id">im_wishlist</td><td><span class="pill b">table</span></td><td>Saved products</td><td>RLS · strict owner</td></tr>
+      <tr><td class="id">im_orders</td><td><span class="pill b">table</span></td><td>Order header: total, status, payment, shipping</td><td>RLS · buyer + admin</td></tr>
+      <tr><td class="id">im_order_items</td><td><span class="pill b">table</span></td><td>Order lines with unit price snapshot</td><td>RLS · follows order</td></tr>
+      <tr><td class="id">im_order_status_history</td><td><span class="pill g">0002</span></td><td>Every status transition, auto-logged by trigger</td><td>RLS · participant read</td></tr>
+      <tr><td class="id">im_transactions</td><td><span class="pill b">table</span></td><td>Payment ledger: fee, payout split, currency</td><td>RLS · admin only</td></tr>
+      <tr><td class="id">im_payment_providers</td><td><span class="pill b">table</span></td><td>COD/GCash/Maya/PayMongo/Stripe/PayPal config</td><td>RLS · world read</td></tr>
+      <tr><td class="id">im_payouts</td><td><span class="pill b">table</span></td><td>Seller withdrawal requests &amp; approval</td><td>RLS · seller + admin</td></tr>
+      <tr><td class="id">im_product_reviews</td><td><span class="pill b">table</span></td><td>Ratings 1–5, moderation flags</td><td>RLS · public read</td></tr>
+      <tr><td class="id">im_flash_sales</td><td><span class="pill b">table</span></td><td>Time-bounded % discounts</td><td>RLS · public read</td></tr>
+      <tr><td class="id">im_conversations / im_messages</td><td><span class="pill b">table</span></td><td>Direct buyer↔seller threads per product</td><td>RLS · participants</td></tr>
+      <tr><td class="id">im_support_tickets / responses</td><td><span class="pill b">table</span></td><td>Help desk with priority &amp; assignment</td><td>RLS · owner + admin</td></tr>
+      <tr><td class="id">im_chat_sessions / messages</td><td><span class="pill b">table</span></td><td>Bot transcripts, escalatable to tickets</td><td>RLS · anon insert ok</td></tr>
+      <tr><td class="id">im_notifications</td><td><span class="pill b">table</span></td><td>In-app alerts (orders, stock, messages)</td><td>RLS · strict owner</td></tr>
+      <tr><td class="id">im_ui_prefs</td><td><span class="pill g">0002</span></td><td>Per-user accessibility settings (TTS, contrast…)</td><td>RLS · strict owner</td></tr>
+      <tr><td class="id">im_activity_logs / im_audit_logs</td><td><span class="pill g">0002</span></td><td>Operational feed + compliance-grade audit</td><td>RLS · admin read</td></tr>
+      <tr><td class="id">im_consent_logs</td><td><span class="pill b">table</span></td><td>Cookie/privacy consent evidence</td><td>insert-any, admin read</td></tr>
+      <tr><td class="id">im_addresses</td><td><span class="pill b">table</span></td><td>Shipping address book</td><td>RLS · strict owner</td></tr>
+      <tr><td class="id">im_newsletter_subscribers</td><td><span class="pill b">table</span></td><td>Email list with opt-out</td><td>insert-any</td></tr>
+      <tr><td class="id">im_theme_settings</td><td><span class="pill b">table</span></td><td>Singleton DSWD theme tokens</td><td>admin write</td></tr>
+      <tr><td class="id">im_low_stock_alerts</td><td><span class="pill y">view</span></td><td>Approved products/variants at ≤ 5 units</td><td>authenticated read</td></tr>
+      <tr><td class="id">create_order_with_items()</td><td><span class="pill r">rpc</span></td><td>Atomic checkout: lock → validate stock → order + items → decrement → history → notify → clear cart</td><td>security definer</td></tr>
+    </tbody>
+  </table></div>
+  <pre class="sql"><span class="cm">-- Atomic checkout (excerpt of migration 0002)</span>
+<span class="kw">select</span> create_order_with_items(
+  <span class="kw">'{"buyer_id": 2, "total_amount": 1250.00,</span>
+<span class="kw">     "payment_method":"gcash", "shipping_address":"..."}'</span>::jsonb,
+  <span class="kw">'[{"product_id": 7, "variant_id": 12, "quantity": 2}]'</span>::jsonb
+); <span class="cm">-- returns order row jsonb · raises INSUFFICIENT_STOCK:<sku> on conflict</span></pre>
+</section>
+
+<!-- ══ 6 UML ════════════════════════════════════════════════ -->
+<section class="doc" id="s6">
+  <div class="sec-head"><div class="sec-badge" style="background:#be185d">6</div><h2>UML — Components &amp; Classes</h2></div>
+  <p class="sec-sub">Layered component view and the domain class model.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 6.1 — Component layers</span><span class="tag">Component</span></div>
+    <div class="body" data-d="umlComp"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 6.2 — Domain class model</span><span class="tag">Class</span></div>
+    <div class="body" data-d="umlClass"></div></figure>
+</section>
+
+<!-- ══ 7 SEQUENCES ══════════════════════════════════════════ -->
+<section class="doc" id="s7">
+  <div class="sec-head"><div class="sec-badge" style="background:#ea580c">7</div><h2>Sequence Diagrams</h2></div>
+  <p class="sec-sub">Object interactions over time for the three critical journeys.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 7.1 — Sign in with Supabase Auth</span><span class="tag">Sequence</span></div>
+    <div class="body" data-d="seqLogin"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 7.2 — Checkout via create_order_with_items RPC</span><span class="tag">Sequence</span></div>
+    <div class="body" data-d="seqCheckout"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 7.3 — Buyer ↔ seller messaging</span><span class="tag">Sequence</span></div>
+    <div class="body" data-d="seqMsg"></div></figure>
+</section>
+
+<!-- ══ 8 STATE MACHINES ═════════════════════════════════════ -->
+<section class="doc" id="s8">
+  <div class="sec-head"><div class="sec-badge" style="background:#166534">8</div><h2>State Machines</h2></div>
+  <p class="sec-sub">Lifecycle rules enforced by CHECK constraints and role-guarded transitions.</p>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 8.1 — Order lifecycle</span><span class="tag">State</span></div>
+    <div class="body" data-d="stOrder"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 8.2 — Product moderation lifecycle</span><span class="tag">State</span></div>
+    <div class="body" data-d="stProduct"></div></figure>
+  <figure class="diagram"><div class="fig-cap"><span class="t">Fig 8.3 — Ticket · Account · Payout · Chat session</span><span class="tag">State</span></div>
+    <div class="body" data-d="stMisc"></div></figure>
+</section>
+
+<!-- ══ 9 FUNCTIONAL REQS ════════════════════════════════════ -->
+<section class="doc" id="s9">
+  <div class="sec-head"><div class="sec-badge" style="background:var(--blue)">9</div><h2>Functional Requirements</h2></div>
+  <p class="sec-sub">What the system must do — each traceable to shipped code.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>Requirement</th><th>Implemented in</th></tr></thead>
+    <tbody>
+      <tr><td class="id">FR-01</td><td>Email/password auth via Supabase; email confirmation for signups</td><td>AuthContext, supabase.js</td></tr>
+      <tr><td class="id">FR-02</td><td>Role-based homes + route guards (buyer/seller/admin)</td><td>AuthGuard, AdminGuard</td></tr>
+      <tr><td class="id">FR-03</td><td>Public catalog &amp; product pages for guests and all roles</td><td>/catalog, ProductDetail</td></tr>
+      <tr><td class="id">FR-04</td><td>Server-side cart, wishlist, orders that decrement stock</td><td>im_cart, CartContext, db.js</td></tr>
+      <tr><td class="id">FR-05</td><td>Orders record shipping + provider; status history logged</td><td>im_order_status_history trigger</td></tr>
+      <tr><td class="id">FR-06</td><td>Buyers rate products 1–5 with comment</td><td>im_product_reviews</td></tr>
+      <tr><td class="id">FR-07</td><td>Per-conversation buyer↔seller messaging</td><td>im_conversations, im_messages</td></tr>
+      <tr><td class="id">FR-08</td><td>Floating chatbot for guests; escalation to tickets</td><td>ChatWidget, im_chat_sessions</td></tr>
+      <tr><td class="id">FR-09</td><td>Tickets: buyers open, admins reply/resolve</td><td>/buyer/support, admin tickets</td></tr>
+      <tr><td class="id">FR-10</td><td>Sellers create products pending admin approval</td><td>/seller/products, approvals</td></tr>
+      <tr><td class="id">FR-11</td><td>Sellers advance order status along allowed path</td><td>/seller/seller-orders</td></tr>
+      <tr><td class="id">FR-12</td><td>Admin approve/flag, suspend/restore, configure providers/theme</td><td>/admin/* modules</td></tr>
+      <tr><td class="id">FR-13</td><td>Export reports (.xlsx/.csv)</td><td>exportCSV.js, Reports page</td></tr>
+      <tr><td class="id">FR-14</td><td>Accessibility toolbar: font size, contrast, TTS, voice, reading mode</td><td>AccessibilityToolbar, im_ui_prefs</td></tr>
+      <tr><td class="id">FR-15</td><td>In-app notifications (orders, low stock, messages, sales)</td><td>im_notifications</td></tr>
+      <tr><td class="id">FR-16</td><td>Flash sales with % discount and time window</td><td>im_flash_sales</td></tr>
+      <tr><td class="id">FR-17</td><td>Consent + audit logs for compliance</td><td>im_consent_logs, im_audit_logs</td></tr>
+      <tr><td class="id">FR-18</td><td>Newsletter subscribe/unsubscribe</td><td>im_newsletter_subscribers</td></tr>
+      <tr><td class="id">FR-19</td><td>Static pages: About, Contact, FAQ, Privacy, Terms, Accessibility</td><td>/static/*</td></tr>
+      <tr><td class="id">FR-20</td><td>Seller payouts; admin approve/pay/reject</td><td>im_payouts</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ══ 10 NFR ═══════════════════════════════════════════════ -->
+<section class="doc" id="s10">
+  <div class="sec-head"><div class="sec-badge" style="background:#475569">10</div><h2>Non-Functional Requirements</h2></div>
+  <p class="sec-sub">Quality attributes.</p>
+  <div class="grid">
+    <div class="info-card"><h5>NFR-01 · Accessibility</h5><p>WCAG 2.1 AA: skip link, landmarks, keyboard toolbar, high contrast, semantic cards.</p></div>
+    <div class="info-card red"><h5>NFR-02 · Security</h5><p>RLS on every im_* table; anon key only in browser; mutations role-checked.</p></div>
+    <div class="info-card gold"><h5>NFR-03 · Privacy</h5><p>Emails masked cross-role; consent logged; no service-role key client-side.</p></div>
+    <div class="info-card"><h5>NFR-04 · i18n</h5><p>Currency ISO 4217 PHP; ISO 8601 UTC storage; en-PH display dates.</p></div>
+    <div class="info-card green"><h5>NFR-05 · Performance</h5><p>Vite ESM bundles on Vercel edge CDN; images resized client-side ≤ 800px.</p></div>
+    <div class="info-card"><h5>NFR-06 · Availability</h5><p>Vercel hosting + Supabase managed Postgres/Auth.</p></div>
+    <div class="info-card"><h5>NFR-07 · Maintainability</h5><p>im_ prefix; central db.js data layer; {data,error} convention everywhere.</p></div>
+    <div class="info-card gold"><h5>NFR-08 · Auditability</h5><p>Activity feed + compliance audit log; exports include audit sheet.</p></div>
+    <div class="info-card red"><h5>NFR-09 · Usability</h5><p>DSWD blue/red/gold tokens; admin theme customizer; toast feedback.</p></div>
+    <div class="info-card green"><h5>NFR-10 · Integrity</h5><p>Stock locked &amp; checked inside checkout RPC; FK cascade/set-null rules; amount checks.</p></div>
+    <div class="info-card"><h5>NFR-11 · Compatibility</h5><p>Evergreen browsers; responsive web only (no native app).</p></div>
+    <div class="info-card"><h5>NFR-12 · Observability</h5><p>Activity logs + Vercel deployment logs.</p></div>
+  </div>
+</section>
+
+<!-- ══ 11 STACK ═════════════════════════════════════════════ -->
+<section class="doc" id="s11">
+  <div class="sec-head"><div class="sec-badge" style="background:#1d4ed8">11</div><h2>Technology Stack</h2></div>
+  <p class="sec-sub">As deployed — versions from package.json.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Layer</th><th>Technology</th><th>Version / notes</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UI</td><td>React + react-dom</td><td>^19.2</td></tr>
+      <tr><td class="id">Build</td><td>Vite</td><td>^6.4 · ESM production bundles</td></tr>
+      <tr><td class="id">Routing</td><td>react-router-dom</td><td>^7.18</td></tr>
+      <tr><td class="id">Styling</td><td>Tailwind CSS v4 + CSS custom properties</td><td>@tailwindcss/postcss ^4.3</td></tr>
+      <tr><td class="id">Icons</td><td>lucide-react</td><td>^1.24</td></tr>
+      <tr><td class="id">Database</td><td>PostgreSQL (Supabase)</td><td>27 im_* objects · migrations 0001–0002</td></tr>
+      <tr><td class="id">Auth</td><td>Supabase Auth (JWT sessions)</td><td>@supabase/supabase-js 2.112</td></tr>
+      <tr><td class="id">Security</td><td>Row Level Security + security-definer RPC</td><td>policies in 0001/0002</td></tr>
+      <tr><td class="id">Payments</td><td>COD · GCash · Maya · PayMongo · Stripe · PayPal</td><td>scaffolded service modules</td></tr>
+      <tr><td class="id">A11y</td><td>Web Speech API (TTS/voice) + im_ui_prefs</td><td>WCAG 2.1 AA target</td></tr>
+      <tr><td class="id">Hosting</td><td>Vercel</td><td>inclusive-market.vercel.app</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ══ 12 GLOSSARY ══════════════════════════════════════════ -->
+<section class="doc" id="s12">
+  <div class="sec-head"><div class="sec-badge" style="background:#9333ea">12</div><h2>Glossary</h2></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="id">IncluMarket</td><td>PWD-livelihood marketplace in the InkluTrack ecosystem (this app).</td></tr>
+      <tr><td class="id">PWD</td><td>Person with disability — profiles store disability_type, assistive_needs, pwd_id_url.</td></tr>
+      <tr><td class="id">DSWD</td><td>Dept. of Social Welfare &amp; Development (PH). Brand: blue primary, red compassion, gold hope.</td></tr>
+      <tr><td class="id">RLS</td><td>Row Level Security — Postgres policies limiting rows per authenticated viewer.</td></tr>
+      <tr><td class="id">Variant</td><td>Sellable SKU of a product (color_name, size, stock_qty, sku_code).</td></tr>
+      <tr><td class="id">Flash sale</td><td>Time-bounded percent discount on a product.</td></tr>
+      <tr><td class="id">Payout</td><td>Seller withdrawal request (bank / GCash / Maya / PayPal / other).</td></tr>
+      <tr><td class="id">Transaction</td><td>Ledger row for an order payment incl. platform fee split.</td></tr>
+      <tr><td class="id">Chat session</td><td>Bot transcript; may escalate into a support ticket.</td></tr>
+      <tr><td class="id">Anon key</td><td>Public Supabase key — access still limited by RLS.</td></tr>
+      <tr><td class="id">TTS</td><td>Text-to-speech in the accessibility toolbar (Web Speech API).</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer class="docfoot">
+  <strong>IncluMarket</strong> · Chapter 3 Design &amp; Methodology — generated from the running system
+  (migrations 0001–0002, src/lib/db.js, package.json). Live app:
+  <a href="/" style="color:var(--blue);font-weight:700">inclusive-market.vercel.app</a>
+</footer>
+
+</main>
+</div>
+
+<!-- ═══════════ PRESENTATION DECK (separate view of the whole) ═══════════ -->
+<div id="deck" role="dialog" aria-modal="true" aria-label="Presentation mode">
+  <div class="deck-top">
+    <span class="dk">Presentation Mode</span>
+    <span class="dt" id="deckTitle">Design &amp; Methodology</span>
+    <span id="autoBadge">● AUTO</span>
+    <div class="spacer"></div>
+    <button class="btn btn-gold" id="playBtn" onclick="toggleAuto()">▶ Auto-play</button>
+    <button class="btn btn-red" onclick="closeDeck()">✕ Exit</button>
+  </div>
+  <div class="deck-stage"><div id="slideHost" style="width:100%;height:100%"></div></div>
+  <div class="deck-bot">
+    <button class="nav-arrow" onclick="step(-1)" aria-label="Previous slide">‹</button>
+    <div class="progress"><i id="bar"></i></div>
+    <span class="counter" id="ctr">1 / 1</span>
+    <button class="nav-arrow" onclick="step(1)" aria-label="Next slide">›</button>
+  </div>
+</div>
+
+<script type="module">
+  // ── Mermaid diagram sources (aligned to the ACTUAL deployed system) ──
+  const D = {
+  arch:`flowchart LR
+    subgraph client["CLIENT"]
+      web["Web Browser<br/>React 19 SPA"]
+    end
+    subgraph edge["EDGE"]
+      vercel["Vercel CDN<br/>static bundle + rewrites"]
+    end
+    subgraph app["APPLICATION (browser)"]
+      router["React Router v7<br/>role guards"]
+      ctx["Contexts<br/>Auth · Cart · DataStore<br/>Toast · Voice"]
+      lib["lib/db.js<br/>typed query wrappers"]
+      pay["Payment services<br/>GCash · Maya · PayMongo<br/>Stripe · PayPal"]
+    end
+    subgraph data["DATA"]
+      sbjs["supabase-js 2.112"]
+      pg[("Supabase Postgres<br/>27 im_* objects · RLS")]
+      rpc["create_order_with_items()<br/>security-definer RPC"]
+    end
+    subgraph ext["EXTERNAL"]
+      auth["Supabase Auth<br/>JWT sessions"]
+      speech["Web Speech API<br/>TTS · voice commands"]
+    end
+    web -->|"HTTPS"| vercel
+    vercel --> router --> ctx --> lib --> sbjs
+    sbjs -->|"SQL under RLS"| pg
+    sbjs -.-> rpc
+    rpc --> pg
+    ctx -.->|"session JWT"| auth
+    ctx -.-> speech
+    ctx -.-> pay`,
+  uc:`flowchart TD
+    guest(["Guest"]):::g
+    buyer(["Buyer"]):::b
+    seller(["Seller"]):::s
+    admin(["Admin"]):::a
+    subgraph pub["PUBLIC"]
+      browse["Browse catalog"]:::p
+      viewP["View product"]:::p
+      chat["Use chatbot"]:::p
+      a11y["Accessibility tools"]:::p
+      login["Sign in / up"]:::p
+    end
+    subgraph buyc["BUYER"]
+      cart["Cart & wishlist"]:::p
+      checkout["Checkout order"]:::p
+      track["Track orders"]:::p
+      review["Review product"]:::p
+      msgB["Message seller"]:::p
+    end
+    subgraph selc["SELLER"]
+      listP["List products"]:::p
+      fulfill["Fulfill orders"]:::p
+      payout["Request payout"]:::p
+      msgS["Message buyer"]:::p
+    end
+    subgraph admc["ADMIN"]
+      users["Manage users"]:::p
+      moderate["Moderate products"]:::p
+      tickets["Resolve tickets"]:::p
+      reports["Export reports"]:::p
+    end
+    guest --> browse & viewP & chat & a11y & login
+    login --> buyer & seller & admin
+    buyer --> cart & checkout & track & review & msgB
+    seller --> listP & fulfill & payout & msgS
+    admin --> users & moderate & tickets & reports
+    classDef g fill:#FFD700,stroke:#92400e,stroke-width:2.5px,color:#1e293b
+    classDef b fill:#dbeafe,stroke:#0047AB,stroke-width:2.5px,color:#0f172a
+    classDef s fill:#dcfce7,stroke:#15803d,stroke-width:2.5px,color:#0f172a
+    classDef a fill:#fee2e2,stroke:#C8102E,stroke-width:2.5px,color:#0f172a
+    classDef p fill:#ffffff,stroke:#475569,stroke-width:2px,color:#0f172a`,
+  flowBuy:`flowchart LR
+    start(["Open /catalog"]):::ee --> browse["Browse / search"]:::pp
+    browse --> product["Open product page"]:::pp
+    product --> signedIn{"Signed in?"}:::dd
+    signedIn -->|No| login["Login / register"]:::pp
+    login --> cart
+    signedIn -->|Yes| cart["Add to cart"]:::pp
+    cart --> checkout["Checkout<br/>create_order_with_items()"]:::pp
+    checkout --> stock{"Stock available?<br/>(row-locked in RPC)"}:::dd
+    stock -->|No| fail["INSUFFICIENT_STOCK error"]:::rr
+    fail -.-> cart
+    stock -->|Yes| order["Order created · stock decremented<br/>history row · sellers notified"]:::gg
+    order --> done(["Track in /buyer/orders"]):::ee
+    classDef ee fill:#FFD700,stroke:#92400e,stroke-width:2.5px,color:#1e293b
+    classDef pp fill:#ffffff,stroke:#0047AB,stroke-width:2px,color:#0f172a
+    classDef dd fill:#fef9c3,stroke:#b45309,stroke-width:2.5px,color:#1e293b
+    classDef rr fill:#fee2e2,stroke:#C8102E,stroke-width:2.5px,color:#0f172a
+    classDef gg fill:#dcfce7,stroke:#15803d,stroke-width:2.5px,color:#0f172a`,
+  flowSell:`flowchart LR
+    start(["Seller dashboard"]):::ee --> create["Create product"]:::pp
+    create --> pending["status = pending_review"]:::yy
+    pending --> adminRev["Admin reviews"]:::pp
+    adminRev --> decision{"Approve?"}:::dd
+    decision -->|No| flagged["status = flagged"]:::rr
+    flagged -.-> create
+    decision -->|Yes| live["status = approved<br/>visible in catalog"]:::gg
+    live --> orders["Incoming orders<br/>(notification)"]:::pp
+    orders --> ship["Mark processing → shipped"]:::pp
+    ship --> delivered["Mark delivered"]:::pp
+    delivered --> payout["Request payout"]:::pp
+    payout --> done(["Paid or rejected"]):::ee
+    classDef ee fill:#FFD700,stroke:#92400e,stroke-width:2.5px,color:#1e293b
+    classDef pp fill:#ffffff,stroke:#0047AB,stroke-width:2px,color:#0f172a
+    classDef dd fill:#fef9c3,stroke:#b45309,stroke-width:2.5px,color:#1e293b
+    classDef rr fill:#fee2e2,stroke:#C8102E,stroke-width:2.5px,color:#0f172a
+    classDef gg fill:#dcfce7,stroke:#15803d,stroke-width:2.5px,color:#0f172a
+    classDef yy fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#1e293b`,
+  flowAdmin:`flowchart TD
+    start(["Admin signs in"]):::ee --> home["Admin console"]:::pp
+    home --> users["Users"]:::pp & products["Product approvals"]:::pp & tickets["Tickets"]:::pp & reports["Reports"]:::pp & payments["Payments"]:::pp & theme["Theme"]:::pp
+    users --> ua{"Action"}:::dd
+    ua -->|Suspend| sus["account_status = suspended"]:::rr
+    ua -->|Restore| act["account_status = active"]:::gg
+    products --> pa{"Moderation"}:::dd
+    pa -->|Approve| ap["Product approved"]:::gg
+    pa -->|Flag| fl["Product flagged"]:::rr
+    tickets --> ta{"Ticket"}:::dd
+    ta -->|Reply| rep["Add response"]:::pp
+    ta -->|Resolve| res["Ticket resolved"]:::gg
+    reports --> xlsx[".xlsx / .csv export"]:::pp
+    payments --> pcfg["Enable providers"]:::pp
+    theme --> tok["DSWD color tokens"]:::pp
+    classDef ee fill:#FFD700,stroke:#92400e,stroke-width:2.5px,color:#1e293b
+    classDef pp fill:#ffffff,stroke:#0047AB,stroke-width:2px,color:#0f172a
+    classDef dd fill:#fef9c3,stroke:#b45309,stroke-width:2.5px,color:#1e293b
+    classDef rr fill:#fee2e2,stroke:#C8102E,stroke-width:2.5px,color:#0f172a
+    classDef gg fill:#dcfce7,stroke:#15803d,stroke-width:2.5px,color:#0f172a`,
+  erdCommerce:`erDiagram
+    direction LR
+    PROFILES ||--o{ PRODUCTS : sells
+    PROFILES ||--o{ ORDERS : places
+    PROFILES ||--o{ CART : owns
+    PROFILES ||--o{ REVIEWS : writes
+    PROFILES ||--o{ WISHLISTS : saves
+    CATEGORIES ||--o{ PRODUCTS : groups
+    PRODUCTS ||--o{ VARIANTS : has
+    PRODUCTS ||--o{ IMAGES : has
+    PRODUCTS ||--o{ REVIEWS : receives
+    PRODUCTS ||--o{ ITEMS : sold_in
+    PRODUCTS ||--o{ CART : in_cart
+    PRODUCTS ||--o{ FLASH : on_sale
+    VARIANTS ||--o{ ITEMS : ordered_as
+    ORDERS ||--|{ ITEMS : contains
+    ORDERS ||--o{ HISTORY : status_log
+    PROFILES {
+      bigint id PK
+      uuid auth_user_id FK
+      text email UK
+      text role
+      text account_status
+      text disability_type
+    }
+    CATEGORIES {
+      text id PK
+      text name
+    }
+    PRODUCTS {
+      bigint id PK
+      bigint seller_id FK
+      text title
+      numeric base_price
+      int stock
+      text status
+      bool is_featured
+    }
+    VARIANTS {
+      bigint id PK
+      bigint product_id FK
+      text sku_code UK
+      int stock_qty
+    }
+    ORDERS {
+      bigint id PK
+      text order_ref UK
+      bigint buyer_id FK
+      numeric total_amount
+      text order_status
+      text payment_provider FK
+    }
+    ITEMS {
+      bigint id PK
+      bigint order_id FK
+      bigint product_id FK
+      bigint variant_id FK
+      int quantity
+      numeric unit_price
+    }
+    CART {
+      bigint id PK
+      bigint user_id FK
+      bigint product_id FK
+      bigint variant_id FK
+      int quantity
+    }
+    HISTORY {
+      bigint id PK
+      bigint order_id FK
+      text old_status
+      text new_status
+    }
+    REVIEWS {
+      bigint id PK
+      bigint product_id FK
+      int rating_score
+    }
+    FLASH {
+      bigint id PK
+      bigint product_id FK
+      numeric discount_percent
+      timestamptz starts_at
+      timestamptz ends_at
+    }`,
+  erdMsg:`erDiagram
+    direction LR
+    PROFILES ||--o{ CONVERSATIONS : buys_in
+    PROFILES ||--o{ CONVERSATIONS : sells_in
+    PROFILES ||--o{ MESSAGES : sends
+    PROFILES ||--o{ TICKETS : opens
+    PROFILES ||--o{ RESPONSES : authors
+    PROFILES ||--o{ NOTICES : receives
+    PRODUCTS ||--o{ CONVERSATIONS : discussed
+    CONVERSATIONS ||--o{ MESSAGES : thread
+    TICKETS ||--o{ RESPONSES : thread
+    TICKETS ||--o| CHATSESS : escalated_from
+    CHATSESS ||--o{ CHATMSG : transcript
+    CONVERSATIONS {
+      bigint id PK
+      bigint buyer_id FK
+      bigint seller_id FK
+      bigint product_id FK
+    }
+    MESSAGES {
+      bigint id PK
+      bigint conversation_id FK
+      bigint sender_id FK
+      text body
+      timestamptz read_at
+    }
+    TICKETS {
+      bigint id PK
+      text ticket_ref UK
+      bigint user_id FK
+      text ticket_status
+      text priority_level
+      bigint assigned_to FK
+    }
+    RESPONSES {
+      bigint id PK
+      bigint ticket_id FK
+      bigint author_id FK
+      text message
+    }
+    CHATSESS {
+      bigint id PK
+      bigint user_id FK
+      text guest_id
+      text status
+    }
+    CHATMSG {
+      bigint id PK
+      bigint session_id FK
+      text role
+      text body
+    }
+    NOTICES {
+      bigint id PK
+      bigint user_id FK
+      text type
+      bool is_read
+    }`,
+  erdPlatform:`erDiagram
+    direction LR
+    PROFILES ||--|| UIPREFS : owns
+    PROFILES ||--o{ CONSENT : consents
+    PROFILES ||--o{ AUDIT : acts
+    PROFILES ||--o{ ACTIVITY : logs
+    PROFILES ||--o{ PAYOUTS : requests
+    PROFILES ||--o{ TXNS : pays
+    PROVIDERS ||--o{ TXNS : records
+    PROVIDERS ||--o{ ORDERS : used_by
+    ORDERS ||--o{ TXNS : billed_as
+    UIPREFS {
+      bigint user_id PK
+      text contrast
+      int font_size_px
+      bool tts_enabled
+      bool voice_commands
+      bool reading_mode
+    }
+    PROVIDERS {
+      text id PK
+      text display_name
+      bool enabled
+      numeric fee_percent
+    }
+    PAYOUTS {
+      bigint id PK
+      text payout_ref UK
+      bigint seller_id FK
+      numeric amount
+      text method
+      text status
+    }
+    TXNS {
+      bigint id PK
+      bigint order_id FK
+      text provider_id FK
+      numeric amount
+      numeric platform_fee
+      text currency
+      text status
+    }
+    AUDIT {
+      bigint id PK
+      bigint actor_id FK
+      text action
+      text entity_type
+    }`,
+  umlComp:`flowchart TD
+    subgraph present["PRESENTATION"]
+      pages["Pages: public · buyer · seller · admin"]:::a
+      clients["Client components<br/>Navbar · ChatWidget · A11yToolbar"]:::a
+      styles["Tailwind v4 + CSS tokens"]:::a
+    end
+    subgraph appL["APPLICATION"]
+      guards["AuthGuard · AdminGuard<br/>GuestGuard"]:::b
+      contexts["AuthContext · CartContext<br/>DataStore · Toast · Voice"]:::b
+      chatbot["Rule-based responder"]:::b
+      excel["CSV/XLSX export"]:::b
+    end
+    subgraph dataL["DATA"]
+      dblib["lib/db.js"]:::c
+      sbjs["supabase-js"]:::c
+      rls["Postgres RLS policies"]:::c
+    end
+    subgraph infra["INFRASTRUCTURE"]
+      vercel["Vercel CDN"]:::d
+      postgres[("Supabase Postgres")]:::d
+      auth["Supabase Auth"]:::d
+    end
+    pages --> clients
+    pages --> guards
+    clients --> contexts
+    styles --> pages
+    guards --> contexts
+    contexts --> dblib
+    contexts --> excel
+    contexts --> chatbot
+    dblib --> sbjs
+    sbjs --> rls
+    rls --> postgres
+    contexts -.-> auth
+    vercel --> pages
+    classDef a fill:#dbeafe,stroke:#0047AB,stroke-width:2px,color:#0f172a
+    classDef b fill:#fef9c3,stroke:#b45309,stroke-width:2px,color:#1e293b
+    classDef c fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#0f172a
+    classDef d fill:#fee2e2,stroke:#C8102E,stroke-width:2px,color:#0f172a`,
+  umlClass:`classDiagram
+    class Profile {
+      +int id
+      +string auth_user_id
+      +string email
+      +Role role
+      +string account_status
+      +string disability_type
+    }
+    class Product {
+      +int id
+      +int seller_id
+      +string title
+      +number base_price
+      +int stock
+      +ProductStatus status
+    }
+    class ProductVariant {
+      +int id
+      +string sku_code
+      +int stock_qty
+      +number price_mod
+    }
+    class Order {
+      +int id
+      +string order_ref
+      +int buyer_id
+      +number total_amount
+      +OrderStatus order_status
+    }
+    class OrderItem {
+      +int order_id
+      +int product_id
+      +int variant_id
+      +int quantity
+      +number unit_price
+    }
+    class CartLine {
+      +int user_id
+      +int product_id
+      +int variant_id
+      +int quantity
+    }
+    class Conversation {
+      +int buyer_id
+      +int seller_id
+      +int product_id
+    }
+    class SupportTicket {
+      +TicketStatus ticket_status
+      +Priority priority_level
+    }
+    class UiPrefs {
+      +int font_size_px
+      +bool tts_enabled
+      +string contrast
+    }
+    Profile "1" --> "*" Product : sells
+    Profile "1" --> "*" Order : places
+    Profile "1" --> "*" CartLine : owns
+    Profile "1" --> "*" SupportTicket
+    Profile "1" --> "1" UiPrefs
+    Product "1" --> "*" ProductVariant
+    Order "1" --> "*" OrderItem
+    Product "1" --> "*" OrderItem
+    Product "1" --> "*" CartLine`,
+  seqLogin:`sequenceDiagram
+    autonumber
+    actor User
+    participant Login as LoginPage
+    participant AC as AuthContext
+    participant SA as Supabase Auth
+    participant PG as Postgres (RLS)
+    User->>Login: Submit email + password
+    Login->>AC: login(email, password)
+    AC->>SA: signInWithPassword()
+    SA-->>AC: session JWT
+    AC->>PG: select im_profiles by auth_user_id
+    PG-->>AC: profile row (role, status)
+    AC-->>Login: setUser(profile)
+    Login-->>User: Redirect by role<br/>buyer→home · seller→dashboard · admin→console`,
+  seqCheckout:`sequenceDiagram
+    autonumber
+    actor Buyer
+    participant Cart as CartPage
+    participant DB as lib/db.js
+    participant RPC as create_order_with_items()
+    participant PG as Postgres
+    participant S as Seller
+    Buyer->>Cart: Confirm shipping + payment
+    Cart->>DB: createOrder(orderData, itemsData)
+    DB->>RPC: jsonb payloads
+    RPC->>PG: SELECT … FOR UPDATE (lock products/variants)
+    PG-->>RPC: rows locked
+    alt insufficient stock
+      RPC-->>Cart: raise INSUFFICIENT_STOCK:<sku>
+      Cart-->>Buyer: error toast
+    else stock ok
+      RPC->>PG: INSERT im_orders + im_order_items
+      RPC->>PG: UPDATE stock / stock_qty (decrement)
+      RPC->>PG: INSERT status history ('pending')
+      RPC->>PG: INSERT notifications (per seller)
+      RPC->>PG: DELETE purchased im_cart lines
+      RPC-->>Cart: order jsonb (order_ref)
+      Cart-->>Buyer: redirect /buyer/orders
+      PG-->>S: new_order notification
+    end`,
+  seqMsg:`sequenceDiagram
+    autonumber
+    actor Buyer
+    participant PP as ProductPage
+    participant DB as getOrCreateConversation()
+    participant PG as Postgres
+    actor Seller
+    Buyer->>PP: Click "Message seller"
+    PP->>DB: find conversation(buyer,seller,product)
+    DB->>PG: select im_conversations (maybeSingle)
+    alt none yet
+      DB->>PG: INSERT im_conversations
+    end
+    PG-->>PP: conversation id
+    Buyer->>PP: Type message → send
+    PP->>PG: INSERT im_messages
+    PP->>PG: UPDATE conversation last_message
+    PG-->>Seller: unread notice in /seller/messages
+    Seller->>PG: INSERT reply
+    PG-->>Buyer: thread update`,
+  stOrder:`stateDiagram-v2
+    direction LR
+    [*] --> Pending: placeOrder (RPC)
+    Pending --> Processing: seller accepts
+    Processing --> Shipped: mark shipped (+tracking)
+    Shipped --> Delivered: mark delivered
+    Delivered --> Returned: buyer returns
+    Delivered --> [*]
+    Returned --> [*]
+    note right of Pending: every transition auto-logged<br/>to im_order_status_history`,
+  stProduct:`stateDiagram-v2
+    direction LR
+    [*] --> PendingReview: seller creates
+    PendingReview --> Approved: admin approves
+    PendingReview --> Flagged: admin flags
+    Approved --> Flagged: admin flags
+    Flagged --> Approved: admin restores
+    Flagged --> PendingReview: seller edits
+    Approved --> [*]`,
+  stMisc:`stateDiagram-v2
+    direction LR
+    subgraph Ticket
+      [*] --> T_Open: user opens
+      T_Open --> T_Progress: admin assigns
+      T_Progress --> T_Done: admin resolves
+      T_Done --> [*]
+    end
+    subgraph Account
+      [*] --> Active: signup
+      Active --> Suspended: admin suspends
+      Suspended --> Active: admin restores
+    end
+    subgraph Payout
+      [*] --> P_Pending: seller requests
+      P_Pending --> P_Approved: admin approves
+      P_Pending --> P_Rejected: admin rejects
+      P_Approved --> Completed: admin marks paid
+    end
+    subgraph ChatSession
+      [*] --> C_Open: guest/user chats
+      C_Open --> Escalated: bot → ticket
+      Escalated --> C_Closed: resolved
+    end`,
+  };
+
+  const m = await import('https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs')
+    .catch(() => null);
+
+  async function renderAll() {
+    if (!m) { // offline fallback: show source
+      document.querySelectorAll('[data-d]').forEach(el => {
+        el.innerHTML = '<pre style="white-space:pre-wrap;font-size:13px;color:#334155">' +
+          D[el.dataset.d].replace(/</g,'&lt;') + '</pre>';
+      });
+      return;
+    }
+    m.default.initialize({
+      startOnLoad:false, securityLevel:'loose',
+      theme:'base', fontFamily:'Segoe UI, sans-serif', fontSize:16,
+      themeVariables:{
+        primaryColor:'#dbeafe', primaryTextColor:'#0f172a', primaryBorderColor:'#0047AB',
+        lineColor:'#334155', secondaryColor:'#fef9c3', tertiaryColor:'#f8fafc',
+        fontSize:'16px'
+      },
+      flowchart:{useMaxWidth:true,htmlLabels:true,curve:'basis',nodeSpacing:55,rankSpacing:65},
+      sequence:{useMaxWidth:true,actorFontSize:16,messageFontSize:15,noteFontSize:14,width:180},
+      er:{useMaxWidth:true,fontSize:15,entityPadding:16,minEntityWidth:120},
+      class:{useMaxWidth:true,fontSize:15},
+      state:{useMaxWidth:true,fontSize:15}
+    });
+    for (const [key, src] of Object.entries(D)) {
+      try {
+        const { svg } = await m.default.render('g-' + key, src);
+        document.querySelectorAll(`[data-d="${key}"]`).forEach(el => el.innerHTML = svg);
+      } catch(e) {
+        document.querySelectorAll(`[data-d="${key}"]`).forEach(el =>
+          el.innerHTML = '<pre style="white-space:pre-wrap">'+src.replace(/</g,'&lt;')+'</pre>');
+      }
+    }
+  }
+
+  // ── Slide deck definition (the whole chapter, separate view) ──
+  const SLIDES = [
+    { k:'Cover', t:'IncluMarket — Chapter 3', h:`<div style="text-align:center">
+        <div style="font-size:15px;letter-spacing:3px;color:#FFD700;font-weight:800">DESIGN &amp; METHODOLOGY</div>
+        <h3 style="font-size:52px;margin:14px 0">IncluMarket</h3>
+        <p style="font-size:20px;color:#cbd5e1;max-width:760px;margin:0 auto">PWD-livelihood marketplace for Zamboanga City.<br/>
+        React 19 SPA · Supabase Postgres + Auth · Vercel · WCAG 2.1 AA</p>
+        <p style="margin-top:26px;color:#94a3b8;font-size:15px">Press → or click ‹ › to navigate · “Auto-play” runs the whole demo</p></div>` },
+    { k:'Agenda', t:'What this deck covers', h:`<ul class="sl">
+        <li><b>1–3</b> Architecture · Use Cases · Process Flowcharts</li>
+        <li><b>4–5</b> Entity-Relationship Model · Live Database Schema</li>
+        <li><b>6–8</b> UML Components &amp; Classes · Sequences · State Machines</li>
+        <li><b>9–12</b> Functional &amp; Non-Functional Requirements · Stack · Glossary</li></ul>` },
+    { d:'arch', k:'Section 1', t:'System Architecture' },
+    { d:'uc',   k:'Section 2', t:'Use Cases — four actors' },
+    { d:'flowBuy',   k:'Section 3', t:'Flowchart — Buyer purchase' },
+    { d:'flowSell',  k:'Section 3', t:'Flowchart — Seller listing &amp; fulfillment' },
+    { d:'flowAdmin', k:'Section 3', t:'Flowchart — Admin moderation' },
+    { d:'erdCommerce', k:'Section 4', t:'ERD — Commerce domain' },
+    { d:'erdMsg',      k:'Section 4', t:'ERD — Messaging &amp; support' },
+    { d:'erdPlatform', k:'Section 4', t:'ERD — Platform, payments &amp; accessibility' },
+    { k:'Section 5', t:'Database schema — highlights', h:`<ul class="sl">
+        <li><b>27 objects</b> — 24 tables · 1 view (<b>im_low_stock_alerts</b>) · 1 atomic RPC (<b>create_order_with_items</b>)</li>
+        <li><b>Migration 0002 additions</b> — im_cart · im_order_status_history · im_ui_prefs · im_audit_logs</li>
+        <li><b>RLS everywhere</b> — strict-owner carts/wishlists/prefs; buyer+admin orders; admin-only ledger</li>
+        <li><b>Status-history trigger</b> — every order transition auto-recorded</li></ul>` },
+    { d:'umlComp',  k:'Section 6', t:'UML — Component layers' },
+    { d:'umlClass', k:'Section 6', t:'UML — Domain classes' },
+    { d:'seqLogin',    k:'Section 7', t:'Sequence — Sign in' },
+    { d:'seqCheckout', k:'Section 7', t:'Sequence — Atomic checkout RPC' },
+    { d:'seqMsg',      k:'Section 7', t:'Sequence — Buyer ↔ seller messaging' },
+    { d:'stOrder',   k:'Section 8', t:'State — Order lifecycle' },
+    { d:'stProduct', k:'Section 8', t:'State — Product moderation' },
+    { d:'stMisc',    k:'Section 8', t:'State — Ticket · Account · Payout · Chat' },
+    { k:'Section 9', t:'Functional requirements', h:`<ul class="sl">
+        <li><b>FR-01..05</b> Supabase auth · role guards · public catalog · server cart · order history</li>
+        <li><b>FR-06..10</b> Reviews · messaging · chatbot→tickets · help desk · moderated listings</li>
+        <li><b>FR-11..15</b> Fulfillment path · admin controls · report exports · a11y toolbar · notifications</li>
+        <li><b>FR-16..20</b> Flash sales · consent/audit · newsletter · static pages · payouts</li></ul>` },
+    { k:'Section 10', t:'Non-functional requirements', h:`<ul class="sl">
+        <li><b>Accessibility</b> WCAG 2.1 AA — skip links, TTS, high contrast, reduced motion</li>
+        <li><b>Security &amp; privacy</b> — RLS defense-in-depth, no service-role keys in browser, consent logs</li>
+        <li><b>Integrity</b> — row-locked stock validation inside the checkout RPC</li>
+        <li><b>Performance &amp; ops</b> — Vercel edge CDN, activity + audit observability</li></ul>` },
+    { k:'Section 11', t:'Technology stack', h:`<ul class="sl">
+        <li><b>Frontend</b> — React 19 · Vite 6 · React Router 7 · Tailwind 4 · lucide-react</li>
+        <li><b>Data</b> — Supabase Postgres · supabase-js 2.112 · RLS + security-definer RPC</li>
+        <li><b>Auth</b> — Supabase Auth JWT sessions (+ Google OAuth ready)</li>
+        <li><b>Hosting</b> — Vercel · inclusive-market.vercel.app</li></ul>` },
+    { k:'Close', t:'Thank you', h:`<div style="text-align:center">
+        <h3 style="font-size:44px">IncluMarket</h3>
+        <p style="font-size:19px;color:#cbd5e1;margin-top:12px">Thrive · Lead · Innovate — accessible e-commerce for PWD entrepreneurs.</p>
+        <p style="margin-top:22px"><a href="/" style="color:#FFD700;font-weight:800;font-size:18px">← Back to the live app</a></p></div>` },
+  ];
+
+  let cur = 0, timer = null;
+  const host = document.getElementById('slideHost');
+
+  function buildSlides() {
+    host.innerHTML = '';
+    SLIDES.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.className = 'slide';
+      div.innerHTML = s.d
+        ? `<div class="sk">${s.k}</div><h3>${s.t}</h3><div class="sc" data-d="${s.d}"></div>`
+        : `<div class="sk">${s.k}</div><h3>${s.t}</h3><div style="flex:1;display:flex;align-items:center;overflow:auto">${s.h}</div>`;
+      host.appendChild(div);
+    });
+    // copy already-rendered svgs into slides
+    document.querySelectorAll('#slideHost [data-d]').forEach(el => {
+      const src = document.querySelector(`main [data-d="${el.dataset.d}"]`);
+      if (src) el.innerHTML = src.innerHTML;
+    });
+  }
+
+  function show(i) {
+    cur = Math.max(0, Math.min(SLIDES.length - 1, i));
+    document.querySelectorAll('.slide').forEach((s, j) => s.classList.toggle('on', j === cur));
+    document.getElementById('ctr').textContent = `${cur + 1} / ${SLIDES.length}`;
+    document.getElementById('bar').style.width = ((cur + 1) / SLIDES.length * 100) + '%';
+    document.getElementById('deckTitle').textContent = SLIDES[cur].t.replace(/&amp;/g, '&');
+  }
+  window.step = n => { stopAuto(); show(cur + n); };
+  window.openDeck = i => {
+    buildSlides(); show(i ?? 0);
+    document.getElementById('deck').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeDeck = () => {
+    stopAuto();
+    document.getElementById('deck').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  function startAuto(ms = 9000) {
+    openDeck(cur);
+    clearInterval(timer);
+    document.getElementById('autoBadge').classList.add('on');
+    timer = setInterval(() => {
+      if (cur >= SLIDES.length - 1) show(0); else show(cur + 1);
+    }, ms);
+  }
+  function stopAuto() {
+    clearInterval(timer); timer = null;
+    document.getElementById('autoBadge').classList.remove('on');
+  }
+  window.toggleAuto = () => timer ? stopAuto() : startAuto();
+  window.presentAll = () => { cur = 0; startAuto(); };
+
+  document.addEventListener('keydown', e => {
+    const deckOpen = document.getElementById('deck').classList.contains('open');
+    if (!deckOpen) return;
+    if (e.key === 'Escape') closeDeck();
+    else if (e.key === 'ArrowRight' || e.key === ' ') step(1);
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key.toLowerCase() === 'p') toggleAuto();
+  });
+
+  // TOC active highlight
+  const links = [...document.querySelectorAll('nav.toc a')];
+  const obs = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting) links.forEach(l =>
+      l.classList.toggle('active', l.getAttribute('href') === '#' + en.target.id));
+  }), { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('section.doc').forEach(s => obs.observe(s));
+
+  await renderAll();
+</script>
+</body>
+</html>

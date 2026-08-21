@@ -212,6 +212,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-4">
             <Link to="/catalog" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Catalog</Link>
+            <a href="/docs/" target="_blank" rel="noreferrer" className="text-gray-700 hover:text-amber-600 font-medium transition-colors">Docs</a>
 
             {user ? (
               <>
@@ -262,6 +263,7 @@ export default function Navbar() {
             </div>
           </form>
           <Link to="/catalog" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Catalog</Link>
+          <a href="/docs/" target="_blank" rel="noreferrer" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Chapter 3 Docs</a>
           {user ? (
             <>
               {user.role === 'buyer' && <Link to="/buyer/cart" className="block py-2 text-gray-700 font-medium" onClick={() => setMobileOpen(false)}>Cart ({count})</Link>}

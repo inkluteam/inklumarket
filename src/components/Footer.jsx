@@ -43,6 +43,7 @@ export default function Footer() {
               <li><Link to="/static/accessibility" className="hover:text-white transition-colors">Accessibility</Link></li>
               <li><Link to="/static/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link to="/static/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><a href="/docs/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-semibold text-amber-400">Chapter 3 Docs &amp; Presentation ↗</a></li>
             </ul>
           </div>
         </div>

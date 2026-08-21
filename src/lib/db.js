@@ -8,10 +8,10 @@ import { supabase } from './supabase'
 
 // ── Products ─────────────────────────────────────────────────
 export const getProducts = () =>
-  supabase.from('im_products').select('*, im_categories(name), im_sellers(name)').order('created_at', { ascending: false })
+  supabase.from('im_products').select('*, im_categories(name), im_profiles(name)').order('created_at', { ascending: false })
 
 export const getProduct = (id) =>
-  supabase.from('im_products').select('*, im_categories(name), im_variants(*), im_product_images(url)').eq('id', id).single()
+  supabase.from('im_products').select('*, im_categories(name), im_product_variants(*), im_product_images(*)').eq('id', id).single()
 
 export const createProduct = (product) =>
   supabase.from('im_products').insert(product).select().single()
@@ -62,7 +62,9 @@ export const getOrdersByBuyer = (buyerId) =>
   supabase.from('im_orders').select('*, im_order_items(*)').eq('buyer_id', buyerId).order('created_at', { ascending: false })
 
 export const getOrdersBySeller = (sellerId) =>
-  supabase.from('im_orders').select('*, im_order_items(*, im_products(name, seller_id))').order('created_at', { ascending: false })
+  supabase.from('im_orders').select('*, im_order_items(*, im_products!inner(name, seller_id))')
+    .eq('im_order_items.im_products.seller_id', sellerId)
+    .order('created_at', { ascending: false })
 
 export const createOrder = (order, items) =>
   supabase.rpc('create_order_with_items', { order_data: order, items_data: items })
@@ -239,3 +241,44 @@ export const addChatMessage = (msg) =>
 
 export const updateChatSession = (id, updates) =>
   supabase.from('im_chat_sessions').update(updates).eq('id', id)
+
+// ── Cart (server-side, spec FR-04 / migration 0002) ──────────
+export const getCart = (userId) =>
+  supabase.from('im_cart').select('*, im_products(*), im_product_variants(*)').eq('user_id', userId).order('created_at')
+
+export const addToCart = (userId, productId, variantId = null, quantity = 1) =>
+  supabase.from('im_cart').upsert(
+    { user_id: userId, product_id: productId, variant_id: variantId, quantity },
+    { onConflict: 'user_id,product_id,variant_id' }
+  )
+
+export const updateCartQuantity = (id, quantity) =>
+  supabase.from('im_cart').update({ quantity }).eq('id', id)
+
+export const removeFromCart = (id) =>
+  supabase.from('im_cart').delete().eq('id', id)
+
+export const clearCart = (userId) =>
+  supabase.from('im_cart').delete().eq('user_id', userId)
+
+// ── Order Status History (spec FR-05 / migration 0002) ───────
+export const getOrderHistory = (orderId) =>
+  supabase.from('im_order_status_history').select('*').eq('order_id', orderId).order('created_at')
+
+// ── UI Accessibility Prefs (spec FR-14 / im_ui_prefs) ────────
+export const getUiPrefs = (userId) =>
+  supabase.from('im_ui_prefs').select('*').eq('user_id', userId).maybeSingle()
+
+export const saveUiPrefs = (userId, prefs) =>
+  supabase.from('im_ui_prefs').upsert({ user_id: userId, ...prefs }, { onConflict: 'user_id' }).select().single()
+
+// ── Audit Logs (spec NFR-08 / im_audit_logs) ─────────────────
+export const getAuditLogs = () =>
+  supabase.from('im_audit_logs').select('*, im_profiles(name)').order('created_at', { ascending: false }).limit(200)
+
+export const createAuditLog = (log) =>
+  supabase.from('im_audit_logs').insert(log)
+
+// ── Low Stock Alerts (view, spec §4.3) ───────────────────────
+export const getLowStockAlerts = () =>
+  supabase.from('im_low_stock_alerts').select('*')

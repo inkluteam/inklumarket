@@ -70,6 +70,9 @@ export default function Home() {
               <Link to="/seller/register-seller" className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/10 transition-colors">
                 Become a Seller
               </Link>
+              <a href="/docs/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-800 transition-colors border-2 border-blue-300">
+                ▶ Chapter 3 Docs &amp; Presentation
+              </a>
             </div>
           </div>
         </div>
