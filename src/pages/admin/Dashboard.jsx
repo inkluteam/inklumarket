@@ -139,7 +139,7 @@ export default function AdminDashboard() {
         <Link to="/admin/admin-orders" className="card p-4 text-center hover:scale-105 transition-transform">
           <ShoppingCart className="w-8 h-8 text-cyan-600 mx-auto mb-2" /><span className="text-sm font-semibold">Orders</span><span className="block text-xs text-gray-500">{pendingOrders} pending</span>
         </Link>
-        <Link to="/admin/reports" className="card p-4 text-center hover:scale-105 transition-transform">
+        <Link to="/admin/admin-reports" className="card p-4 text-center hover:scale-105 transition-transform">
           <TrendingUp className="w-8 h-8 text-amber-600 mx-auto mb-2" /><span className="text-sm font-semibold">Reports</span><span className="block text-xs text-gray-500">Analytics</span>
         </Link>
       </div>

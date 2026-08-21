@@ -726,6 +726,81 @@ SETTINGS: siteName, description, currency, platformFee, lowStockThreshold, notif
   </div>
 </section>
 
+<!-- ═══ CLIENT-RECOMMENDED ROADMAP ═══ -->
+<section class="doc">
+  <span class="chap-tag">Client Recommendations · Future Enhancement Roadmap</span>
+  <div class="sec-head"><div class="sec-num">5.3</div><h3>Client-Recommended Features</h3></div>
+  <p class="body-text">Features recommended directly by the client during review meetings, organized into development tracks. Each item is a candidate work package for post-defense iterations.</p>
+
+  <div class="sub-head"><h4>Track A — Trust &amp; Safety</h4></div>
+  <div class="cards">
+    <div class="icard pink"><h4>Block System</h4><p>Users block specific buyers/sellers; hides listings &amp; messages between blocked parties.</p></div>
+    <div class="icard pink"><h4>Ban System</h4><p>Admin-level permanent suspension with reason logging and appeal trail.</p></div>
+    <div class="icard pink"><h4>Blocklist Management</h4><p>Dedicated panel listing blocked entities with unblock controls.</p></div>
+    <div class="icard"><h4>ID Verification</h4><p>KYC-style PWD ID / government ID validation workflow for sellers.</p></div>
+    <div class="icard"><h4>COD Verification</h4><p>OTP/callback confirmation before cash-on-delivery orders are accepted.</p></div>
+    <div class="icard gold"><h4>Review Integrity System</h4><p>Purchase-gated reviews, duplicate/fake detection, admin moderation hooks.</p></div>
+    <div class="icard gold"><h4>Fraud Detection System</h4><p>Velocity checks on orders/payouts; anomaly flags for admin review.</p></div>
+    <div class="icard green"><h4>Report and Mediation System</h4><p>In-app reporting of users/listings with structured mediation workflow.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track B — Payments &amp; Payouts</h4></div>
+  <div class="cards">
+    <div class="icard green"><h4>Cash on Delivery</h4><p>COD as a checkout option alongside the five configured providers.</p></div>
+    <div class="icard green"><h4>E-wallet Integration</h4><p>Deeper wallet rails beyond gateway APIs (direct GCash/Maya wallet flows).</p></div>
+    <div class="icard gold"><h4>Seller Wallet</h4><p>In-platform balance ledger per seller fed by completed orders.</p></div>
+    <div class="icard gold"><h4>Instant Payout</h4><p>On-demand wallet withdrawal bypassing batch approval cycles.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track C — Support &amp; Communication</h4></div>
+  <div class="cards">
+    <div class="icard"><h4>Support Ticket Resolution</h4><p>Ticket lifecycle (open → assigned → resolved → closed) with SLA timers and history — extends the existing chat-to-ticket pipeline.</p></div>
+    <div class="icard"><h4>Notification Center</h4><p>Unified in-app notification feed for order events, approvals, payouts.</p></div>
+    <div class="icard pink"><h4>LiveChat Selling Support</h4><p>Real-time buyer↔seller chat during product discovery (extends im_chat_sessions).</p></div>
+    <div class="icard pink"><h4>Customer Service Real-Time Chatbot</h4><p>Automated first-line support bot with human handoff to tickets.</p></div>
+    <div class="icard"><h4>Contact Support Chatbot</h4><p>Buyer-side assistant embedded in support/contact flows.</p></div>
+    <div class="icard gold"><h4>SmartChat — Concerns Specification</h4><p>Structured concern taxonomy so chats auto-classify (order, payment, product, account) and route correctly.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track D — Accessibility &amp; Buyer Experience</h4></div>
+  <div class="cards">
+    <div class="icard pink"><h4>Accessibility Mode</h4><p>One-tap profile bundling font scaling + contrast + reduced motion + TTS defaults.</p></div>
+    <div class="icard"><h4>Low-Data Mode</h4><p>Image-quality throttling and payload reduction for constrained connections.</p></div>
+    <div class="icard"><h4>Multi-Language Support</h4><p>i18n starting with English · Filipino · Chavacano.</p></div>
+    <div class="icard pink"><h4>Voice Feedback System</h4><p>Spoken confirmations of cart/checkout actions complementing TTS.</p></div>
+    <div class="icard"><h4>Keyword Filter System</h4><p>Admin-managed banned-word filtering for listings, reviews, chat.</p></div>
+    <div class="icard green"><h4>Buyer Details — Size / Color Variants</h4><p>Optional per-product option sets rendered at cart &amp; checkout.</p></div>
+    <div class="icard green"><h4>Only-Available Toggle</h4><p>Catalog switch hiding out-of-stock items entirely.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track E — Shipping &amp; Fulfillment</h4></div>
+  <div class="cards">
+    <div class="icard"><h4>Shipping Report</h4><p>Fulfillment performance exports (lead times, failures).</p></div>
+    <div class="icard"><h4>Shipping Types</h4><p>Configurable methods: pickup, local courier, LBC/J&amp;T integration-ready.</p></div>
+    <div class="icard"><h4>Shipping Manage</h4><p>Admin/seller management screen for rates, zones, couriers.</p></div>
+    <div class="icard gold"><h4>Returns Hub</h4><p>Return/refund request workflow with seller response and admin arbitration.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track F — Community Commerce &amp; Seller Enablement</h4></div>
+  <div class="cards">
+    <div class="icard green"><h4>Group Buying System</h4><p>Batched community orders unlocking bulk pricing.</p></div>
+    <div class="icard green"><h4>Rural Pickup Points</h4><p>Barangay-level rendezvous/drop-off selection at checkout.</p></div>
+    <div class="icard green"><h4>Barangay Storefront</h4><p>Geography-scoped storefront views per barangay.</p></div>
+    <div class="icard gold"><h4>Voucher System</h4><p>Admin/seller discount codes with usage rules and expiry.</p></div>
+    <div class="icard"><h4>Micro-Seller Onboarding</h4><p>Guided minimal-data registration path for first-time PWD sellers.</p></div>
+    <div class="icard"><h4>Training Hub</h4><p>AVRC-curated tutorials on selling, photography, packaging.</p></div>
+    <div class="icard"><h4>Offline Upload Advance</h4><p>Queue listing drafts offline, sync when reconnected.</p></div>
+    <div class="icard"><h4>Greetings Module</h4><p>Time-aware personalized greetings across dashboards.</p></div>
+    <div class="icard"><h4>Date/Time Implementation</h4><p>Consistent Asia/Manila timestamps with relative formatting everywhere.</p></div>
+  </div>
+
+  <div class="sub-head"><h4>Track G — Extras &amp; Integrations</h4></div>
+  <div class="cards">
+    <div class="icard gold"><h4>QR Code Support</h4><p>Product/payment QR generation &amp; scanning for offline-market bridges.</p></div>
+    <div class="icard gold"><h4>bitly.com Link Support</h4><p>Shortened shareable product links via Bitly API.</p></div>
+  </div>
+</section>
+
 <!-- ═══ REFERENCES ═══ -->
 <section class="doc">
   <span class="chap-tag">References · APA Format</span>
@@ -862,6 +937,13 @@ const SLIDES=[
  {k:'Ch. 5',t:'Conclusion & recommendations',h:`<ul class="fl">
    <li><b>Conclusion</b> An institutionally embedded, accessibility-first marketplace demonstrably bridges AVRC production and digital markets — PWDs as empowered sellers under co-management.</li>
    <li><b>Next</b> Field evaluation → live merchant keys → notifications/OAuth → regional replication → React Native companion.</li></ul>`},
+ {k:'5.3',t:'Client-recommended roadmap',h:`<ul class="fl">
+   <li><b>Trust &amp; Safety</b> Block · Ban · Blocklist · ID Verification · COD Verification · Review Integrity · Fraud Detection · Report &amp; Mediation.</li>
+   <li><b>Payments &amp; Support</b> Cash on Delivery · E-wallet rails · Seller Wallet · Instant Payout · Support Ticket Resolution · Notification Center · LiveChat + CS Chatbot · SmartChat concern routing.</li>
+   <li><b>Experience</b> Accessibility Mode · Low-Data Mode · Multi-Language (EN/FIL/Chavacano) · Voice Feedback · Keyword Filter · Size/Color variants · Only-Available toggle.</li>
+   <li><b>Fulfillment &amp; Community</b> Shipping report/type/manage · Returns Hub · Group Buying · Rural Pickup Points · Barangay Storefront · Vouchers.</li>
+   <li><b>Seller Enablement</b> Micro-seller Onboarding · Training Hub · Offline Upload Advance · Greetings module · Date/Time standardization.</li>
+   <li><b>Extras</b> QR Code support · bitly.com share links.</li></ul>`},
  {k:'Close',t:'Thank you',h:`<div class="sb-in">
    <h3 style="font-size:44px;margin-bottom:10px">Salamat!</h3>
    <p class="sub">Thrive · Lead · Innovate — accessible e-commerce for PWD entrepreneurs of Region IX.</p>
