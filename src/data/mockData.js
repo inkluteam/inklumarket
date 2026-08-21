@@ -144,3 +144,53 @@ export const siteSettings = {
   contactPhone: '+63 62 991 2345',
   address: 'Mampang, Zamboanga City, Region IX, Philippines',
 }
+
+
+export const conversations = [
+  { id: 'conv-1', buyerId: 'u2', sellerId: 's1', productId: '1', createdAt: '2026-01-04T10:00:00Z', lastMessage: 'Thank you for your order!', lastMessageAt: '2026-01-05T08:00:00Z' },
+  { id: 'conv-2', buyerId: 'u5', sellerId: 's2', productId: '2', createdAt: '2026-01-06T09:00:00Z', lastMessage: 'Is this available in larger size?', lastMessageAt: '2026-01-07T11:00:00Z' },
+  { id: 'conv-3', buyerId: 'u8', sellerId: 's5', productId: '5', createdAt: '2026-01-04T14:00:00Z', lastMessage: 'Order has been shipped!', lastMessageAt: '2026-01-05T16:00:00Z' },
+]
+
+export const supportTickets = [
+  { id: 'TKT-001', userId: 'u2', userName: 'Maria Santos', subject: 'Order ORD-1001 delayed', description: 'My order has not arrived yet after 5 days.', status: 'resolved', priority: 'normal', createdAt: '2026-01-06T10:00:00Z', updatedAt: '2026-01-07T14:00:00Z', responses: [{ id: 'tr-1', authorId: 'u1', authorName: 'Admin', message: 'We have contacted the courier. Your package will arrive tomorrow.', sentAt: '2026-01-07T09:00:00Z' }] },
+  { id: 'TKT-002', userId: 'u5', userName: 'James Liu', subject: 'Wrong item received', description: 'I received a different product than what I ordered.', status: 'in_progress', priority: 'high', createdAt: '2026-01-08T12:00:00Z', updatedAt: '2026-01-09T10:00:00Z', responses: [] },
+  { id: 'TKT-003', userId: 'u10', userName: 'Sarah Johnson', subject: 'Payment not reflecting', description: 'I paid via GCash but the order still shows pending.', status: 'open', priority: 'high', createdAt: '2026-01-10T15:00:00Z', updatedAt: '2026-01-10T15:00:00Z', responses: [] },
+]
+
+export const notifications = [
+  { id: 'n-1', userId: 'u2', type: 'order', message: 'Your order ORD-1001 has been delivered!', link: '/buyer/orders', isRead: true, createdAt: '2026-01-06T10:00:00Z' },
+  { id: 'n-2', userId: 'u2', type: 'message', message: 'Hope Bakery replied to your message.', link: '/buyer/messages', isRead: false, createdAt: '2026-01-07T08:00:00Z' },
+  { id: 'n-3', userId: 'u5', type: 'order', message: 'Your order ORD-1002 has been shipped!', link: '/buyer/orders', isRead: false, createdAt: '2026-01-08T09:00:00Z' },
+  { id: 'n-4', userId: 'u3', type: 'order', message: 'New order ORD-1001 received!', link: '/seller/seller-orders', isRead: true, createdAt: '2026-01-05T07:00:00Z' },
+  { id: 'n-5', userId: 'u3', type: 'low_stock', message: 'Artisan Sourdough Bread is running low (5 left).', link: '/seller/products', isRead: false, createdAt: '2026-01-10T06:00:00Z' },
+]
+
+export const flashSales = [
+  { id: 'fs-1', productId: '3', discountPercent: 15, startsAt: '2026-01-15T00:00:00Z', endsAt: '2026-01-17T23:59:59Z', createdAt: '2026-01-14T10:00:00Z' },
+  { id: 'fs-2', productId: '5', discountPercent: 20, startsAt: '2026-01-20T00:00:00Z', endsAt: '2026-01-21T23:59:59Z', createdAt: '2026-01-18T10:00:00Z' },
+]
+
+export const wishlist = [
+  { id: 'w-1', userId: 'u2', productId: '5', addedAt: '2026-01-03T10:00:00Z' },
+  { id: 'w-2', userId: 'u2', productId: '11', addedAt: '2026-01-05T12:00:00Z' },
+  { id: 'w-3', userId: 'u5', productId: '3', addedAt: '2026-01-07T09:00:00Z' },
+  { id: 'w-4', userId: 'u8', productId: '6', addedAt: '2026-01-04T14:00:00Z' },
+]
+
+export const consentLogs = [
+  { id: 'cl-1', userId: 'u2', action: 'cookie_accept', purpose: 'analytics and preferences', consent: true, loggedAt: '2026-01-01T10:00:00Z' },
+  { id: 'cl-2', userId: 'u5', action: 'cookie_accept', purpose: 'analytics and preferences', consent: true, loggedAt: '2026-01-02T09:00:00Z' },
+  { id: 'cl-3', userId: 'u6', action: 'cookie_decline', purpose: 'analytics', consent: false, loggedAt: '2026-01-03T11:00:00Z' },
+]
+
+export const newsletter = [
+  { id: 'nl-1', email: 'maria@example.com', userId: 'u2', subscribedAt: '2026-01-01T10:00:00Z', active: true },
+  { id: 'nl-2', email: 'james@example.com', userId: 'u5', subscribedAt: '2026-01-02T09:00:00Z', active: true },
+  { id: 'nl-3', email: 'newsletter@example.com', userId: null, subscribedAt: '2026-01-05T15:00:00Z', active: true },
+]
+
+export const chatSessions = [
+  { id: 'cs-1', userId: 'u2', guestId: null, status: 'closed', escalatedTicketId: null, createdAt: '2026-01-05T09:00:00Z', messages: [{ id: 'cm-1', role: 'user', body: 'How do I track my order?', sentAt: '2026-01-05T09:01:00Z' }, { id: 'cm-2', role: 'bot', body: 'You can track your order under Buyer → Orders. Your order ID is shown on each row.', sentAt: '2026-01-05T09:01:05Z' }] },
+  { id: 'cs-2', userId: null, guestId: 'guest-xyz', status: 'closed', escalatedTicketId: null, createdAt: '2026-01-07T14:00:00Z', messages: [{ id: 'cm-3', role: 'user', body: 'What payment methods are available?', sentAt: '2026-01-07T14:01:00Z' }, { id: 'cm-4', role: 'bot', body: 'We accept Cash on Delivery, GCash, Maya, and Bank Transfer.', sentAt: '2026-01-07T14:01:04Z' }] },
+]

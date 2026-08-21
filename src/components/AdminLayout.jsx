@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Users, Package, ShoppingCart, DollarSign, BarChart3, Settings, Tags, Activity, MessageSquare, CreditCard, Palette, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
 const links = [
@@ -12,6 +12,9 @@ const links = [
   { to: '/admin/admin-reports', label: 'Reports', icon: BarChart3 },
   { to: '/admin/review-moderation', label: 'Reviews', icon: MessageSquare },
   { to: '/admin/activity-logs', label: 'Activity', icon: Activity },
+  { to: '/admin/payments', label: 'Payments', icon: CreditCard },
+  { to: '/admin/theme', label: 'Theme', icon: Palette },
+  { to: '/admin/compliance', label: 'Compliance', icon: ShieldCheck },
   { to: '/admin/admin-settings', label: 'Settings', icon: Settings },
 ]
 

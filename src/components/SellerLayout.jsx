@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingCart, BarChart3, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingCart, BarChart3, DollarSign, MessageCircle, Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
 const links = [
@@ -8,6 +8,8 @@ const links = [
   { to: '/seller/seller-orders', label: 'Orders', icon: ShoppingCart },
   { to: '/seller/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/seller/payouts', label: 'Payouts', icon: DollarSign },
+  { to: '/seller/messages', label: 'Messages', icon: MessageCircle },
+  { to: '/seller/reviews', label: 'Reviews', icon: Star },
 ]
 
 export default function SellerLayout() {

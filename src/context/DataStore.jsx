@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react'
-import { categories as initCategories, sellers as initSellers, products as initProducts, users as initUsers, orders as initOrders, reviews as initReviews, activityLogs as initLogs, payouts as initPayouts, transactions as initTransactions } from '../data/mockData'
+import { categories as initCategories, sellers as initSellers, products as initProducts, users as initUsers, orders as initOrders, reviews as initReviews, activityLogs as initLogs, payouts as initPayouts, transactions as initTransactions, conversations as initConversations, supportTickets as initTickets, notifications as initNotifications, flashSales as initFlashSales, wishlist as initWishlist, consentLogs as initConsentLogs, newsletter as initNewsletter, chatSessions as initChatSessions } from '../data/mockData'
 
 const DataStoreContext = createContext(null)
 
@@ -51,6 +51,62 @@ export function DataStoreProvider({ children }) {
   const [refunds, setRefunds] = useState(() => {
     const saved = localStorage.getItem('im_refunds')
     return saved ? JSON.parse(saved) : []
+  })
+  const [conversations, setConversations] = useState(() => {
+    const saved = localStorage.getItem('im_conversations')
+    return saved ? JSON.parse(saved) : initConversations
+  })
+  const [supportTickets, setSupportTickets] = useState(() => {
+    const saved = localStorage.getItem('im_support_tickets')
+    return saved ? JSON.parse(saved) : initTickets
+  })
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem('im_notifications')
+    return saved ? JSON.parse(saved) : initNotifications
+  })
+  const [flashSales, setFlashSales] = useState(() => {
+    const saved = localStorage.getItem('im_flash_sales')
+    return saved ? JSON.parse(saved) : initFlashSales
+  })
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem('im_wishlist')
+    return saved ? JSON.parse(saved) : initWishlist
+  })
+  const [consentLogs, setConsentLogs] = useState(() => {
+    const saved = localStorage.getItem('im_consent_logs')
+    return saved ? JSON.parse(saved) : initConsentLogs
+  })
+  const [newsletter, setNewsletter] = useState(() => {
+    const saved = localStorage.getItem('im_newsletter')
+    return saved ? JSON.parse(saved) : initNewsletter
+  })
+  const [chatSessions, setChatSessions] = useState(() => {
+    const saved = localStorage.getItem('im_chat_sessions')
+    return saved ? JSON.parse(saved) : initChatSessions
+  })
+  const [paymentProviders, setPaymentProviders] = useState(() => {
+    const saved = localStorage.getItem('im_payment_providers')
+    return saved ? JSON.parse(saved) : [
+      { id: 'cod', name: 'Cash on Delivery', enabled: true, fee: 0 },
+      { id: 'gcash', name: 'GCash', enabled: true, fee: 1.5 },
+      { id: 'maya', name: 'Maya (PayMaya)', enabled: true, fee: 1.5 },
+      { id: 'paymongo', name: 'PayMongo', enabled: false, fee: 2.5 },
+      { id: 'stripe', name: 'Stripe', enabled: false, fee: 2.9 },
+      { id: 'paypal', name: 'PayPal', enabled: false, fee: 3.0 },
+    ]
+  })
+  const [themeSettings, setThemeSettings] = useState(() => {
+    const saved = localStorage.getItem('im_theme_settings')
+    return saved ? JSON.parse(saved) : {
+      colorPrimary: '#0047AB',
+      colorSecondary: '#C8102E',
+      colorAccent: '#FFD700',
+      colorBackground: '#FFFFFF',
+      colorText: '#1a1a1a',
+      fontSizeBase: 16,
+      borderRadius: 8,
+      preset: 'dswd-default',
+    }
   })
 
   const persist = (key, data) => localStorage.setItem(key, JSON.stringify(data))
@@ -523,8 +579,185 @@ export function DataStoreProvider({ children }) {
     addActivityLog('Review moderated', 'Admin', 'user', `Review ${reviewId} ${action}`)
   }, [addActivityLog])
 
+  // ── Conversations ────────────────────────────────────────────
+  const getOrCreateConversation = useCallback((buyerId, sellerId, productId = null) => {
+    const existing = conversations.find(c => c.buyerId === buyerId && c.sellerId === sellerId && (productId ? c.productId === productId : true))
+    if (existing) return existing
+    const newConv = { id: 'conv-' + Date.now(), buyerId, sellerId, productId, createdAt: new Date().toISOString(), lastMessage: null, lastMessageAt: null }
+    setConversations(prev => { const next = [newConv, ...prev]; persist('im_conversations', next); return next })
+    return newConv
+  }, [conversations])
+
+  const sendConversationMessage = useCallback((conversationId, senderId, body) => {
+    const newMsg = { id: 'cmsg-' + Date.now(), conversationId, senderId, body, sentAt: new Date().toISOString(), readAt: null }
+    setMessages(prev => { const next = [newMsg, ...prev]; persist('im_messages', next); return next })
+    setConversations(prev => {
+      const next = prev.map(c => c.id === conversationId ? { ...c, lastMessage: body, lastMessageAt: new Date().toISOString() } : c)
+      persist('im_conversations', next)
+      return next
+    })
+    return newMsg
+  }, [])
+
+  const getConversationMessages = useCallback((conversationId) => {
+    return messages.filter(m => m.conversationId === conversationId).sort((a, b) => a.sentAt?.localeCompare(b.sentAt))
+  }, [messages])
+
+  const getConversationsForUser = useCallback((userId) => {
+    return conversations.filter(c => c.buyerId === userId || c.sellerId === userId)
+  }, [conversations])
+
+  // ── Support Tickets ──────────────────────────────────────────
+  const createTicket = useCallback((ticket) => {
+    const newTicket = { ...ticket, id: 'TKT-' + Date.now().toString().slice(-6), status: 'open', createdAt: new Date().toISOString(), responses: [] }
+    setSupportTickets(prev => { const next = [newTicket, ...prev]; persist('im_support_tickets', next); return next })
+    addActivityLog('Support ticket opened', ticket.userName || 'User', 'user', ticket.subject)
+    return newTicket
+  }, [addActivityLog])
+
+  const updateTicketStatus = useCallback((ticketId, status, adminNote = '') => {
+    setSupportTickets(prev => {
+      const next = prev.map(t => t.id === ticketId ? { ...t, status, updatedAt: new Date().toISOString(), adminNote } : t)
+      persist('im_support_tickets', next)
+      return next
+    })
+    addActivityLog(`Ticket ${status}`, 'Admin', 'user', `TKT ${ticketId} marked ${status}`)
+  }, [addActivityLog])
+
+  const addTicketResponse = useCallback((ticketId, authorId, authorName, message) => {
+    setSupportTickets(prev => {
+      const next = prev.map(t => t.id === ticketId ? { ...t, responses: [...(t.responses || []), { id: 'tr-' + Date.now(), authorId, authorName, message, sentAt: new Date().toISOString() }], updatedAt: new Date().toISOString() } : t)
+      persist('im_support_tickets', next)
+      return next
+    })
+  }, [])
+
+  const getTicketsByUser = useCallback((userId) => {
+    return supportTickets.filter(t => t.userId === userId)
+  }, [supportTickets])
+
+  // ── Notifications ────────────────────────────────────────────
+  const addNotification = useCallback((userId, type, message, link = null) => {
+    const notif = { id: 'n-' + Date.now(), userId, type, message, link, isRead: false, createdAt: new Date().toISOString() }
+    setNotifications(prev => { const next = [notif, ...prev]; persist('im_notifications', next); return next })
+    return notif
+  }, [])
+
+  const markNotificationRead = useCallback((notifId) => {
+    setNotifications(prev => { const next = prev.map(n => n.id === notifId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
+  }, [])
+
+  const markAllNotificationsRead = useCallback((userId) => {
+    setNotifications(prev => { const next = prev.map(n => n.userId === userId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
+  }, [])
+
+  const getNotificationsForUser = useCallback((userId) => {
+    return notifications.filter(n => n.userId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  }, [notifications])
+
+  // ── Flash Sales ──────────────────────────────────────────────
+  const addFlashSale = useCallback((sale) => {
+    const newSale = { ...sale, id: 'fs-' + Date.now(), createdAt: new Date().toISOString() }
+    setFlashSales(prev => { const next = [newSale, ...prev]; persist('im_flash_sales', next); return next })
+    addActivityLog('Flash sale created', 'Admin', 'product', `${sale.discountPercent}% off product ${sale.productId}`)
+    return newSale
+  }, [addActivityLog])
+
+  const removeFlashSale = useCallback((saleId) => {
+    setFlashSales(prev => { const next = prev.filter(s => s.id !== saleId); persist('im_flash_sales', next); return next })
+  }, [])
+
+  const getActiveFlashSales = useCallback(() => {
+    const now = new Date().toISOString()
+    return flashSales.filter(s => s.startsAt <= now && s.endsAt >= now)
+  }, [flashSales])
+
+  // ── Wishlist ─────────────────────────────────────────────────
+  const addToWishlist = useCallback((userId, productId) => {
+    const existing = wishlist.find(w => w.userId === userId && w.productId === productId)
+    if (existing) return
+    const item = { id: 'w-' + Date.now(), userId, productId, addedAt: new Date().toISOString() }
+    setWishlist(prev => { const next = [item, ...prev]; persist('im_wishlist', next); return next })
+  }, [wishlist])
+
+  const removeFromWishlist = useCallback((userId, productId) => {
+    setWishlist(prev => { const next = prev.filter(w => !(w.userId === userId && w.productId === productId)); persist('im_wishlist', next); return next })
+  }, [])
+
+  const getWishlistByUser = useCallback((userId) => {
+    return wishlist.filter(w => w.userId === userId)
+  }, [wishlist])
+
+  const isInWishlist = useCallback((userId, productId) => {
+    return wishlist.some(w => w.userId === userId && w.productId === productId)
+  }, [wishlist])
+
+  // ── Consent Logs ─────────────────────────────────────────────
+  const addConsentLog = useCallback((userId, action, purpose) => {
+    const log = { id: 'cl-' + Date.now(), userId, action, purpose, consent: true, loggedAt: new Date().toISOString() }
+    setConsentLogs(prev => { const next = [log, ...prev]; persist('im_consent_logs', next); return next })
+  }, [])
+
+  const getConsentLogsByUser = useCallback((userId) => {
+    return consentLogs.filter(l => l.userId === userId)
+  }, [consentLogs])
+
+  // ── Newsletter ───────────────────────────────────────────────
+  const subscribeNewsletter = useCallback((email, userId = null) => {
+    const existing = newsletter.find(n => n.email === email)
+    if (existing) return existing
+    const sub = { id: 'nl-' + Date.now(), email, userId, subscribedAt: new Date().toISOString(), active: true }
+    setNewsletter(prev => { const next = [sub, ...prev]; persist('im_newsletter', next); return next })
+    return sub
+  }, [newsletter])
+
+  const unsubscribeNewsletter = useCallback((email) => {
+    setNewsletter(prev => { const next = prev.map(n => n.email === email ? { ...n, active: false, unsubscribedAt: new Date().toISOString() } : n); persist('im_newsletter', next); return next })
+  }, [])
+
+  // ── Chat Sessions ────────────────────────────────────────────
+  const createChatSession = useCallback((userId = null, guestId = null) => {
+    const session = { id: 'cs-' + Date.now(), userId, guestId, status: 'open', messages: [], escalatedTicketId: null, createdAt: new Date().toISOString() }
+    setChatSessions(prev => { const next = [session, ...prev]; persist('im_chat_sessions', next); return next })
+    return session
+  }, [])
+
+  const addChatMessage = useCallback((sessionId, role, body) => {
+    setChatSessions(prev => {
+      const next = prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: 'cm-' + Date.now(), role, body, sentAt: new Date().toISOString() }] } : s)
+      persist('im_chat_sessions', next)
+      return next
+    })
+  }, [])
+
+  const escalateChatToTicket = useCallback((sessionId, userId, subject) => {
+    const session = chatSessions.find(s => s.id === sessionId)
+    if (!session) return null
+    const transcript = (session.messages || []).map(m => `[${m.role}] ${m.body}`).join('\n')
+    const ticket = createTicket({ userId, userName: 'Chat User', subject, description: `Escalated from chat.\n\n${transcript}`, priority: 'normal' })
+    setChatSessions(prev => {
+      const next = prev.map(s => s.id === sessionId ? { ...s, status: 'escalated', escalatedTicketId: ticket.id } : s)
+      persist('im_chat_sessions', next)
+      return next
+    })
+    return ticket
+  }, [chatSessions, createTicket])
+
+  // ── Payment Providers ────────────────────────────────────────
+  const updatePaymentProvider = useCallback((providerId, updates) => {
+    setPaymentProviders(prev => { const next = prev.map(p => p.id === providerId ? { ...p, ...updates } : p); persist('im_payment_providers', next); return next })
+    addActivityLog('Payment provider updated', 'Admin', 'system', `Provider ${providerId} updated`)
+  }, [addActivityLog])
+
+  // ── Theme Settings ───────────────────────────────────────────
+  const updateThemeSettings = useCallback((updates) => {
+    setThemeSettings(prev => { const next = { ...prev, ...updates }; persist('im_theme_settings', next); return next })
+    addActivityLog('Theme updated', 'Admin', 'system', 'Theme settings saved')
+  }, [addActivityLog])
+
   const value = useMemo(() => ({
     products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
+    conversations, supportTickets, notifications, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -539,7 +772,17 @@ export function DataStoreProvider({ children }) {
     addAddress, updateAddress, deleteAddress, setDefaultAddress, getAddressesByUser,
     requestRefund, updateRefundStatus, getRefundsByOrder,
     moderateReview,
+    getOrCreateConversation, sendConversationMessage, getConversationMessages, getConversationsForUser,
+    createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
+    addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
+    addFlashSale, removeFlashSale, getActiveFlashSales,
+    addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
+    addConsentLog, getConsentLogsByUser,
+    subscribeNewsletter, unsubscribeNewsletter,
+    createChatSession, addChatMessage, escalateChatToTicket,
+    updatePaymentProvider, updateThemeSettings,
   }), [products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
+    conversations, supportTickets, notifications, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -553,7 +796,16 @@ export function DataStoreProvider({ children }) {
     addActivityLog,
     addAddress, updateAddress, deleteAddress, setDefaultAddress, getAddressesByUser,
     requestRefund, updateRefundStatus, getRefundsByOrder,
-    moderateReview])
+    moderateReview,
+    getOrCreateConversation, sendConversationMessage, getConversationMessages, getConversationsForUser,
+    createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
+    addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
+    addFlashSale, removeFlashSale, getActiveFlashSales,
+    addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
+    addConsentLog, getConsentLogsByUser,
+    subscribeNewsletter, unsubscribeNewsletter,
+    createChatSession, addChatMessage, escalateChatToTicket,
+    updatePaymentProvider, updateThemeSettings])
 
   return (
     <DataStoreContext.Provider value={value}>

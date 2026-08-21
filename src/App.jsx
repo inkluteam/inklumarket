@@ -27,12 +27,17 @@ import Profile from './pages/buyer/Profile'
 import Checkout from './pages/buyer/Checkout'
 import Orders from './pages/buyer/Orders'
 import OrderDetail from './pages/buyer/OrderDetail'
+import BuyerMessages from './pages/buyer/Messages'
+import BuyerSupport from './pages/buyer/Support'
+import BuyerWishlist from './pages/buyer/Wishlist'
 
 import SellerDashboard from './pages/seller/Dashboard'
 import SellerProducts from './pages/seller/Products'
 import SellerOrders from './pages/seller/SellerOrders'
 import SellerAnalytics from './pages/seller/Analytics'
 import SellerPayouts from './pages/seller/Payouts'
+import SellerMessages from './pages/seller/Messages'
+import SellerReviews from './pages/seller/Reviews'
 import RegisterSeller from './pages/seller/RegisterSeller'
 
 import AdminDashboard from './pages/admin/Dashboard'
@@ -45,9 +50,13 @@ import AdminReports from './pages/admin/Reports'
 import ReviewModeration from './pages/admin/ReviewModeration'
 import ActivityLogs from './pages/admin/ActivityLogs'
 import AdminSettings from './pages/admin/AdminSettings'
+import AdminPayments from './pages/admin/Payments'
+import AdminTheme from './pages/admin/Theme'
+import AdminCompliance from './pages/admin/Compliance'
 
 import About from './pages/static/About'
 import Contact from './pages/static/Contact'
+import FAQ from './pages/static/FAQ'
 import AccessibilityPage from './pages/static/Accessibility'
 import Privacy from './pages/static/Privacy'
 import Terms from './pages/static/Terms'
@@ -80,15 +89,19 @@ export default function App() {
                       <Route path="/buyer/checkout" element={<AuthGuard><Checkout /></AuthGuard>} />
                       <Route path="/buyer/orders" element={<AuthGuard><Orders /></AuthGuard>} />
                       <Route path="/buyer/order-detail/:id" element={<AuthGuard><OrderDetail /></AuthGuard>} />
+                      <Route path="/buyer/messages" element={<AuthGuard><BuyerMessages /></AuthGuard>} />
+                      <Route path="/buyer/support" element={<AuthGuard><BuyerSupport /></AuthGuard>} />
+                      <Route path="/buyer/wishlist" element={<AuthGuard><BuyerWishlist /></AuthGuard>} />
                       <Route path="/seller/register-seller" element={<RegisterSeller />} />
                       <Route path="/static/about" element={<About />} />
                       <Route path="/static/contact" element={<Contact />} />
+                      <Route path="/static/faq" element={<FAQ />} />
                       <Route path="/static/accessibility" element={<AccessibilityPage />} />
                       <Route path="/static/privacy" element={<Privacy />} />
                       <Route path="/static/terms" element={<Terms />} />
                     </Route>
 
-                    {/* Admin routes — only admin can access */}
+                    {/* Admin routes */}
                     <Route element={<Layout />}>
                       <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
                         <Route index element={<Navigate to="dashboard" replace />} />
@@ -102,10 +115,13 @@ export default function App() {
                         <Route path="review-moderation" element={<ReviewModeration />} />
                         <Route path="activity-logs" element={<ActivityLogs />} />
                         <Route path="admin-settings" element={<AdminSettings />} />
+                        <Route path="payments" element={<AdminPayments />} />
+                        <Route path="theme" element={<AdminTheme />} />
+                        <Route path="compliance" element={<AdminCompliance />} />
                       </Route>
                     </Route>
 
-                    {/* Seller routes — only sellers can access */}
+                    {/* Seller routes */}
                     <Route element={<Layout />}>
                       <Route path="/seller" element={<AuthGuard allowedRoles={['seller']}><SellerLayout /></AuthGuard>}>
                         <Route index element={<Navigate to="dashboard" replace />} />
@@ -114,6 +130,8 @@ export default function App() {
                         <Route path="seller-orders" element={<SellerOrders />} />
                         <Route path="analytics" element={<SellerAnalytics />} />
                         <Route path="payouts" element={<SellerPayouts />} />
+                        <Route path="messages" element={<SellerMessages />} />
+                        <Route path="reviews" element={<SellerReviews />} />
                       </Route>
                     </Route>
 
