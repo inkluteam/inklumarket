@@ -122,6 +122,25 @@ export function DataStoreProvider({ children }) {
     })
   }, [])
 
+  // ── Notifications (declared early — used by orders & tickets below) ────────
+  const addNotification = useCallback((userId, type, message, link = null) => {
+    const notif = { id: 'n-' + Date.now(), userId, type, message, link, isRead: false, createdAt: new Date().toISOString() }
+    setNotifications(prev => { const next = [notif, ...prev]; persist('im_notifications', next); return next })
+    return notif
+  }, [])
+
+  const markNotificationRead = useCallback((notifId) => {
+    setNotifications(prev => { const next = prev.map(n => n.id === notifId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
+  }, [])
+
+  const markAllNotificationsRead = useCallback((userId) => {
+    setNotifications(prev => { const next = prev.map(n => n.userId === userId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
+  }, [])
+
+  const getNotificationsForUser = useCallback((userId) => {
+    return notifications.filter(n => n.userId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  }, [notifications])
+
   const addProduct = useCallback((product) => {
     const newProduct = { ...product, id: String(Date.now()), rating: 0, reviews: 0, status: 'pending_review', dateAdded: new Date().toISOString().split('T')[0] }
     setProducts(prev => {
@@ -658,25 +677,6 @@ export function DataStoreProvider({ children }) {
   const getTicketsByUser = useCallback((userId) => {
     return supportTickets.filter(t => t.userId === userId)
   }, [supportTickets])
-
-  // â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const addNotification = useCallback((userId, type, message, link = null) => {
-    const notif = { id: 'n-' + Date.now(), userId, type, message, link, isRead: false, createdAt: new Date().toISOString() }
-    setNotifications(prev => { const next = [notif, ...prev]; persist('im_notifications', next); return next })
-    return notif
-  }, [])
-
-  const markNotificationRead = useCallback((notifId) => {
-    setNotifications(prev => { const next = prev.map(n => n.id === notifId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
-  }, [])
-
-  const markAllNotificationsRead = useCallback((userId) => {
-    setNotifications(prev => { const next = prev.map(n => n.userId === userId ? { ...n, isRead: true } : n); persist('im_notifications', next); return next })
-  }, [])
-
-  const getNotificationsForUser = useCallback((userId) => {
-    return notifications.filter(n => n.userId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-  }, [notifications])
 
   // â”€â”€ Blocklist â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [blocklist, setBlocklist] = useState(() => {
