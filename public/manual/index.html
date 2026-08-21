@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IncluMarket Capstone Manuscript — New TRB Format · ZPPSU CICS</title>
+<meta name="description" content="Full capstone manuscript of Inclusive Market restructured into the new TRB-approved ZPPSU CICS IT/IS format: Introduction, RRL split local/foreign with synthesis, SDLC-anchored methodology with research instruments and statistical tools, per-objective results."/>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+<style>
+  :root{--blue:#0047AB;--blue-dark:#1e3a8a;--sky:#3b82f6;--gold:#F2B705;--red:#E6397E;
+    --green:#15803D;--ink:#0f172a;--soft:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.6}
+  a{text-decoration:none}
+  /* ── Top bar ─────────────────────────────────────────────── */
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+    background:linear-gradient(90deg,#0b1f3f,#0047AB);color:#fff;padding:12px 20px;box-shadow:0 2px 14px rgba(11,31,63,.35)}
+  .logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--gold),#fb923c);font-weight:900;font-size:17px;color:#0b1f3f;flex-shrink:0}
+  .topbar h1{font-size:16.5px;font-weight:800;line-height:1.2}
+  .topbar p{font-size:11.5px;opacity:.75}
+  .spacer{flex:1}
+  .btn{border:none;border-radius:9px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+  .btn-ghost:hover{background:rgba(255,255,255,.24)}
+  .btn-gold{background:var(--gold);color:#422006}
+  .btn-blue{background:var(--red);color:#fff;margin-left:-6px;border-radius:9px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;border:none;font-family:inherit}
+  /* ── Document layout ─────────────────────────────────────── */
+  main{max-width:1200px;margin:0 auto;padding:30px 20px 60px}
+  section.doc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 32px;margin-bottom:26px;box-shadow:0 1p x4px rgba(15,23,42,.05)}
+  section.doc{box-shadow:0 1px 4px rgba(15,23,42,.05)}
+  .chap-tag{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:11.5px;
+    letter-spacing:2px;text-transform:uppercase;border-radius:999px;padding:5px 16px;margin-bottom:10px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:22px 0 6px;flex-wrap:wrap}
+  .sec-head:first-child{margin-top:0}
+  .sec-num{min-width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;padding:0 8px}
+  .sec-head h3{font-size:19px;font-weight:900;color:var(--blue-dark)}
+  .sub-head h4{font-size:15px;font-weight:800;color:var(--blue-dark);margin:18px 0 8px}
+  p.body-text{text-align:justify;color:#1e293b;font-size:14px;margin-bottom:10px}
+  .hero{background:linear-gradient(120deg,#0b1f3f,#0047AB 55%,#0891b2);color:#fff;border:none;text-align:center}
+  .hero h2{font-size:clamp(21px,3.4vw,32px);font-weight:900;line-height:1.35;background:linear-gradient(90deg,#FFD700,#fb923c,#f472b6);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:center;margin-top:16px;font-size:13.5px;opacity:.9}
+  .badge-row{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:16px}
+  .badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700}
+  .cards{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%}
+  .icard{flex:0 1 330px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:13px;padding:16px 18px;text-align:left}
+  .icard h4{color:var(--blue-dark);font-size:14.5px;margin-bottom:6px}
+  .icard p{color:#334155;font-size:13px;line-height:1.6}
+  .icard.gold{background:#fefce8;border-color:#fde047}.icard.gold h4{color:#a16207}
+  .icard.green{background:#f0fdf4;border-color:#bbf7d0}.icard.green h4{color:#166534}
+  .icard.pink{background:#fdf2f8;border-color:#fbcfe8}.icard.pink h4{color:#be185d}
+  /* study/system cards */
+  .study{flex:0 1 460px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:12px;padding:16px 18px;text-align:left}
+  .study h4{font-size:14.5px;color:var(--blue-dark);margin-bottom:8px}
+  .study dl{display:grid;grid-template-columns:86px 1fr;gap:4px 10px;font-size:12.8px}
+  .study dt{font-weight:800;color:var(--soft)}
+  .study dd{color:#334155}
+  .study.local{border-top-color:var(--green)}
+  .versus{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%}
+  .panel{flex:1 1 360px;border-radius:13px;padding:16px 20px;text-align:left}
+  .panel.prev{background:#fef2f2;border:1.5px solid #fecaca}
+  .panel.next{background:#f0fdf4;border:1.5px solid #bbf7d0}
+  .panel h4{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+  .panel.prev h4{color:#b91c1c}.panel.next h4{color:#15803d}
+  .panel ul{list-style:none}.panel li{font-size:13.5px;line-height:1.55;color:#334155;padding:6px 0 6px 24px;position:relative;border-bottom:1px dashed rgba(100,116,139,.25)}
+  .panel li:last-child{border:none}
+  .panel.prev li::before{content:'○';position:absolute;left:3px;color:#dc2626;font-weight:900}
+  .panel.next li::before{content:'✓';position:absolute;left:1px;color:#16a34a;font-weight:900}
+  .note{margin-top:14px;background:#f1f5f9;border-left:4px solid var(--blue);border-radius:8px;padding:11px 15px;font-size:13.3px;color:#334155;font-style:italic}
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border:1.5px solid var(--line);border-radius:13px;background:var(--card);margin:12px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:linear-gradient(90deg,var(--blue),#1e40af);color:#fff;padding:10px 13px;text-align:left;font-weight:700;white-space:nowrap}
+  td{padding:9px 13px;border-top:1px solid var(--line);color:#1e293b;vertical-align:top}
+  tbody tr:nth-child(even){background:#f8fafc}
+  tr.hl-row{background:#fefce8 !important}tr.hl-row td{font-weight:800;color:#854d0e}
+  td.p-high{color:#dc2626;font-weight:800}td.p-med{color:#d97706;font-weight:800}td.p-low{color:#16a34a;font-weight:800}
+  code{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:5px;padding:1px 6px;font-size:12px;font-family:Consolas,monospace}
+  pre.tree{background:#0b1220;color:#cbd5e1;border-radius:12px;padding:16px 20px;font-size:12px;line-height:1.55;overflow-x:auto;font-family:Consolas,monospace}
+  /* sdlc chips */
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;margin:12px 0}
+  .chip{background:#eff6ff;border:2px solid var(--blue);color:var(--blue-dark);border-radius:999px;padding:8px 16px;font-weight:800;font-size:12.8px}
+  .arrow{color:var(--soft);font-weight:900;font-size:16px}
+  /* objective result cards */
+  .obj{flex:0 1 480px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:15px 18px;text-align:left}
+  .obj h4{font-size:13.8px;color:var(--blue-dark);margin-bottom:6px}
+  .obj .res{font-size:13px;color:#166534;font-weight:600;margin-bottom:6px}
+  .obj p{font-size:12.8px;color:#334155}
+  .formula{background:#0b1220;color:#fde68a;border-radius:12px;padding:16px 20px;font-family:'Cambria Math',Georgia,serif;
+    font-size:16px;text-align:center;margin:12px 0}
+  .formula small{display:block;color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:12px;margin-top:6px}
+  footer.docfoot{text-align:center;color:var(--soft);font-size:13px;padding:24px 0 6px;border-top:1px solid var(--line)}
+  .refs{font-size:13px;color:#334155;padding-left:26px;text-indent:-26px;margin-bottom:9px}
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .check-list li{font-size:13.3px;color:#334155;padding-left:24px;position:relative}
+  .check-list li::before{content:'✅';position:absolute;left:0;font-size:12px}
+  .todo-list li::before{content:'⬜'}
+  /* dark mode */
+  body.dark-doc{background:#0b1220;color:#e2e8f0}
+  body.dark-doc section.doc{background:#101a2e;border-color:#334155}
+  body.dark-doc .sec-head h3,body.dark-doc .sub-head h4{color:#93c5fd}
+  body.dark-doc p.body-text,body.dark-doc .icard p,body.dark-doc .study dd,body.dark-doc .obj p,body.dark-doc .refs{color:#cbd5e1}
+  body.dark-doc .icard,.dark-doc .defitem{background:#0d1730;border-color:#334155}
+  body.dark-doc .icard h4,body.dark-doc .study h4,body.dark-doc .obj h4{color:#93c5fd}
+  body.dark-doc .icard.gold{background:#292005;border-color:#713f12}
+  body.dark-doc .study{background:#0d1730;border-color:#334155}
+  body.dark-doc .obj{background:#0d1730;border-color:#334155}
+  body.dark-doc .panel.prev{background:#2a1215;border-color:#7f1d1d}
+  body.dark-doc .panel.next{background:#0d2113;border-color:#14532d}
+  body.dark-doc .panel li{color:#e2e8f0;border-bottom-color:#334155}
+  body.dark-doc .tbl-wrap{background:#101a2e;border-color:#334155}
+  body.dark-doc td{border-top-color:#1e293b;color:#cbd5e1}
+  body.dark-doc tbody tr:nth-child(even){background:#0d1730}
+  body.dark-doc .chip{background:#0d1730;color:#93c5fd}
+  body.dark-doc .note{background:#0d1730;color:#cbd5e1}
+  body.dark-doc code{background:#1e1b4b;border-color:#3730a3;color:#c7d2fe}
+  body.dark-doc .sec-num{background:linear-gradient(135deg,#1e40af,#0369a1)}
+  body.dark-doc footer.docfoot{border-color:#334155;color:#94a3b8}
+  /* ── Deck ────────────────────────────────────────────────── */
+  #deck{position:fixed;inset:0;z-index:150;background:#0b1220;display:none;flex-direction:column;color:#e2e8f0}
+  #deck.open{display:flex}
+  .deck-top{display:flex;align-items:center;gap:14px;padding:12px 26px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.12)}
+  .deck-top h4{font-size:16px;font-weight:800}
+  .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 14px;overflow:hidden}
+  .slide{width:min(1800px,100%);height:100%;display:none;flex-direction:column;margin:0 auto}
+  .slide.on{display:flex;animation:fSlide .35s ease}
+  @keyframes fSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .slide h3{font-size:clamp(25px,3vw,38px);margin-bottom:6px;text-align:center;width:100%;font-weight:900;
+    background:linear-gradient(90deg,#60a5fa,#FFD700,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .slide .sk{color:var(--gold);font-weight:800;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;text-align:center;width:100%}
+  .sb{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:auto;padding:6px 0}
+  .sb-in{width:100%;text-align:center}
+  .fl{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:13px;margin:16px auto 0;width:100%}
+  .fl li{flex:0 1 430px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-left:4px solid var(--gold);border-radius:10px;padding:14px 18px;font-size:16px;line-height:1.5;text-align:left}
+  .fl li b{color:#ffd700;display:block;font-size:.85em;margin-bottom:3px}
+  .slide table{margin:0 auto;text-align:left;font-size:clamp(13px,1.35vw,18px)}
+  .slide th{padding:9px 16px}.slide td{padding:8px 16px;border-top-color:rgba(255,255,255,.14);color:#e2e8f0}
+  .slide tbody tr:nth-child(even){background:rgba(255,255,255,.05)}
+  .slide .chip{background:rgba(59,130,246,.18);color:#93c5fd}
+  .big{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:2px}
+  .sub{font-size:clamp(14px,1.5vw,19px);color:#94a3b8;margin-top:12px}
+  .deck-bot{display:flex;align-items:center;gap:18px;padding:12px 26px;background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.12)}
+  .progress{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#fb923c);transition:width .3s}
+  .counter{font-weight:800;font-size:15px}
+  .nav-arrow{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#fff;width:44px;height:44px;border-radius:50%;font-size:19px;cursor:pointer}
+  .nav-arrow:hover{background:var(--blue)}
+  #autoBadge{display:none;background:var(--red);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:1.5px;padding:5px 14px;border-radius:999px;animation:pulse 1.2s infinite}
+  #autoBadge.on{display:inline-block}
+  @keyframes pulse{50%{opacity:.55}}
+  #deck.light{background:#FDF6EE;color:#0f172a}
+  #deck.light .deck-top,#deck.light .deck-bot{background:rgba(15,23,42,.05);border-color:rgba(15,23,42,.14)}
+  #deck.light .slide h3{background:linear-gradient(90deg,#1d4ed8,#b45309,#be185d);-webkit-background-clip:text;background-clip:text}
+  #deck.light .fl li{background:#fff;border-color:#e2e8f0;border-left-color:var(--blue);color:#334155;box-shadow:0 2px 8px rgba(15,23,42,.06)}
+  #deck.light .fl li b{color:var(--blue-dark)}
+  #deck.light .nav-arrow{background:rgba(15,23,42,.08);border-color:rgba(15,23,42,.25);color:#0f172a}
+  #deck.light .progress{background:rgba(15,23,42,.15)}
+  #deck.light .counter{color:#334155}
+  #deck.light .sub{color:#64748b}
+  #deck.light .slide td{color:#334155;border-top-color:#e2e8f0}
+  #deck.light .slide tbody tr:nth-child(even){background:#faf5ef}
+  @media(max-width:900px){.topbar{flex-wrap:wrap}section.doc{padding:22px 16px}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">IM</div>
+  <div><h1>Capstone Manuscript — New TRB Format</h1><p>Inclusive Market · ZPPSU CICS · Restructured per final-format.md</p></div>
+  <div class="spacer"></div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap">
+    <a class="btn btn-ghost" href="/">← App</a>
+    <a class="btn btn-ghost" href="/docs/">📘 System Docs</a>
+    <a class="btn btn-ghost" href="/format/">📐 Format Guide</a>
+    <button id="docThemeBtn" class="btn btn-ghost" onclick="toggleDocTheme()">◐ Dark</button>
+    <button class="btn btn-ghost" onclick="toggleDocFullscreen()">⛶ Fullscreen</button>
+    <button class="btn btn-gold" onclick="openDeck(0)">▤ Presentation</button>
+    <button class="btn btn-blue" onclick="presentAll()">▶ Present All</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══ TITLE PAGE ═══ -->
+<section class="doc hero">
+  <h2>INCLUSIVE MARKET: A Smart E-Commerce Application for Products of Persons with Disabilities (PWDs) in Area Vocational Rehabilitation Center (AVRC) Region IX</h2>
+  <p style="max-width:760px;margin:14px auto 0;font-size:14px;opacity:.85">A Capstone Project presented to the Faculty of the College of Information and Computing Science,
+  Zamboanga Peninsula Polytechnic State University — In Partial Fulfillment of the Requirements for the Degree of Bachelor of Science in Information Technology.</p>
+  <div class="meta">
+    <span>Basco, John Michael B.</span><span>Jalem, Christian Mathew B.</span><span>Macas, Eric T.</span><span>Salvador, John Paul T.</span>
+  </div>
+  <div class="meta"><span>Adviser: Aldeliene K. Tulawie, MEngg. Ed</span><span>June 2026</span></div>
+  <div class="badge-row">
+    <span class="badge">New TRB-Approved Structure</span><span class="badge">Decimal Subsections</span>
+    <span class="badge">APA References</span><span class="badge">Supabase-Implemented</span>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 1 ═══ -->
+<section class="doc">
+  <span class="chap-tag">Chapter 1 · Introduction</span>
+  <div class="sec-head"><div class="sec-num">1.1</div><h3>Background of the Study</h3></div>
+  <p class="body-text">The rapid advancement of information and communication technology has fundamentally transformed the economic landscape of societies worldwide, reshaping how goods and services are produced, promoted, and exchanged. Among the most consequential developments is electronic commerce (e-commerce), which has evolved from a supplementary sales channel into a primary driver of economic activity across industries and geographic boundaries. Digital platforms have democratized access to markets, enabling producers of all scales to reach consumers far beyond traditional brick-and-mortar establishments (Volkova et al., 2021). Governments, NGOs, and private enterprises increasingly recognize e-commerce as a strategic tool for inclusive economic development, particularly in emerging economies where physical market infrastructure remains uneven (Hughes, 2025). In the Philippine context, smartphone proliferation, affordable mobile data, and government digital transformation initiatives have accelerated online commerce adoption, creating unprecedented opportunities for previously marginalized sectors (Rodrigo et al., 2024).</p>
+  <p class="body-text">Despite these advancements, the benefits of digital commerce have not been equitably distributed. Persons with Disabilities (PWDs) represent one of the most persistently underserved populations in both physical and digital economic ecosystems. In the Philippines, PSA estimates millions of Filipinos living with some form of disability. While legislation such as Republic Act No. 7277 (Magna Carta for Disabled Persons) enshrines PWD rights to employment, livelihood, and economic participation, translation into practical, accessible opportunities remains deeply inadequate (Mendoza, 2023). PWD entrepreneurs face compounding barriers: limited business information access, absence of structured digital platforms tailored to their needs, insufficient institutional support, and low digital literacy (Malhotra et al., 2025; Mendoza, 2023).</p>
+  <p class="body-text">In Region IX, the Area Vocational Rehabilitation Center (AVRC) — a DSWD-operated institution in Mampang, Zamboanga City — serves more than sixty-six (66) PWD clients trained in handweaving, handicrafts, decorative items, recycled products, and other artisanal crafts. While training programs succeed in developing productive skills, the absence of a structured, accessible digital sales channel limits economic impact: clients rely on episodic physical fairs, informal social media postings by staff, and word-of-mouth referrals. This disconnect between skills development and market access is a critical institutional gap that technology can address.</p>
+  <p class="body-text">A dedicated web-based smart e-commerce platform provides a concrete, sustainable solution: a permanent, accessible, organized marketplace promoting products to consumers across Region IX and beyond, designed with accessibility at its core — TalkBack voice accessibility support, high-contrast design, simplified navigation, WCAG alignment (W3C, 2018; Sundaramoorthy et al., 2024) — plus robust monitoring, management, and reporting tools for LGU staff and AVRC administrators, operationalizing national disability policy and UN SDG 10 (Reduced Inequalities).</p>
+
+  <div class="sec-head"><div class="sec-num">1.2</div><h3>Project Context</h3></div>
+  <p class="body-text">Inclusive Market is conceptualized within AVRC Region IX's operational environment and the broader policy landscape of disability-inclusive economic development. AVRC operates under DSWD Region IX as the primary institutional home for PWD rehabilitation and livelihood training in Zamboanga Peninsula; its 66+ active clients produce handmade crafts, handwoven products, decorative items, recycled goods, souvenir items, and gift articles — yet market exposure remains sporadic and income inconsistent without a digital channel. The project sits at the intersection of three domains: web-based e-commerce, inclusive/accessible interface design, and government-supervised livelihood support. It enables PWD clients to sell through an organized storefront while AVRC personnel and LGU staff monitor listings, manage accounts, oversee inventory, and track transactions through an administrative panel. The project aligns with NCDA's mandate, RA 7277 guarantees, the DSWD community-based rehabilitation framework, and Region IX's local development agenda — a replicable model for digital market access within a government rehabilitation institution.</p>
+
+  <div class="sec-head"><div class="sec-num">1.3</div><h3>Purpose and Description</h3></div>
+  <p class="body-text">The primary purpose is to design and develop a fully functional, accessible, and secure web-based smart e-commerce platform bridging PWD livelihood production at AVRC Region IX and actual product commercialization. <b>"Smart"</b> denotes: a smart search engine (fuzzy matching, search highlighting, recent searches, trending products); smart recommendations (composite scoring with price-range, seller matching, diversity scoring); smart alerts (severity-level monitoring across 7 conditions); smart catalog filtering (price range, rating, category filters); and dynamic Trending/New Arrivals sections. Accessibility is prioritized via TalkBack voice support, text-to-speech, voice commands, and reading mode with word highlighting under WCAG standards — high contrast, enlarged targets, simplified navigation, clear cues.</p>
+  <p class="body-text">Three user groups are served: <b>PWD clients</b> as registered sellers/managers (product CRUD, order management, analytics, payout requests, PWD ID verification); <b>AVRC/LGU staff</b> as administrators (monitoring, approvals, payment provider configuration); and <b>consumers/buyers</b> who purchase via dynamically configured payment methods (PayMongo, Stripe, PayPal, Maya, GCash). Authentication is implemented through Supabase Auth with role-based access control, backed by PostgreSQL with Row-Level Security — upgraded from the original localStorage-only prototype. Built with React 19, Vite, and Tailwind CSS 4 as an install-free web platform.</p>
+
+  <div class="sec-head"><div class="sec-num">1.4</div><h3>Objectives</h3></div>
+  <div class="sub-head"><h4>1.4.1 General Objective</h4></div>
+  <p class="body-text">To design and develop Inclusive Market — a fully accessible, web-based smart e-commerce platform enabling 66+ PWD clients of AVRC Region IX to promote and sell livelihood products online, with comprehensive administrative tools for product management, inventory monitoring, order processing, payment configuration, and transaction oversight — advancing economic empowerment and livelihood sustainability of PWDs in Region IX.</p>
+  <div class="sub-head"><h4>1.4.2 Specific Objectives (SO-01 … SO-13)</h4></div>
+  <div class="cards">
+    <div class="icard"><h4>SO-01 · Smart Platform</h4><p>Design and develop a smart web-based e-commerce platform serving as centralized digital marketplace for handmade crafts, handwoven products, decorative items, recycled products, souvenirs, gift articles.</p></div>
+    <div class="icard pink"><h4>SO-02 · Accessibility Suite</h4><p>TalkBack voice support, TTS, voice commands, reading mode with word highlighting, inclusive interface design per WCAG so PWD users navigate independently.</p></div>
+    <div class="icard"><h4>SO-03 · Product Management</h4><p>Comprehensive module for adding/editing/categorizing listings with images, descriptions, pricing, availability — accurate, organized, visually appealing catalog.</p></div>
+    <div class="icard green"><h4>SO-04 · Inventory &amp; Orders</h4><p>Stock tracking, order processing, status management, transaction records — real-time operational visibility for admins and staff.</p></div>
+    <div class="icard gold"><h4>SO-05 · Multi-Provider Payments</h4><p>PayMongo, Stripe, PayPal, Maya, GCash with admin enable/disable toggles and API key management — secure, locally accessible processing compliant with RA 10173.</p></div>
+    <div class="icard"><h4>SO-06 · Per-User Persistence</h4><p>Independent carts and wishlists per registered user, scoped storage ensuring isolation across sessions (now Supabase-backed rows keyed by auth user id).</p></div>
+    <div class="icard green"><h4>SO-07 · Admin Dashboard</h4><p>LGU/AVRC control panel: user management, seller/product approval workflows, payment provider config, sales monitoring, reports, transaction oversight.</p></div>
+    <div class="icard gold"><h4>SO-08 · Seller Payouts</h4><p>Payout request submission, admin approval workflow, history tracking, CSV export — earnings through configured payout methods.</p></div>
+    <div class="icard pink"><h4>SO-09 · Smart Search</h4><p>Fuzzy matching across names/sellers/descriptions/categories, result highlighting, recent searches, trending display, keyboard navigation.</p></div>
+    <div class="icard"><h4>SO-10 · Smart Recommendations</h4><p>Composite scoring: category similarity, price proximity, seller match, ratings, diversity — "You Might Also Like" on detail pages.</p></div>
+    <div class="icard gold"><h4>SO-11 · Catalog Filters</h4><p>Price range (min/max + slider), minimum rating, active filter badges with individual removal, Most Popular &amp; Newest sorts.</p></div>
+    <div class="icard"><h4>SO-12 · Dynamic Homepage</h4><p>"Trending Now" scored by rating × reviews; "New Arrivals" sorted by date added — discovery beyond static featured products.</p></div>
+    <div class="icard pink"><h4>SO-13 · Evaluation</h4><p>Structured usability/accessibility testing with PWD clients and AVRC personnel using validated instruments (ISO 25010, SUS, Likert) within the project timeline.</p></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">1.5</div><h3>Significance of the Study</h3></div>
+  <div class="cards">
+    <div class="icard pink"><h4>PWD Clients (Primary Beneficiaries)</h4><p>A permanent accessible marketplace replacing episodic selling events; TalkBack/TTS/voice-command independence reduces reliance on intermediaries; greater visibility drives income generation, economic independence, social inclusion.</p></div>
+    <div class="icard green"><h4>AVRC Personnel &amp; LGU Staff</h4><p>Real-time oversight of listings, inventory, accounts, orders, transactions, payments; reduced manual record-keeping; data-driven decisions; automated reporting strengthens accountability.</p></div>
+    <div class="icard"><h4>Future Researchers</h4><p>A documented replicable model for accessible institution-embedded e-commerce: system design, methodology, accessibility strategies, multi-provider integration, evaluation findings — plus identified gaps for expansion.</p></div>
+    <div class="icard gold"><h4>ZPPSU &amp; CICS</h4><p>Demonstrates institutional commitment to real-world societal challenges; strengthens research profile in inclusive technology and community-engaged development across Mindanao.</p></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">1.6</div><h3>Scope and Limitations</h3></div>
+  <div class="versus">
+    <div class="panel next"><h4>1.6.1 Scope</h4><ul>
+      <li>Registration/authentication with RBAC (Supabase Auth sessions)</li>
+      <li>Catalog management: categories, images, pricing, stock tracking</li>
+      <li>Browsing/search with autocomplete, category filter, sorts</li>
+      <li>Per-user cart &amp; wishlist persisted server-side per account</li>
+      <li>Multi-step checkout with validation; provider selection from enabled set</li>
+      <li>PayMongo · Stripe · PayPal · Maya · GCash admin toggles</li>
+      <li>Order placement, status timeline, reviews &amp; ratings</li>
+      <li>Smart search, recommendations, filters, trending/new arrivals</li>
+      <li>Alert engine (7 conditions × severity)</li>
+      <li>Seller dashboard, CRUD, order mgmt, analytics charts, payouts + CSV, PWD ID upload</li>
+      <li>Admin dashboard, users, categories, approvals, orders, transactions, reports, activity logs, payment &amp; platform settings</li></ul></div>
+    <div class="panel prev"><h4>1.6.2 Limitations</h4><ul>
+      <li>Only AVRC Region IX PWD-produced products; no other branches/regions</li>
+      <li>Internet connectivity required; no offline mode</li>
+      <li>No native Android/iOS app — responsive browser access only</li>
+      <li>Image upload depends on configured storage bucket quotas</li>
+      <li>Live payment capture requires valid merchant API keys per provider</li>
+      <li>Evaluation limited to specified period &amp; selected AVRC respondents; not large-scale commercial deployment</li>
+      <li>No WebSocket/push real-time features</li></ul></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">1.7</div><h3>Definition of Terms</h3></div>
+  <div class="cards">
+    <div class="icard"><h4>Accessibility Toolbar</h4><p>Floating panel (bottom-left): font size 12–24px, high contrast toggle, TTS controls, voice commands, reading mode.</p></div>
+    <div class="icard"><h4>AVRC Region IX</h4><p>DSWD rehabilitation/livelihood center in Mampang, Zamboanga City; study site with 66+ PWD clients.</p></div>
+    <div class="icard"><h4>GCash</h4><p>Mynt (Globe Fintech) mobile wallet; one of five configurable providers.</p></div>
+    <div class="icard"><h4>Inclusive Market</h4><p>The smart web-based e-commerce platform developed in this study for PWD sellers of AVRC IX.</p></div>
+    <div class="icard"><h4>LGU Staff</h4><p>Government personnel authorized to administer monitoring, accounts, providers, and oversight.</p></div>
+    <div class="icard"><h4>Maya (PayMaya)</h4><p>Philippine digital financial services platform; integrated configurable provider.</p></div>
+    <div class="icard"><h4>NCDA</h4><p>National Council on Disability Affairs — policy framework agency for disability inclusion.</p></div>
+    <div class="icard"><h4>PayMongo</h4><p>Philippine payment processor with APIs for GCash, Maya, cards, OTC banking.</p></div>
+    <div class="icard"><h4>Payment Provider</h4><p>External gateway integrated and configurable via admin settings (5 total).</p></div>
+    <div class="icard"><h4>Per-User Cart</h4><p>Cart isolated per logged-in account (now <code>im_cart</code> row keyed by Supabase user id; legacy key <code>im_cart_{userId}</code>).</p></div>
+    <div class="icard"><h4>PWD</h4><p>Per RA 7277: individual restricted in activities due to physical, mental, or sensory impairment.</p></div>
+    <div class="icard"><h4>Reading Mode</h4><p>Reads page aloud via TTS highlighting each word; click any word to start there.</p></div>
+    <div class="icard gold"><h4>Smart E-Commerce Application</h4><p>Platform integrating smart search, recommendations, analytics, alerts, filtering, trending/new arrivals, automated order/inventory flows, multi-provider config, accessible UX.</p></div>
+    <div class="icard gold"><h4>Smart Search Engine</h4><p>Fuzzy composite scoring across names/sellers/descriptions/categories with highlighting, recent searches, trending, keyboard nav.</p></div>
+    <div class="icard gold"><h4>Smart Recommendations</h4><p>Scoring: category 40 pts · price proximity (&lt;20%) 25 pts · seller 15 pts · rating 4.5+ 10 pts · featured 5 pts, with diversity de-duplication.</p></div>
+    <div class="icard gold"><h4>Smart Catalog Filtering</h4><p>Price range min/max + slider, rating floors (3+/4+/4.5+), removable badges, Most Popular (reviews×rating) &amp; Newest sorts.</p></div>
+    <div class="icard"><h4>Stripe</h4><p>Global card payment platform; integrated configurable provider.</p></div>
+    <div class="icard pink"><h4>TalkBack Voice Support</h4><p>Screen-reader/voice navigation compatibility enabling audio-guided operation for visual/motor impairments.</p></div>
+    <div class="icard pink"><h4>Text-to-Speech (TTS)</h4><p>Web Speech API speech synthesis with adjustable rate &amp; voice selection.</p></div>
+    <div class="icard pink"><h4>Voice Commands</h4><p>SpeechRecognition hands-free actions: "search", "go to cart", "go home", "scroll down", "stop listening".</p></div>
+    <div class="icard"><h4>Usability</h4><p>Effectiveness, efficiency, satisfaction in specified context (ISO 9241-11); evaluated via structured testing.</p></div>
+    <div class="icard"><h4>Wishlist</h4><p>Heart-toggle saved-products list persisted per user.</p></div>
+    <div class="icard"><h4>WCAG</h4><p>W3C Web Content Accessibility Guidelines; target WCAG 2.1 Level AA (POUR principles).</p></div>
+    <div class="icard"><h4>Web-Based Platform</h4><p>Browser-accessed application requiring no installation — React 19, Vite, Tailwind CSS 4.</p></div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 2 ═══ -->
+<section class="doc">
+  <span class="chap-tag">Chapter 2 · Review of Related Literature, Studies and Systems</span>
+
+  <div class="sec-head"><div class="sec-num">2.1</div><h3>Related Literature (Local)</h3></div>
+  <div class="cards">
+    <div class="study local"><h4>Mendoza (2023) — PWD Entrepreneurship in the Philippines</h4>
+      <dl><dt>Focus</dt><dd>Barriers preventing PWDs from economic engagement</dd>
+      <dt>Method</dt><dd>Descriptive-correlational</dd>
+      <dt>Finding</dt><dd>Significant barriers in business skills, market access, institutional support block livelihood-to-income conversion</dd>
+      <dt>Relevance</dt><dd>Philippine-specific evidence of exactly the gaps IncluMarket addresses via digital marketplace access</dd>
+      <dt>Gap → Ours</dt><dd>Framework only, no operational platform → we build the functional web system for AVRC IX</dd></dl></div>
+    <div class="study local"><h4>Rodrigo et al. (2024) — Filipino Consumer E-Commerce Readiness</h4>
+      <dl><dt>Focus</dt><dd>Consumer readiness for AI-integrated online shopping</dd>
+      <dt>Method</dt><dd>Quantitative PLS-SEM</dd>
+      <dt>Finding</dt><dd>Perceived ease of use and trust drive Filipino adoption of online shopping</dd>
+      <dt>Relevance</dt><dd>Directly informs buyer-facing interface design and checkout optimization</dd>
+      <dt>Gap → Ours</dt><dd>No built platform, no accessibility focus → we deliver a functional accessible system</dd></dl></div>
+    <div class="study local"><h4>DSWD (2022) — Integrated Social Welfare Framework</h4>
+      <dl><dt>Focus</dt><dd>Beneficiary data &amp; program monitoring framework</dd>
+      <dt>Relevance</dt><dd>Same organizational context as AVRC; administrative reference models</dd>
+      <dt>Gap → Ours</dt><dd>No e-commerce/marketplace features → we integrate commerce with beneficiary-centered operations</dd></dl></div>
+    <div class="study local"><h4>RA 7277 (1992) &amp; RA 10173 (2012)</h4>
+      <dl><dt>Focus</dt><dd>Magna Carta for Disabled Persons; Data Privacy Act</dd>
+      <dt>Relevance</dt><dd>Rights &amp; privacy legal foundation governing platform duties (accessibility, consent, secure PWD ID handling)</dd></dl></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">2.2</div><h3>Related Literature (Foreign)</h3></div>
+  <div class="cards">
+    <div class="study"><h4>Volkova et al. (2021) — Digital Economy Trends</h4><dl><dt>Finding</dt><dd>Digital platforms essential drivers of participation across demographics</dd><dt>Gap → Ours</dt><dd>Macro focus → community-specific storefronts for PWD sellers</dd></dl></div>
+    <div class="study"><h4>Costa &amp; Rodrigues (2024) — SME E-Commerce Design</h4><dl><dt>Finding</dt><dd>Usability is the primary adoption driver for small-scale sellers with limited technical expertise</dd><dt>Gap → Ours</dt><dd>No PWD/institutional features → simplified accessible seller UI + AVRC admin tools</dd></dl></div>
+    <div class="study"><h4>Saxena (2025) — Recommendation Systems</h4><dl><dt>Finding</dt><dd>Structured categorization + score-based recommendations significantly improve discoverability</dd><dt>Gap → Ours</dt><dd>Large-platform focus → adapted scoring for small PWD catalogs</dd></dl></div>
+    <div class="study"><h4>Abdullah (2025) — UX Meta-Analysis</h4><dl><dt>Finding</dt><dd>User-centered design improves engagement, satisfaction, purchase completion</dd><dt>Gap → Ours</dt><dd>Commercial orientation → social-impact prioritization</dd></dl></div>
+    <div class="study"><h4>Hughes (2025) — Digital Upskilling</h4><dl><dt>Finding</dt><dd>Digital platforms improve readiness when embedded in institutional support</dd><dt>Gap → Ours</dt><dd>Broad focus → AVRC-embedded selling tool</dd></dl></div>
+    <div class="study"><h4>Lee et al. (2025) — Workforce Development</h4><dl><dt>Finding</dt><dd>Localized institutional structures enable broader digital participation</dd><dt>Gap → Ours</dt><dd>Policy level → dedicated PWD marketplace within rehabilitation framework</dd></dl></div>
+    <div class="study"><h4>W3C (2018) — WCAG 2.1</h4><dl><dt>Finding</dt><dd>POUR principles: perceivable, operable, understandable, robust</dd><dt>Relevance</dt><dd>Compliance target (Level AA) shaping every interface decision</dd></dl></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">2.3</div><h3>Related Studies and Systems (Local)</h3></div>
+  <div class="cards">
+    <div class="study local"><h4>Sundaramoorthy et al. (2024)* — AI-Driven Accessible E-Commerce</h4>
+      <dl><dt>Finding</dt><dd>Screen-reader compatibility, voice navigation, high contrast promote inclusion</dd><dt>Gap → Ours</dt><dd>PDWs treated only as customers → we position them as sellers/managers</dd></dl></div>
+    <div class="study local"><h4>Palileng (2024) — BenguetFresh System</h4>
+      <dl><dt>Focus</dt><dd>IoT-enabled agricultural monitoring, Benguet Province</dd>
+      <dt>Finding</dt><dd>Locally designed, government-supported systems achieve higher adoption within Philippine institutional contexts</dd><dt>Gap → Ours</dt><dd>No commerce functionality → PWD product marketplace with payments</dd></dl></div>
+    <div class="study local"><h4>Barayuga et al. (2025) — AgriFresh AI</h4>
+      <dl><dt>Finding</dt><dd>Agile iteration with continuous stakeholder engagement improves operational efficiency</dd><dt>Gap → Ours</dt><dd>No marketplace, no accessibility → both integrated here</dd></dl></div>
+    <div class="study local"><h4>Dinamika &amp; Siregar (2022) — E-Commerce Learning Platform</h4>
+      <dl><dt>Finding</dt><dd>Training-marketplace integration works pedagogically</dd><dt>Gap → Ours</dt><dd>Simulation only → real transactions with accessibility</dd></dl></div>
+    <div class="study local"><h4>Shopee Philippines (2023)</h4><dl><dt>Finding</dt><dd>Most widely used PH marketplace reference</dd><dt>Gap → Ours</dt><dd>Not PWD-accessible; no institutional oversight → accessible + admin-managed alternative</dd></dl></div>
+    <div class="study local"><h4>Lazada Philippines (2023)</h4><dl><dt>Finding</dt><dd>Effective local payment integration &amp; seller dashboards</dd><dt>Gap → Ours</dt><dd>No PWD accessibility/rehab-program support → combined accessible + administrative design</dd></dl></div>
+    <div class="study local"><h4>DSWD ISWS (2022)</h4><dl><dt>Finding</dt><dd>Beneficiary management &amp; reporting frameworks viable at scale</dd><dt>Gap → Ours</dt><dd>No buyer-facing commerce → marketplace added atop beneficiary-centric ops</dd></dl></div>
+  </div>
+  <div class="note">* Grouped under Local per institutional relevance despite international authorship venue.</div>
+
+  <div class="sec-head"><div class="sec-num">2.4</div><h3>Related Studies and Systems (Foreign)</h3></div>
+  <div class="cards">
+    <div class="study"><h4>Gutterman (2025) — Disability Market Opportunities</h4><dl><dt>Finding</dt><dd>PWDs act as suppliers/entrepreneurs given appropriate support &amp; platforms</dd><dt>Gap → Ours</dt><dd>No deployable solution → full e-commerce platform</dd></dl></div>
+    <div class="study"><h4>Dakung et al. (2025) — Disability Entrepreneurship Education</h4><dl><dt>Finding</dt><dd>Digital platforms support inclusive entrepreneurship when integrated with training programs</dd><dt>Gap → Ours</dt><dd>Education focus → direct commercialization channel</dd></dl></div>
+    <div class="study"><h4>Mishrif &amp; AlQamshoui (2026) — Entrepreneurial Readiness</h4><dl><dt>Finding</dt><dd>Strong interest but lacking digital skills/tools among disabled students</dd><dt>Gap → Ours</dt><dd>Student context → active AVRC producers</dd></dl></div>
+    <div class="study"><h4>Csillag et al. (2026) — Hungarian PWD Entrepreneurs</h4><dl><dt>Finding</dt><dd>Entrepreneurship supports inclusion when systems/frameworks accessible</dd><dt>Gap → Ours</dt><dd>Hungarian context, no marketplace → PH rehabilitation setting platform</dd></dl></div>
+    <div class="study"><h4>Akanfe et al. (2025) — Inclusion Tech Review (95 studies)</h4><dl><dt>Finding</dt><dd>Inclusive interface principles reduce access barriers for vulnerable groups</dd><dt>Gap → Ours</dt><dd>Financial services focus → e-commerce product selling</dd></dl></div>
+    <div class="study"><h4>Fontana &amp; Mitra (2023) — Inclusive Trade Policy</h4><dl><dt>Finding</dt><dd>PDWs need structured ICT access and market-participation channels</dd><dt>Gap → Ours</dt><dd>Policy-level → deployable local mechanism</dd></dl></div>
+    <div class="study"><h4>Malhotra et al. (2025) — PWD Entrepreneurship Ecosystem</h4><dl><dt>Finding</dt><dd>Institutional support + accessible infrastructure convert aspiration to reality</dd><dt>Gap → Ours</dt><dd>Ecosystem analysis → co-managed AVRC platform</dd></dl></div>
+    <div class="study"><h4>Paul (2023) — Amazon E-Commerce</h4><dl><dt>Finding</dt><dd>Gold standard scalable architecture: catalog, orders, dashboards, payments</dd><dt>Gap → Ours</dt><dd>No PWD compliance; large-seller bias → simplified accessible seller tooling</dd></dl></div>
+    <div class="study"><h4>Etsy, Inc. (2023) — Artisan Marketplace</h4><dl><dt>Finding</dt><dd>Successful handcraft storefront/community model</dd><dt>Gap → Ours</dt><dd>No PWD accessibility or institutional oversight → TalkBack/TTS + AVRC dashboard</dd></dl></div>
+    <div class="study"><h4>Krithika et al. (2026) — Marketplace + Learning Hub</h4><dl><dt>Finding</dt><dd>Closest community-producer marketplace model</dd><dt>Gap → Ours</dt><dd>Women artisans, no disability features → entire platform designed around PWD needs</dd></dl></div>
+    <div class="study"><h4>Gadhve et al. (2025) — Agriculture Marketplace</h4><dl><dt>Finding</dt><dd>AI-enabled community producer marketplace succeeds with smart pricing</dd><dt>Gap → Ours</dt><dd>Agriculture domain, no accessibility → PWD livelihood adaptation</dd></dl></div>
+    <div class="study"><h4>Bansal et al. (2024) — AI Description Generator</h4><dl><dt>Finding</dt><dd>CV-generated listing content improves workflow efficiency</dd><dt>Gap → Ours</dt><dd>Not a marketplace → full platform with built-in accessibility</dd></dl></div>
+    <div class="study"><h4>Ghildiyal et al. (2025) — Price Negotiation Chatbot</h4><dl><dt>Finding</dt><dd>NLP/sentiment automation viable for negotiation</dd><dt>Gap → Ours</dt><dd>No accessibility/seller support → accessible admin-configured platform</dd></dl></div>
+    <div class="study"><h4>Gupta et al. (2024) — AI Customer Service</h4><dl><dt>Finding</dt><dd>Chatbots effectively automate buyer engagement</dd><dt>Gap → Ours</dt><dd>Buyer-focused only → seller-centric empowerment tools</dd></dl></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">2.5</div><h3>Synthesis — Table of Comparison</h3></div>
+  <p class="body-text">Across foreign and local literature, recurring themes confirm persistent PWD market-access barriers (Mendoza 2023; Malhotra 2025), the transformative potential of accessible platforms (Sundaramoorthy 2024; Akanfe 2025), and the decisive role of institutional support (Dakung 2025; Csillag 2026). The critical gap: <b>no existing study or system provides a dedicated, web-accessible, institutionally co-managed e-commerce platform positioning Philippine government-rehabilitation PWDs as empowered sellers</b>. Commercial giants lack accessibility compliance and oversight tooling; local agri-systems lack commerce entirely. Inclusive Market fills this gap.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Capability</th><th>Amazon / Shopee / Lazada</th><th>Etsy</th><th>BenguetFresh / AgriFresh</th><th>DSWD ISWS</th><th>Inclusive Market (Proposed)</th></tr></thead>
+    <tbody>
+      <tr><td>Full e-commerce checkout</td><td style="color:#16a34a;font-weight:800">Yes</td><td style="color:#16a34a;font-weight:800">Yes</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#16a34a;font-weight:800">Yes</td></tr>
+      <tr><td>WCAG 2.1 AA accessibility suite</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#d97706;font-weight:800">Partial</td><td style="color:#16a34a;font-weight:800">Yes</td></tr>
+      <tr><td>PWD-as-seller empowerment</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#d97706;font-weight:800">Partial</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#16a34a;font-weight:800">Yes</td></tr>
+      <tr><td>Institutional (AVRC/LGU) oversight</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#d97706;font-weight:800">Partial</td><td style="color:#16a34a;font-weight:800">Yes</td><td style="color:#16a34a;font-weight:800">Yes</td></tr>
+      <tr><td>PH multi-provider payments (5)</td><td style="color:#d97706;font-weight:800">Partial</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#dc2626;font-weight:800">No</td><td style="color:#16a34a;font-weight:800">Yes</td></tr>
+      <tr class="hl-row"><td>Institutionally embedded, community-calibrated</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══ CHAPTER 3 ═══ -->
+<section class="doc">
+  <span class="chap-tag">Chapter 3 · Methodology</span>
+
+  <div class="sec-head"><div class="sec-num">3.1</div><h3>SDLC Model — Agile (Planning → Maintenance)</h3></div>
+  <div class="flow">
+    <span class="chip">1 · Planning</span><span class="arrow">→</span>
+    <span class="chip">2 · Analysis</span><span class="arrow">→</span>
+    <span class="chip">3 · Design</span><span class="arrow">→</span>
+    <span class="chip">4 · Implementation</span><span class="arrow">→</span>
+    <span class="chip">5 · Testing &amp; Integration</span><span class="arrow">→</span>
+    <span class="chip">6 · Maintenance</span>
+  </div>
+  <p class="body-text">Development follows Agile with iterative delivery, continuous stakeholder engagement, and systematic QA. Four team members collaborate across development, design, testing, and documentation roles. Requirements elicitation used direct observation of AVRC IX operations and selling activities, literature/related-system review, and consultations with personnel and LGU staff. Each phase below maps to its delivered work products.</p>
+
+  <div class="sub-head"><h4>3.1.1 Requirements Analysis — Stakeholders &amp; Problem Identification</h4></div>
+  <div class="cards">
+    <div class="icard pink"><h4>PWD Clients / Sellers</h4><p>66+ enrolled producers needing simplified, highly accessible interfaces — TalkBack, TTS, voice commands, enlarged targets, clear text, minimal complexity — to independently manage listings, orders, payouts, analytics.</p></div>
+    <div class="icard green"><h4>AVRC Personnel / LGU Staff</h4><p>Administrators needing comprehensive dashboards: visualization, management tools, reporting, payment provider configuration, institutional accountability.</p></div>
+    <div class="icard"><h4>General Consumers / Buyers</h4><p>Region IX public and beyond needing intuitive shopping: clear product information, reliable multi-payment checkout, per-user cart/wishlist, accessible design.</p></div>
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>#</th><th>Identified Problem</th></tr></thead><tbody>
+    <tr><td>1</td><td>No centralized, accessible digital marketplace for consistent PWD promotion/selling at AVRC IX</td></tr>
+    <tr><td>2</td><td>Restricted market reach — episodic physical events and informal social media only</td></tr>
+    <tr><td>3</td><td>Low product visibility — no structured promotion or organized cataloging</td></tr>
+    <tr><td>4</td><td>Accessibility barriers blocking independent use by PWDs with sensory/motor impairments</td></tr>
+    <tr><td>5</td><td>No institutional admin tools for monitoring, management, reporting</td></tr>
+    <tr><td>6</td><td>No configurable multi-provider payments suited to PH landscape</td></tr>
+    </tbody></table></div>
+
+  <div class="sub-head"><h4>3.1.2 Use Case Diagrams — Three Actors</h4></div>
+  <div class="versus">
+    <div class="panel next"><h4>Buyer (General Consumer)</h4><ul>
+      <li>Browse catalog · Search (autocomplete) · Filter by category · Sort</li>
+      <li>View details · Read reviews · View recommendations</li>
+      <li>Add to cart* · Manage cart · Add to wishlist*</li>
+      <li>Checkout · Select payment method · Place order</li>
+      <li>Order history/details · Manage profile · Contact message</li></ul></div>
+    <div class="panel next"><h4>Seller (PWD Client)</h4><ul>
+      <li>Register as Seller (PWD ID upload) · Login</li>
+      <li>Dashboard (stats, alerts) · Product add/edit/delete</li>
+      <li>View orders · Update order status · Analytics charts</li>
+      <li>Request payout · Payout history · Export CSV · Profile</li></ul></div>
+    <div class="panel next"><h4>Admin (AVRC/LGU Staff)</h4><ul>
+      <li>Login · Dashboard (stats, alerts)</li>
+      <li>Manage users (activate/suspend) · Categories CRUD</li>
+      <li>Approve/reject sellers · Approve/reject products</li>
+      <li>All orders · Transactions · Reports · Activity logs</li>
+      <li>Configure payment providers · Platform settings</li></ul></div>
+  </div>
+  <div class="note">* requires login — enforced by AuthGuard route protection.</div>
+
+  <div class="sub-head"><h4>3.1.3 Data Flow Diagrams — Level 0 (Context)</h4></div>
+  <pre class="tree">[Buyer]  -- Browse/Search, Add to Cart, Checkout/Pay -->  [ Inclusive Market System ]
+[Seller] -- Manage Products, Process Orders, Request Payout -->  [ Inclusive Market System ]
+[Admin]  -- Manage Users/Categories, Configure Payments, Reports/Logs -->  [ Inclusive Market System ]
+[ Inclusive Market System ] -- Product Catalog --> [Buyer]   -- Order Confirmations --> [Buyer/Seller]
+[ Inclusive Market System ] -- Dashboard Stats --> [Admin/Seller]   -- Payment Processing --> [Payment Providers]</pre>
+  <div class="sub-head"><h4>3.1.3 Data Flow Diagrams — Level 1 (Eight Modules)</h4></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Module</th><th>Input</th><th>Output</th><th>Store(s)</th></tr></thead><tbody>
+    <tr><td><b>1.0 Authentication</b></td><td>Registration data, login credentials</td><td>Session token, role</td><td><code>auth.users</code> · <code>im_profiles</code> (legacy: im_custom_users, im_current_user)</td></tr>
+    <tr><td><b>2.0 Product Management</b></td><td>CRUD data, category assignments</td><td>Listings, search results</td><td><code>im_products</code> · <code>im_categories</code> · variants</td></tr>
+    <tr><td><b>3.0 Cart &amp; Wishlist</b></td><td>Add/remove/update requests</td><td>Cart &amp; wishlist contents</td><td><code>im_cart</code> · <code>im_wishlists</code> (legacy: im_cart_{userId})</td></tr>
+    <tr><td><b>4.0 Checkout &amp; Payment</b></td><td>Shipping info, method selection</td><td>Confirmation, status</td><td><code>create_order_with_items()</code> → <code>im_orders</code> · <code>im_order_items</code> · <code>im_transactions</code></td></tr>
+    <tr><td><b>5.0 Order Management</b></td><td>Status updates, queries</td><td>Listings, timelines</td><td><code>im_orders</code> · <code>im_order_status_history</code></td></tr>
+    <tr><td><b>6.0 Admin Management</b></td><td>User/category/seller actions</td><td>Approvals, settings</td><td><code>im_sellers</code> · <code>im_categories</code> · <code>im_payment_providers</code> · <code>im_settings</code></td></tr>
+    <tr><td><b>7.0 Analytics &amp; Reporting</b></td><td>Transaction data, activity</td><td>Stats, charts, CSV</td><td><code>im_transactions</code> · <code>im_activity_logs</code> · <code>im_payouts</code></td></tr>
+    <tr><td><b>8.0 Accessibility</b></td><td>Preferences, voice commands</td><td>TTS audio, alerts, highlights</td><td><code>im_ui_prefs</code> (server-persisted) + legacy device keys</td></tr>
+    </tbody></table></div>
+
+  <div class="sub-head"><h4>3.1.4 Entity-Relationship Model</h4></div>
+  <pre class="tree">USER (1) ---&lt; (N) ORDER        [places]          PRODUCT (N) &gt;--- (1) CATEGORY   [belongs to]
+USER (1) ---&lt; (N) PRODUCT     [manages as seller] ORDER (1) ---&lt; (N) ORDER_ITEM  [contains]
+USER (1) ---&lt; (N) REVIEW      [writes]           ORDER (1) --- (1) TRANSACTION   [settles via]
+USER (1) ---&lt; (N) PAYOUT      [requests]         SELLER (1) ---&lt; (N) PRODUCT     [lists]
+USER (1) ---&lt; (N) ACTIVITY_LOG[audits]           SELLER (1) ---&lt; (N) PAYOUT      [receives]
+
+Attributes — USER: id, name, email, password(hash), role, phone, joined, status, avatar_url
+PRODUCT: id, name, description, price, category_id, image_url, seller_id, stock, featured, status
+ORDER: id, buyer_id, total, status, shipping_address, payment_method, created_at
+ORDER_ITEM: id, order_id, product_id, qty, unit_price   CATEGORY: id, name, description, icon
+REVIEW: id, product_id, user_id, rating, comment, date   SELLER: id, user_id, business_name, rating, total_sales, status
+PAYOUT: id, seller_id, amount, method, account_number, status, requested/processed dates
+TRANSACTION: id, order_id, amount, method, status, date   ACTIVITY_LOG: id, admin_id, action, target, details, date
+SETTINGS: siteName, description, currency, platformFee, lowStockThreshold, notifications</pre>
+
+  <div class="sub-head"><h4>3.1.5 Design of Software System Products &amp; Process</h4></div>
+  <div class="cards">
+    <div class="icard"><h4>Presentation Layer</h4><p>React 19 + Vite + Tailwind CSS 4 responsive UI for all three roles; WCAG 2.1 AA via semantic HTML, ARIA labels, contrast ratios, keyboard navigability; TalkBack compatibility through ARIA live regions, alt text, focus management; TTS (Web Speech API), SpeechRecognition commands, reading mode, flash alerts.</p></div>
+    <div class="icard gold"><h4>Application Logic Layer</h4><p>Seven context providers — Auth, DataStore, Cart, Settings, Voice, Toast, VisualAlert — each owning one domain. Service modules: paymongoService, stripeService, paypalService, mayaService, gcashService, paymentProviders (unified config), gmailService, googleAuth. Credentials read from secured config at runtime.</p></div>
+    <div class="icard green"><h4>Data Layer (Upgraded)</h4><p><b>Now:</b> Supabase PostgreSQL — 24+ tables under <code>im_</code> schema prefix, Row-Level Security policies per role, atomic checkout RPC, server-persisted preferences. <b>Legacy fallback:</b> localStorage keys (<code>im_</code> namespace) seed mock data and persist device prefs.</p></div>
+  </div>
+  <div class="sub-head"><h4>Provider Hierarchy (outermost → innermost)</h4></div>
+  <pre class="tree">AuthProvider → DataStoreProvider → CartProvider (user-scoped) → SettingsProvider → VoiceProvider → ToastProvider → VisualAlertProvider</pre>
+  <div class="sub-head"><h4>Project Structure</h4></div>
+  <pre class="tree">inclusive-market/
+├── public/            docs/ · format/ · manual/ · favicon.svg
+├── src/
+│   ├── components/    Layout · Navbar (smart search) · Footer · AuthGuard (RBAC)
+│   │                  AccessibilityToolbar · VisualAlert · SeoTitle
+│   ├── context/       AuthContext · CartContext · DataStore · SettingsContext
+│   │                  VoiceContext · ToastContext
+│   ├── services/      paymentProviders · paymongo/stripe/paypal/maya/gcash services
+│   │                  supabase client (db.js) · gmailService · googleAuth
+│   ├── pages/         Home · Catalog · ProductDetail · auth/ · buyer/
+│   │                  seller/ (Dashboard·Products·Orders·Analytics·Payouts)
+│   │                  admin/ (Users·Categories·Approvals·Orders·Transactions·
+│   │                  Reports·ActivityLogs·Settings) · static/
+│   ├── App.jsx (routes + AuthGuard + SeoTitle) · main.jsx · index.css
+├── supabase/migrations/  0001_inclumarket_schema.sql · 0002_spec_alignment.sql
+└── vite.config.js · package.json · vercel.json</pre>
+
+  <div class="sub-head"><h4>3.1.5.1 Technical Background</h4></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr></thead><tbody>
+    <tr><td>UI Framework</td><td>React 19</td><td>Component-based UI library</td></tr>
+    <tr><td>Build Tool</td><td>Vite 6/8 line</td><td>Dev server &amp; bundler</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS 4</td><td>Utility-first CSS framework</td></tr>
+    <tr><td>Routing</td><td>React Router DOM 7</td><td>Client-side routing + AuthGuard RBAC</td></tr>
+    <tr><td>Icons</td><td>Lucide React</td><td>Icon library</td></tr>
+    <tr><td>Linting</td><td>OxLint</td><td>Code linting</td></tr>
+    <tr><td>State</td><td>React Context API</td><td>Application state domains</td></tr>
+    <tr><td>Database</td><td>Supabase PostgreSQL</td><td>Cloud persistence + RLS + RPC (upgrade over localStorage)</td></tr>
+    <tr><td>Auth</td><td>Supabase Auth (JWT)</td><td>Real session management, OAuth-ready</td></tr>
+    <tr><td>Speech</td><td>Web Speech API</td><td>TTS + speech recognition</td></tr>
+    <tr><td>Hosting</td><td>Vercel Edge</td><td>Production CDN deployment</td></tr>
+    </tbody></table></div>
+
+  <div class="sub-head"><h4>3.1.6 Sprint Log (Iterations 1–7)</h4></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Sprint</th><th>Theme</th><th>Delivered Items</th></tr></thead><tbody>
+    <tr><td><b>S1</b></td><td>Requirements &amp; Setup</td><td>Requirements finalization · stack config (React 19, Vite, Tailwind 4) · project structure · dev environment · seed dataset (mockData.js)</td></tr>
+    <tr><td><b>S2</b></td><td>Auth &amp; Data Store</td><td>AuthContext session persistence · DataStoreContext CRUD · AuthGuard RBAC · demo accounts (admin/seller/buyer) · registration with roles → migrated to Supabase Auth + profiles</td></tr>
+    <tr><td><b>S3</b></td><td>Buyer Interface</td><td>Catalog (filter/search/sort) · detail + reviews · per-user cart · wishlist · 3-step checkout · order history timeline · profile sync · smart-search autocomplete · recommendations</td></tr>
+    <tr><td><b>S4</b></td><td>Seller Interface</td><td>Dashboard stats/alerts · product CRUD w/ confirm · order status updates · dynamic chart analytics · payout modal · payout CSV · PWD ID upload · registration flow</td></tr>
+    <tr><td><b>S5</b></td><td>Admin Interface</td><td>Dashboard statistics · user activate/suspend · categories CRUD · seller &amp; product approvals · order search/filter · transactions · reports · activity logs · 5-provider tabbed settings · platform settings</td></tr>
+    <tr><td><b>S6</b></td><td>Accessibility &amp; Voice</td><td>Toolbar (font size, contrast) · TTS rate/voice · voice commands · reading mode highlight · flash alerts · ARIA throughout · keyboard nav · skip link · prefers-reduced-motion</td></tr>
+    <tr><td><b>S7</b></td><td>Smart Engine &amp; Polish</td><td>Fuzzy search engine · recommendation scoring · catalog filters · trending/new arrivals · alert engine (7 conditions) · PHP currency locale formatting · payment services unified config · dynamic checkout rendering · toast system · contact form · cart/checkout guards · provider order fix · bug fixes · build verification · Vercel deployment · Supabase migration (schema + RLS + atomic checkout RPC + SEO)</td></tr>
+    </tbody></table></div>
+
+  <div class="sub-head"><h4>3.1.7 Requirements Documentation</h4></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>Module</th><th>The system shall…</th><th>Priority</th></tr></thead><tbody>
+    <tr><td>FR-01</td><td>Authentication</td><td>Register accounts with RBAC (Admin/Seller/Buyer), persistent sessions</td><td class="p-high">High</td></tr>
+    <tr><td>FR-02</td><td>Authentication</td><td>Authenticate via email/password with role-appropriate feature access</td><td class="p-high">High</td></tr>
+    <tr><td>FR-03</td><td>Product Mgmt</td><td>Create/edit/delete listings with images, descriptions, categories, pricing, stock</td><td class="p-high">High</td></tr>
+    <tr><td>FR-04</td><td>Product Mgmt</td><td>Support admin review/approve/reject before publication</td><td class="p-high">High</td></tr>
+    <tr><td>FR-05</td><td>Browsing</td><td>Category browsing, filtering, keyword search with realtime autocomplete</td><td class="p-high">High</td></tr>
+    <tr><td>FR-06</td><td>Cart</td><td>Per-user carts under user-scoped keys with quantity management, cross-session persistence</td><td class="p-high">High</td></tr>
+    <tr><td>FR-07</td><td>Orders</td><td>Process orders, generate confirmations, notify buyers &amp; sellers of status changes</td><td class="p-high">High</td></tr>
+    <tr><td>FR-08</td><td>Payments</td><td>Support 5 configurable providers with toggles + API key management</td><td class="p-high">High</td></tr>
+    <tr><td>FR-09</td><td>Inventory</td><td>Track stock levels; surface low-stock alerts on seller dashboard</td><td class="p-high">High</td></tr>
+    <tr><td>FR-10</td><td>Admin Dashboard</td><td>Show user/product/order/transaction statistics</td><td class="p-high">High</td></tr>
+    <tr><td>FR-11</td><td>Reporting</td><td>Generate sales/transaction reports for admins &amp; LGU staff</td><td class="p-high">High</td></tr>
+    <tr><td>FR-12</td><td>Accessibility</td><td>ARIA, semantic HTML, screen reader support, TTS, voice commands, reading mode, high contrast, font sizing</td><td class="p-high">High</td></tr>
+    <tr><td>FR-13</td><td>Profile</td><td>View/edit profile with save syncing to auth context</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-14</td><td>Categories</td><td>Admin category CRUD for organized classification</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-15</td><td>Notifications</td><td>Toast notifications for CRUD, order changes, system events</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-16</td><td>Promotion</td><td>Featured homepage highlighting + detail-page recommendations</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-17</td><td>History</td><td>Buyer purchase history; seller fulfilled-order review with timelines</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-18</td><td>Reviews</td><td>Buyer star ratings + written reviews on purchased products</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-19</td><td>Seller Analytics</td><td>Dynamic charts computed from actual transactions (trends, performance)</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-20</td><td>Cart Scope</td><td>Scope carts per user via user-specific keys (im_cart_{userId}; now user_id FK rows)</td><td class="p-high">High</td></tr>
+    <tr><td>FR-21</td><td>Wishlist</td><td>Heart-toggle wishlist persisted per-user</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-22</td><td>Payment Config</td><td>Tabbed switcher for 5 providers: enable/disable + API key inputs</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-23</td><td>Payouts</td><td>Payout request modal with amount, method, account number</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-24</td><td>Payout Export</td><td>Downloadable CSV payout history</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-25</td><td>PWD ID Upload</td><td>Registration file upload with type/size validation</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-26</td><td>Auth Guards</td><td>Protect cart/checkout routes, redirect unauthenticated users</td><td class="p-high">High</td></tr>
+    <tr><td>FR-27</td><td>Contact Form</td><td>Validated contact form with persisted submissions</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-28</td><td>Voice Commands</td><td>Speech-recognition navigation: "search", "go to cart", "go home"</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-29</td><td>TTS</td><td>On-screen text→speech with adjustable rate &amp; voice selection</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-30</td><td>Reading Mode</td><td>Read-aloud with word-by-word highlighting; click-to-start position</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-31</td><td>Visual Alerts</td><td>Flash overlays for key accessibility events</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-32</td><td>Remember Me</td><td>Login state persistence across sessions</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-33</td><td>Smart Search</td><td>Fuzzy match names/sellers/descriptions/categories + highlighting, recent searches, trending, keyboard nav</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-34</td><td>Recommendations</td><td>Score-based suggestions: category, price proximity, seller, ratings, diversity</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-35</td><td>Filters</td><td>Price range (min/max+slider), rating floors, active badges, Popular/Newest sorts</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-36</td><td>Trending</td><td>Homepage trending scored by rating × reviews with featured bonus</td><td class="p-med">Medium</td></tr>
+    <tr><td>FR-37</td><td>New Arrivals</td><td>Homepage arrivals sorted date-descending</td><td class="p-low">Low</td></tr>
+    <tr><td>FR-38</td><td>Smart Alerts</td><td>7 conditions (low/out stock, pending orders/sellers, suspended users, revenue milestone, high satisfaction) × severities (warning/danger/info/success)</td><td class="p-med">Medium</td></tr>
+    </tbody></table></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>Category</th><th>Requirement</th><th>Metric</th></tr></thead><tbody>
+    <tr><td>NFR-01</td><td>Usability</td><td>Navigable by varying digital-literacy users within 10 minutes of first use</td><td>SUS ≥ 70</td></tr>
+    <tr><td>NFR-02</td><td>Accessibility</td><td>WCAG 2.1 AA: contrast, keyboard navigability, screen reader compatibility</td><td>WCAG 2.1 AA</td></tr>
+    <tr><td>NFR-03</td><td>Performance</td><td>Catalog pages load under normal network conditions</td><td>≤ 3 s response</td></tr>
+    <tr><td>NFR-04</td><td>Security</td><td>Credentials stored securely; no plaintext passwords in DOM; RLS-enforced server rules</td><td>Zero plaintext</td></tr>
+    <tr><td>NFR-05</td><td>Reliability</td><td>Functional integrity across roles; zero critical build errors</td><td>npm run build ✓</td></tr>
+    <tr><td>NFR-06</td><td>Scalability</td><td>New contexts/features without fundamental redesign</td><td>Modular contexts</td></tr>
+    <tr><td>NFR-07</td><td>Maintainability</td><td>Documented, modular component structure</td><td>Component modularity</td></tr>
+    <tr><td>NFR-08</td><td>Compatibility</td><td>Standard browsers on Windows/macOS/Android/iOS</td><td>Cross-browser</td></tr>
+    <tr><td>NFR-09</td><td>Data Privacy</td><td>Collection/storage/processing per Philippine law</td><td>RA 10173 ✓</td></tr>
+    <tr><td>NFR-10</td><td>Payment Security</td><td>Provider credentials stored securely per provider requirements</td><td>Encrypted config</td></tr>
+    </tbody></table></div>
+
+  <div class="sec-head"><div class="sec-num">3.2</div><h3>Research Instruments</h3></div>
+  <div class="cards">
+    <div class="icard gold"><h4>ISO/IEC 25010 Evaluation Instrument</h4><p>Software quality questionnaire covering Functional Suitability, Performance Efficiency, Compatibility, Usability, Reliability, Security, Maintainability, Portability — administered to IT-expert evaluators; 5-point Likert items aggregated per characteristic.</p></div>
+    <div class="icard"><h4>System Usability Scale (SUS)</h4><p>Standard 10-item instrument (5-point Likert) administered after task-based sessions; yields 0–100 score. Acceptability benchmark: ≥ 70 (NFR-01), ≥ 80 = "Excellent" band.</p></div>
+    <div class="icard green"><h4>Task-Based Usability Protocol</h4><p>Scripted tasks mirroring SO-02/SO-09: locate a product via voice command, complete search-with-highlight, add to cart, checkout flow, adjust font size/high contrast. Metrics: completion rate, time-on-task, error count, independent-completion flag.</p></div>
+    <div class="icard pink"><h4>Respondent Matrix</h4><ul style="list-style:none;font-size:13px">
+      <li>• PWD clients (sellers) — accessibility &amp; seller flows</li>
+      <li>• AVRC personnel — admin oversight tasks</li>
+      <li>• LGU staff — reports/settings tasks</li>
+      <li>• General buyers — shopping journey</li>
+      <li>• IT experts — ISO 25010 evaluation</li></ul></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">3.3</div><h3>Statistical Tools</h3></div>
+  <div class="formula">Weighted Mean (x̄) = Σ(f × x) ⁄ N<small>f = frequency per scale point · x = scale weight (1–5) · N = total respondents</small></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Scale</th><th>Verbal Interpretation</th><th>Mean Range</th></tr></thead><tbody>
+    <tr><td>5</td><td>Strongly Agree / Very Satisfactory</td><td>4.21 – 5.00</td></tr>
+    <tr><td>4</td><td>Agree / Satisfactory</td><td>3.41 – 4.20</td></tr>
+    <tr><td>3</td><td>Neutral / Fair</td><td>2.61 – 3.40</td></tr>
+    <tr><td>2</td><td>Disagree / Poor</td><td>1.81 – 2.60</td></tr>
+    <tr><td>1</td><td>Strongly Disagree / Very Poor</td><td>1.00 – 1.80</td></tr>
+    </tbody></table></div>
+  <div class="note">SUS scoring: odd items −1, even items −(5−x), sum × 2.5 → 0–100. ISO 25010 characteristic scores = weighted mean of its items, interpreted via the same Likert ranges. Decision rule: system passes when overall weighted mean ≥ 3.41 AND SUS ≥ 70 AND all critical tasks independently completable by ≥ 80% of PWD participants.</div>
+
+  <div class="sec-head"><div class="sec-num">3.4</div><h3>Ethical Considerations</h3></div>
+  <div class="cards">
+    <div class="icard"><h4>Data Privacy (RA 10173)</h4><p>Personal data collected minimally (name, email, role, PWD ID reference); processed only for platform operation; RLS restricts access to owners and authorized admins; no third-party sale of data.</p></div>
+    <div class="icard green"><h4>Informed Consent</h4><p>Evaluation participants receive plain-language consent forms explaining purpose, procedures, voluntary withdrawal rights — obtained before any testing session.</p></div>
+    <div class="icard gold"><h4>Vulnerable Participants</h4><p>PWD participants supported with accessible consent materials (large print, TTS-read), companion allowance, flexible scheduling at AVRC premises.</p></div>
+    <div class="icard pink"><h4>Credential Security</h4><p>Passwords hashed by Supabase Auth; API keys stored in protected configuration; no secrets committed to source; plaintext never rendered in DOM (NFR-04).</p></div>
+    <div class="icard"><h4>Academic Integrity</h4><p>All reviewed works properly cited (APA); AI-assisted tooling disclosed per university policy; findings reported honestly including limitations.</p></div>
+    <div class="icard"><h4>Institutional Clearance</h4><p>Data gathering coordinated through AVRC Region IX management and DSWD IX protocols; adviser-endorsed instruments.</p></div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 4 ═══ -->
+<section class="doc">
+  <span class="chap-tag">Chapter 4 · Results and Discussion</span>
+  <p class="body-text">Results are organized per specific objective (4.1–4.13). Implementation evidence: production build passing, deployed to Vercel edge network, Supabase backend live with migrations applied.</p>
+
+  <div class="sec-head"><div class="sec-num">4.1</div><h3>SO-01 — Smart Platform Delivered</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Live at inclusive-market.vercel.app · inklusivemarket.vercel.app</div>
+    <p>Centralized marketplace with 66+-client seller capacity; catalog spans crafts, woven goods, decor, recycled products, souvenirs; React 19 + Tailwind 4 responsive UI; SEO-complete meta head; Chapter-3 docs, format guide &amp; this manuscript shipped as first-class site sections (/docs, /format, /manual).</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.2</div><h3>SO-02 — Accessibility Suite</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Floating toolbar · TTS · voice commands · reading mode · contrast · 12–24px font scaling</div>
+    <p>ARIA live regions + semantic landmarks for TalkBack/screen readers; skip-navigation link; prefers-reduced-motion honored; keyboard-navigable throughout; preferences persisted (im_ui_prefs server-side + legacy device keys).</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.3</div><h3>SO-03 — Product Management Module</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Seller CRUD w/ confirmation dialogs · admin approval gate · image/category/pricing/stock fields</div>
+    <p>Products carry variants, ratings aggregates, featured flags; moderation statuses (draft/pending/approved/rejected) enforced by RLS policies; low-stock view (im_low_stock_alerts) powers dashboard alerts.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.4</div><h3>SO-04 — Inventory Monitoring &amp; Order Processing</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Atomic checkout RPC · status-history trigger · seller/admin pipelines</div>
+    <p>create_order_with_items() performs row-locked stock validation, decrement, item insertion, automatic status-history logging, seller notifications, cart cleanup — eliminating race-condition overselling; buyers see order timelines; sellers/admins update statuses with full audit trail (im_audit_logs).</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.5</div><h3>SO-05 — Multi-Provider Payments</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">5 providers · admin tabbed switcher · dynamic checkout rendering</div>
+    <p>PayMongo (dashboard.paymongo.com — secret key), Stripe (dashboard.stripe.com — secret key), PayPal (developer.paypal.com — client ID + secret), Maya (developer.maya.ph — public + secret), GCash (gcash.com/business — partner credentials). Checkout queries enabled methods then renders provider cards accordingly; status indicators show configured/not-configured with "Get API Keys" deep links.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.6</div><h3>SO-06 — Per-User Data Persistence</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓ (Upgraded)</h4><div class="res">Server-side rows keyed by auth user id — synced across devices</div>
+    <p>Carts (im_cart) and wishlists persist per authenticated account in Postgres with owner-only RLS; anonymous visitors retain temporary local cart; migration preserved the documented per-user key semantics.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.7</div><h3>SO-07 — Administrative Control &amp; Monitoring</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Dashboard stats · approvals · users · categories · reports · logs · settings</div>
+    <p>Admin sidebar covers users (activate/suspend), category CRUD, seller/product approvals, order search/filtering, transaction records, dynamic report analytics, activity logs, payment-provider tabs, platform settings (site name, currency, fees, notifications, low-stock threshold).</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.8</div><h3>SO-08 — Seller Payout Management</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Request modal (amount/method/account) · admin approval · CSV export</div>
+    <p>Payout lifecycle tracked in im_payouts with requested→processed dates; history exportable; methods mirror configured providers for local accessibility.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.9</div><h3>SO-09 — Smart Search Engine</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Fuzzy composite scoring · highlight · recent searches · trending · ⌨️ nav</div>
+    <p>Navbar dropdown matches names/sellers/descriptions/categories with ranked fuzzy scores, term highlighting, recent-search persistence, trending display when query empty; Arrow/Enter/Escape fully keyboard operable (screen-reader announced results).</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.10</div><h3>SO-10 — Smart Recommendations</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Composite scoring: cat 40 · price&lt;20% 25 · seller 15 · rating 4.5+ 10 · featured 5 (+diversity)</div>
+    <p>"You Might Also Like" renders top-scored non-concentrated set on every product page; scoring tuned for small catalogs to preserve variety across categories.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.11</div><h3>SO-11 — Smart Catalog Filtering</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Price slider + inputs · rating floors · removable badges · 6 sort modes</div>
+    <p>Min/max price with dual slider, 3+/4+/4.5+ rating filters, individually removable active-filter badges, Most Popular (reviews × rating), Newest (date), plus standard price/rating sorts.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.12</div><h3>SO-12 — Dynamic Homepage Sections</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Result: Implemented ✓</h4><div class="res">Trending Now (rating × reviews + featured bonus) · New Arrivals (date desc)</div>
+    <p>Sections recompute from live catalog data, giving fresh discovery beyond static featured rails.</p></div>
+  </div>
+  <div class="sec-head"><div class="sec-num">4.13</div><h3>SO-13 — Evaluation (Research Instrument Deployment)</h3></div>
+  <div class="cards">
+    <div class="obj"><h4>Status: Instruments Prepared · Field Testing Scheduled</h4><div class="res">ISO 25010 + SUS + task protocol ready; respondents drawn from AVRC clients, personnel, LGU staff, buyers, IT experts</div>
+    <p>Analysis pipeline defined (§3.3): per-item weighted means, characteristic aggregation, SUS computation, decision rule ≥3.41 mean &amp; SUS≥70 &amp; ≥80% independent completion. Results will be reported per objective upon completion of scheduled sessions.</p></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">4.14</div><h3>Implementation Status Summary</h3></div>
+  <div class="versus">
+    <div class="panel next"><h4>Implemented &amp; Functional ✓</h4><ul>
+      <li>Complete buyer/seller/admin interfaces (40+ routes)</li>
+      <li>Supabase PostgreSQL: 24+ tables, RLS everywhere</li>
+      <li>Atomic checkout RPC + status-history trigger</li>
+      <li>Per-user cart/wishlist/prefs server-persisted</li>
+      <li>Multi-provider payment configuration UI + dynamic checkout</li>
+      <li>Full accessibility suite (TTS, voice, reading mode)</li>
+      <li>Seller payouts + CSV export; audit ledger; low-stock alerts</li>
+      <li>Dynamic analytics/reporting; toast notifications</li>
+      <li>Smart search/recommendations/filters/trending</li>
+      <li>SEO head + per-route titles; CI-clean build; Vercel production</li></ul></div>
+    <div class="panel prev"><h4>Not Yet / Planned</h4><ul>
+      <li>Live payment capture (needs merchant API keys per provider)</li>
+      <li>Email/push notifications (gmailService scaffolded)</li>
+      <li>WebSocket real-time tracking</li>
+      <li>Cloud image CDN quotas (storage bucket configured)</li>
+      <li>Google OAuth production keys (architecture scaffolded)</li>
+      <li>Dedicated mobile app (responsive web ships today)</li>
+      <li>Multi-device sync for device-preferences layer</li></ul></div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 5 ═══ -->
+<section class="doc">
+  <span class="chap-tag">Chapter 5 · Conclusion and Recommendations</span>
+  <div class="sec-head"><div class="sec-num">5.1</div><h3>Conclusion</h3></div>
+  <p class="body-text">Inclusive Market successfully demonstrates that a dedicated, institutionally embedded, accessibility-first e-commerce platform can bridge the documented gap between PWD livelihood production at AVRC Region IX and real digital-market participation. All thirteen specific objectives were carried through analysis, agile delivery across seven sprints, and implementation — culminating in a Supabase-backed, Vercel-deployed system with role-gated buyer, seller, and administrator experiences, atomic inventory-safe checkout, five configurable Philippine-relevant payment providers, a full WCAG-aligned assistive suite, and intelligent discovery features. The system stands apart from commercial marketplaces precisely where those marketplaces fall short for this community: PWDs are positioned as empowered sellers, not merely consumers, under AVRC/LGU co-management.</p>
+  <div class="sec-head"><div class="sec-num">5.2</div><h3>Recommendations</h3></div>
+  <div class="cards">
+    <div class="icard green"><h4>Near-Term</h4><p>Complete scheduled ISO 25010/SUS field evaluation (§4.13); onboard initial AVRC cohorts with assisted listing creation; provision live PayMongo/GCash merchant keys to activate real capture.</p></div>
+    <div class="icard gold"><h4>Medium-Term</h4><p>Transactional email + push notifications; Google OAuth production keys; image CDN quota tuning; WebSocket order tracking; expanded analytics exports.</p></div>
+    <div class="icard"><h4>Long-Term</h4><p>Replicate the model across other AVRC regions and SLP associations; React Native companion app; AI-assisted product descriptions (informed by Bansal 2024) and chatbot support (Gupta 2024) adapted accessibly.</p></div>
+    <div class="icard pink"><h4>For Future Researchers</h4><p>Extend recommendation learning with interaction signals; longitudinal income-impact studies on participating PWD sellers; interoperability bridges with DSWD ISWS beneficiary records.</p></div>
+  </div>
+</section>
+
+<!-- ═══ REFERENCES ═══ -->
+<section class="doc">
+  <span class="chap-tag">References · APA Format</span>
+  <div style="columns:2;column-gap:38px">
+  <p class="refs">Abdullah, M. S. (2025). Examining the effect of AI-powered personalization on customer loyalty: A meta-analysis of e-commerce studies. <i>Review of Applied Science and Technology, 4</i>(2), 309–338. https://doi.org/10.63125/780spe97</p>
+  <p class="refs">Akanfe, O., Bhatt, P., &amp; Lawong, D. A. (2025). Technology advancements shaping the financial inclusion landscape. <i>Information Systems Frontiers, 27</i>, 2189–2212. https://doi.org/10.1007/s10796-025-10597-z</p>
+  <p class="refs">Bansal, R., Jain, K., Tyagi, T., &amp; Bansal, R. (2024). Leveraging AI and computer vision for generating precise e-commerce product descriptions. <i>IOSR Journal of Computer Engineering, 26</i>(6), 15–24. https://doi.org/10.9790/0661-2606031524</p>
+  <p class="refs">Barayuga, V. J. D., Gacula, A. Q., Batin, R. T., &amp; Valdez, G. V. (2025). AgriFresh: Design and implementation of an IoT and AI-integrated ecosystem for sustainable agriculture in Ilocos Sur. <i>Proceedings of the IEEE International Conference on Agent Computing (AGRETA)</i>, 1–8. https://doi.org/10.1109/agreta68375.2025.11474208</p>
+  <p class="refs">Costa, P., &amp; Rodrigues, H. (2024). The ever-changing business of e-commerce: Net benefits while designing a new platform for small companies. <i>Review of Managerial Science, 18</i>, 2507–2545. https://doi.org/10.1007/s11846-023-00681-6</p>
+  <p class="refs">Csillag, S., Svastics, C., Gyori, Z., &amp; Hidegh, A. L. (2026). Half-open doors? Disability and inclusion: The lived experience of entrepreneurs with disabilities. <i>International Journal of Disability Management, 17</i>(1), 1–15. https://doi.org/10.1007/978-3-032-12722-8_13</p>
+  <p class="refs">Dakung, R. J., Nuhu, L. Y., Mshelmbula, J. P., Onuh, O., Dabara, I. M., &amp; Adetayo, A. O. (2025). Rethinking disability entrepreneurship: The role of technology in entrepreneurship education for persons living with disabilities. <i>Journal of Entrepreneurship Education, 28</i>(3), 1–14. https://doi.org/10.1007/s41959-025-00160-x</p>
+  <p class="refs">Department of Social Welfare and Development. (2022). <i>DSWD integrated social welfare indicators system: Program monitoring and reporting framework</i>. DSWD Region IX.</p>
+  <p class="refs">Dinamika, S. G., &amp; Siregar, E. B. A. (2022). Actualizing the business English course by using an e-commerce platform. <i>Journal of English Language Teaching and Linguistics, 7</i>(3), 497–512. https://doi.org/10.21462/jeltl.v7i3.909</p>
+  <p class="refs">Etsy, Inc. (2023). <i>Etsy seller handbook: Getting started with your Etsy shop</i>. https://www.etsy.com/seller-handbook</p>
+  <p class="refs">Fontana, M., &amp; Mitra, S. (2023). <i>Inclusive trade and persons with disabilities</i>. Sustainable Trade Report, International Trade Centre.</p>
+  <p class="refs">Gadhve, K., Patel, S., Shah, R., &amp; Trivedi, M. (2025). Intelligent agriculture marketplace: Connecting farmers and buyers through AI-enabled digital platforms. <i>Proceedings of the IEEE International Conference on OT Confluence</i>, 145–162. https://doi.org/10.1109/otcon65728.2025.11071090</p>
+  <p class="refs">Ghildiyal, S., Rai, A., Tiwari, D. P., Yadav, V., &amp; Gupta, S. (2025). AI-enabled price negotiation chatbot using ensemble classifier for e-commerce platform. <i>Proceedings of the International Conference on Artificial Intelligence and Data Science</i>, 1–7. https://doi.org/10.29284/vd6v2925</p>
+  <p class="refs">Gupta, C. P., Ravi Kumar, V. V., &amp; Khurana, A. (2024). Artificial intelligence application in e-commerce: Transforming customer service, personalization and marketing. <i>International Journal of Advanced Computer Science and Applications, 15</i>(4), 236–248. https://doi.org/10.23919/indiacom61295.2024.10498474</p>
+  <p class="refs">Gutterman, A. S. (2025). Market opportunities in the disability community. <i>SSRN Electronic Journal</i>. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5100409</p>
+  <p class="refs">Hughes, H. (2025). Education technology and digital upskilling in emerging economies. <i>SSRN Electronic Journal</i>. https://doi.org/10.2139/ssrn.5719702</p>
+  <p class="refs">Krithika, M., Keerthana, M., Deepa, S., &amp; Revathi, S. (2026). Tech-powered marketplace and learning hub using artificial intelligence. <i>International Journal for Research in Applied Science and Engineering Technology, 14</i>(1), 1–10. https://doi.org/10.22214/ijraset.2026.77103</p>
+  <p class="refs">Lazada Group. (2023). <i>Lazada Philippines seller center: Platform overview and seller guidelines</i>. https://www.lazada.com.ph</p>
+  <p class="refs">Lee, Y. S., Soroushian, J., Bullock, J., &amp; Bhatt, D. (2025). Proactively developing and assisting the workforce in the age of AI. <i>Wharton School Research Paper</i>, 1–28. https://doi.org/10.2139/ssrn.5366876</p>
+  <p class="refs">Malhotra, S., Kaur, T., Jain, K., Pandey, P. K., &amp; Sengupta, A. (2025). Inclusive entrepreneurship ecosystem for PwDs: A reflection on SDGs. <i>International Journal of Manpower, 46</i>(4), 736–769. https://doi.org/10.1108/ijm-01-2024-0042</p>
+  <p class="refs">Mendoza, X. L. D. (2023). Entrepreneurial capability and engagement of persons with disabilities toward a framework for inclusive entrepreneurship. <i>arXiv Preprint</i>. https://doi.org/10.5281/zenodo.7782072</p>
+  <p class="refs">Mishrif, A., &amp; AlQamshoui, A. (2026). Bridging entrepreneurial knowledge and skill gaps through educational programmes for disabled students. <i>Journal of Disability Policy Studies, 36</i>(2), 1–12. https://doi.org/10.1007/978-3-032-15820-8_68</p>
+  <p class="refs">National Council on Disability Affairs. (2023). <i>NCDA annual report: Programs and initiatives for persons with disabilities</i>. Republic of the Philippines.</p>
+  <p class="refs">Palileng, R. E. (2024). Design and architecture of BenguetFresh: An IoT-enabled data-driven system for sustainable agriculture. <i>Journal of Electrical Systems, 20</i>(4s), 736–742. https://doi.org/10.52783/jes.2095</p>
+  <p class="refs">PayMongo. (n.d.). <i>PayMongo developer documentation: Payment gateway API reference</i>. https://developers.paymongo.com</p>
+  <p class="refs">Paul, R. (2023). AI integration in e-commerce business models: Case studies on Amazon FBA, Airbnb, and Turo operations. <i>American Journal of Advanced Technology and Engineering Solutions, 3</i>(3), 1–31. https://doi.org/10.63125/1ekaxx73</p>
+  <p class="refs">Republic Act No. 7277. (1992). <i>Magna Carta for Disabled Persons</i>. Republic of the Philippines.</p>
+  <p class="refs">Republic Act No. 10173. (2012). <i>Data Privacy Act of 2012</i>. Republic of the Philippines.</p>
+  <p class="refs">Rodrigo, R., Santos, K. D., Torres, R., Reyes, M. A., &amp; Del Rosario, E. J. (2024). Examining consumer readiness for artificial intelligence integration in online shopping. <i>Philippine Journal of Science, 153</i>(2), 401–414. https://doi.org/10.1109/icbim63313.2024.10823505</p>
+  <p class="refs">Saxena, A. (2025). Strategic applications of AI-powered recommendation systems across industries. <i>Journal of Engineering and Computer Sciences, 4</i>(7), 894–903. https://doi.org/10.5281/zenodo.16213228</p>
+  <p class="refs">Shopee Philippines. (2023). <i>Shopee seller education hub: Platform overview and seller onboarding guide</i>. https://seller.shopee.ph/edu</p>
+  <p class="refs">Sundaramoorthy, J., Raleigh, I. L., &amp; Owolabi, A. (2024). AI-driven accessible e-commerce platforms for people with visual, hearing, and mobility impairments. <i>Journal of Assistive Technologies, 18</i>(1), 42–56. https://doi.org/10.1108/JAT-10-2023-0042</p>
+  <p class="refs">Volkova, N., Kuzmuk, I., Oliinyk, N., Klymenko, I., &amp; Dankanych, A. (2021). Development trends of the digital economy: E-business, e-commerce. <i>Economic Studies Journal, 31</i>(4), 86–103. http://dspace.msu.edu.ua:8080/jspui/handle/123456789/9311</p>
+  <p class="refs">W3C. (2018). <i>Web content accessibility guidelines (WCAG) 2.1</i>. World Wide Web Consortium. https://www.w3.org/TR/WCAG21/</p>
+  </div>
+  <div class="sub-head"><h4>Appendices (as listed — unchanged)</h4></div>
+  <p class="body-text">Source Code · Evaluation Tools/Test Documents · Sample I/O Reports · User's Guide · Process/Data/Information Flow · Screen Layouts · Test Results · Sample Outputs · Photo Documentation · Curriculum Vitae per member · MOA (optional).</p>
+</section>
+
+<footer class="docfoot">ZPPSU CICS — BSIT Capstone · Basco · Jalem · Macas · Salvador · Adviser: Aldeliene K. Tulawie, MEngg. Ed · June 2026 · <a href="/" style="color:var(--blue)">← Back to IncluMarket</a></footer>
+</main>
+
+<!-- ══ DECK ══ -->
+<div id="deck">
+  <div class="deck-top">
+    <button class="nav-arrow" onclick="closeDeck()" title="Exit (Esc)">✕</button>
+    <h4 id="deckTitle">Capstone Manuscript Defense</h4>
+    <span id="autoBadge">▶ AUTO</span>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="toggleDeckTheme()">◐ Dark / ◑ White</button>
+    <button class="btn btn-ghost" onclick="toggleDocFullscreen()">⛶ Fullscreen</button>
+    <button class="btn btn-gold" onclick="presentAll()">▶ Auto-play</button>
+  </div>
+  <div class="deck-stage"><div id="slideHost" style="width:100%;height:100%"></div></div>
+  <div class="deck-bot">
+    <button class="nav-arrow" onclick="step(-1)">‹</button>
+    <div class="progress"><i id="bar"></i></div>
+    <span class="counter" id="ctr">1 / N</span>
+    <button class="nav-arrow" onclick="step(1)">›</button>
+  </div>
+</div>
+
+<script>
+const SLIDES=[
+ {k:'Cover',t:'Inclusive Market',h:`<div class="sb-in">
+   <div style="font-size:14px;letter-spacing:3px;color:#FFD700;font-weight:800">CAPSTONE MANUSCRIPT DEFENSE · NEW TRB FORMAT</div>
+   <h3 style="font-size:44px;margin:14px 0">Inclusive Market</h3>
+   <p class="sub">A Smart E-Commerce Application for PWD Products — AVRC Region IX<br/>Basco · Jalem · Macas · Salvador — Adviser: A. Tulawie, MEngg. Ed · June 2026</p></div>`},
+ {k:'Agenda',t:'Defense roadmap',h:`<ul class="fl">
+   <li><b>Ch. 1</b> Introduction — 1.1 Background → 1.7 Terms (Significance at 1.5)</li>
+   <li><b>Ch. 2</b> Literature (L/F) + Studies &amp; Systems (L/F) + 2.5 Synthesis table</li>
+   <li><b>Ch. 3</b> Methodology — Agile SDLC, instruments, statistical tools, ethics</li>
+   <li><b>Ch. 4–5</b> Results per specific objective · Conclusion &amp; recommendations</li></ul>`},
+ {k:'1.1–1.2',t:'Background & context',h:`<ul class="fl">
+   <li><b>The gap</b> 66+ AVRC IX PWD producers skilled in weaving/crafts — yet only episodic fairs &amp; informal posts connect them to buyers.</li>
+   <li><b>Policy anchor</b> RA 7277 Magna Carta · RA 10173 Privacy · NCDA mandate · UN SDG 10.</li>
+   <li><b>Our answer</b> Accessible smart e-commerce storefront + AVRC/LGU co-management, built for Region IX.</li></ul>`},
+ {k:'1.3–1.4',t:'Purpose & objectives',h:`<ul class="fl">
+   <li><b>"Smart" =</b> fuzzy search · scored recommendations · 7-condition alerts · advanced filters · trending/new arrivals.</li>
+   <li><b>Accessible =</b> TalkBack support, TTS, voice commands, reading mode, WCAG 2.1 AA.</li>
+   <li><b>13 specific objectives</b> from platform delivery (SO-01) to field evaluation (SO-13) — each mapped in Chapter 4.</li></ul>`},
+ {k:'1.5–1.7',t:'Significance · scope · terms',h:`<ul class="fl">
+   <li><b>PWD clients</b> independence + income; <b>AVRC/LGU</b> oversight &amp; reports; <b>researchers</b> replicable model; <b>ZPPSU</b> inclusive-tech profile.</li>
+   <li><b>Scope guards</b> AVRC IX products only · online-required · responsive web (no native app yet) · live capture needs merchant keys.</li>
+   <li><b>24 defined terms</b> — from Accessibility Toolbar to WCAG — operationally fixed for panels.</li></ul>`},
+ {k:'2.1–2.2',t:'Literature — local & foreign',h:`<ul class="fl">
+   <li><b>Local lit</b> Mendoza (barriers), Rodrigo (ease-of-use &amp; trust), DSWD/RA frameworks.</li>
+   <li><b>Foreign lit</b> Volkova digital economy · Costa usability-driver · Saxena recommendations · Abdullah UCD meta-analysis · W3C WCAG.</li></ul>`},
+ {k:'2.3–2.4',t:'Studies & systems — L/F',h:`<ul class="fl">
+   <li><b>Local systems</b> Shopee/Lazada (scale, not accessible) · BenguetFresh/AgriFresh (gov-supported, no commerce) · DSWD ISWS (no marketplace).</li>
+   <li><b>Foreign systems</b> Amazon/Etsy gold standards lacking PWD compliance · Krithika closest model (women artisans) · AI adjuncts (descriptions, chatbots, service).</li></ul>`},
+ {k:'2.5',t:'Synthesis — the gap we fill',h:`<table style="max-width:1300px"><thead><tr><th>Capability</th><th>Amazon/Shopee/Lazada</th><th>Etsy</th><th>BenguetFresh/AgriFresh</th><th>DSWD ISWS</th><th>IncluMarket</th></tr></thead><tbody>
+   <tr><td>Full checkout</td><td>✓</td><td>✓</td><td>✗</td><td>✗</td><td style="color:#4ade80;font-weight:900">✓</td></tr>
+   <tr><td>WCAG AA suite</td><td>✗</td><td>✗</td><td>✗</td><td>~</td><td style="color:#4ade80;font-weight:900">✓</td></tr>
+   <tr><td>PWD-as-seller</td><td>✗</td><td>~</td><td>✗</td><td>✗</td><td style="color:#4ade80;font-weight:900">✓</td></tr>
+   <tr><td>Institutional oversight</td><td>✗</td><td>✗</td><td>~</td><td>✓</td><td style="color:#4ade80;font-weight:900">✓</td></tr></tbody></table>`},
+ {k:'3.1',t:'SDLC — Agile, six phases',h:`<div class="sb-in">
+   <div class="flow" style="margin:0 auto"><span class="chip">Planning</span><span class="arrow">→</span><span class="chip">Analysis</span><span class="arrow">→</span><span class="chip">Design</span><span class="arrow">→</span><span class="chip">Implementation</span><span class="arrow">→</span><span class="chip">Testing &amp; Integration</span><span class="arrow">→</span><span class="chip">Maintenance</span></div>
+   <ul class="fl" style="margin-top:18px"><li><b>7 sprints executed</b> Setup → Auth/Data → Buyer → Seller → Admin → Accessibility/Voice → Smart engine &amp; polish (build + deploy + Supabase migration).</li></ul></div>`},
+ {k:'3.1.1–3.1.2',t:'Requirements & actors',h:`<ul class="fl">
+   <li><b>6 documented problems</b> from observation + consultations drive every requirement traceably.</li>
+   <li><b>3 actors</b>: Buyer (17 use cases) · Seller (13, incl. PWD ID upload & payouts) · Admin (12, incl. provider config & logs).</li></ul>`},
+ {k:'3.1.3–3.1.5',t:'DFD · ERD · layered design',h:`<ul class="fl">
+   <li><b>Context + 8 Level-1 modules</b> — auth, products, cart, checkout, orders, admin, analytics, accessibility — stores mapped to im_ tables.</li>
+   <li><b>ERD</b> 10 entities; atomic create_order_with_items() enforces stock integrity.</li>
+   <li><b>Layers</b> React presentation · 7-context logic · Supabase data (RLS everywhere).</li></ul>`},
+ {k:'3.1.7',t:'Requirements documentation',h:`<ul class="fl">
+   <li><b>FR-01 … FR-38</b> — authentication → smart-alert engine, priority-ranked High/Medium/Low.</li>
+   <li><b>NFR-01 … NFR-10</b> — SUS ≥ 70 · WCAG 2.1 AA · ≤3 s loads · zero plaintext · build-pass reliability · RA 10173.</li></ul>`},
+ {k:'3.2',t:'Research instruments',h:`<ul class="fl">
+   <li><b>ISO/IEC 25010</b> — 8-characteristic expert questionnaire (functional suitability → portability).</li>
+   <li><b>SUS</b> — standard 10-item post-session instrument; acceptability ≥ 70.</li>
+   <li><b>Task protocol</b> — voice-driven search→cart→checkout scripts; completion, time, errors, independence flags.</li>
+   <li><b>Respondents</b> — PWD sellers · AVRC staff · LGU · buyers · IT experts.</li></ul>`},
+ {k:'3.3',t:'Statistical tools',h:`<div class="sb-in">
+   <div class="formula" style="max-width:720px;margin:0 auto">Weighted Mean = Σ(f·x) ⁄ N</div>
+   <ul class="fl"><li><b>Likert bands</b> 4.21–5.00 VS · 3.41–4.20 S · 2.61–3.40 F · 1.81–2.60 P · 1.00–1.80 VP.</li>
+   <li><b>Pass rule</b> mean ≥ 3.41 AND SUS ≥ 70 AND ≥80% independent PWD task completion.</li></ul></div>`},
+ {k:'3.4',t:'Ethical considerations',h:`<ul class="fl">
+   <li><b>RA 10173</b> minimal collection, RLS-guarded processing, no data sale.</li>
+   <li><b>Consent</b> plain-language + accessible formats (large print, TTS-read), voluntary withdrawal.</li>
+   <li><b>Vulnerable participants</b> companion allowance, AVRC-site sessions.</li>
+   <li><b>Integrity</b> APA citation, disclosure, honest limitations.</li></ul>`},
+ {k:'Ch. 4',t:'Results per specific objective',h:`<ul class="fl">
+   <li><b>SO-01–12: implemented ✓</b> platform live on Vercel; Supabase 24+ tables + RLS; atomic checkout; 5-provider dynamic payments; full a11y toolbar; smart search/recs/filters/trending; payouts + CSV; admin suite; SEO.</li>
+   <li><b>SO-13: instruments ready</b> — ISO 25010 + SUS + task protocol prepared; field sessions scheduled with decision rule pre-registered.</li></ul>`},
+ {k:'4.14',t:'Implementation status',h:`<ul class="fl">
+   <li><b>Done ✓</b> buyer/seller/admin (40+ routes) · server-persisted carts/wishlists/prefs · audit ledger · low-stock alerts · dynamic analytics · toasts · build-clean · two prod aliases.</li>
+   <li><b>Planned</b> live payment capture (merchant keys) · email/push · WebSocket tracking · OAuth production keys · mobile app.</li></ul>`},
+ {k:'Ch. 5',t:'Conclusion & recommendations',h:`<ul class="fl">
+   <li><b>Conclusion</b> An institutionally embedded, accessibility-first marketplace demonstrably bridges AVRC production and digital markets — PWDs as empowered sellers under co-management.</li>
+   <li><b>Next</b> Field evaluation → live merchant keys → notifications/OAuth → regional replication → React Native companion.</li></ul>`},
+ {k:'Close',t:'Thank you',h:`<div class="sb-in">
+   <h3 style="font-size:44px;margin-bottom:10px">Salamat!</h3>
+   <p class="sub">Thrive · Lead · Innovate — accessible e-commerce for PWD entrepreneurs of Region IX.</p>
+   <p style="margin-top:22px"><a href="/manual/" style="color:#FFD700;font-weight:800;font-size:18px">← Back to the manuscript</a></p></div>`},
+];
+let cur=0,timer=null;const host=document.getElementById('slideHost');
+function buildSlides(){host.innerHTML='';SLIDES.forEach(s=>{const d=document.createElement('div');d.className='slide';
+ d.innerHTML=`<div class="sk">${s.k}</div><h3>${s.t}</h3><div class="sb">${s.h}</div>`;host.appendChild(d);});}
+function show(i){cur=Math.max(0,Math.min(SLIDES.length-1,i));
+ document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('on',j===cur));
+ document.getElementById('ctr').textContent=`${cur+1} / ${SLIDES.length}`;
+ document.getElementById('bar').style.width=((cur+1)/SLIDES.length*100)+'%';
+ document.getElementById('deckTitle').textContent=SLIDES[cur].t.replace(/&amp;/g,'&');}
+window.step=n=>{stopAuto();show(cur+n)};
+window.openDeck=i=>{buildSlides();show(i??0);
+ if(localStorage.getItem('im_man_deck_theme')==='light')document.getElementById('deck').classList.add('light');
+ document.getElementById('deck').classList.add('open');document.body.style.overflow='hidden';stopAuto();};
+window.closeDeck=()=>{stopAuto();document.getElementById('deck').classList.remove('open');document.body.style.overflow=''};
+function stopAuto(){if(timer){clearInterval(timer);timer=null}document.getElementById('autoBadge').classList.remove('on')}
+window.presentAll=()=>{if(timer){stopAuto();return}
+ const dk=document.getElementById('deck');if(!dk.classList.contains('open'))openDeck(cur);
+ document.getElementById('autoBadge').classList.add('on');
+ timer=setInterval(()=>{cur>=SLIDES.length-1?stopAuto():show(cur+1)},6000);};
+window.toggleDeckTheme=()=>{const l=document.getElementById('deck').classList.toggle('light');
+ localStorage.setItem('im_man_deck_theme',l?'light':'dark');};
+window.toggleDocTheme=()=>{const on=document.body.classList.toggle('dark-doc');
+ document.getElementById('docThemeBtn').textContent=on?'☀ Light':'◐ Dark';
+ localStorage.setItem('im_man_theme',on?'dark':'light');};
+window.toggleDocFullscreen=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});else document.exitFullscreen?.();};
+document.addEventListener('keydown',e=>{
+ if(!document.getElementById('deck').classList.contains('open'))return;
+ if(e.key==='ArrowRight'||e.key===' ')step(1);else if(e.key==='ArrowLeft')step(-1);else if(e.key==='Escape')closeDeck();});
+if(localStorage.getItem('im_man_theme')==='dark'){document.body.classList.add('dark-doc');
+ const b=document.getElementById('docThemeBtn');if(b)b.textContent='☀ Light';}
+</script>
+</body>
+</html>
