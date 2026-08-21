@@ -1,143 +1,123 @@
-﻿# IncluMarket â€” Development TODO (Blockout Plan)
+﻿# PWD Seller – Inclusive Market · Development TODO (Blockout Plan)
 
-> Source: client recommendations (review meetings) + manuscript Â§5.3 roadmap.
-> Legend: `[ ]` pending Â· `[~]` in progress Â· `[x]` done
-> Priority: **P0** = next batch Â· P1 = following Â· P2 = later
-
----
-
-## â­ Priority â€” Audit Log & Financial Records Dashboard (P0)
-
-> Fully implemented e-commerce audit trail: every money movement and approval action
-> is recorded with **Date/Time Â· Entry No# Â· Actor Â· Action (approved/rejected/â€¦) Â·
-> Total Amount**, and visualized in charts/graphs over time.
-
-### A. Audit Log upgrade (`/admin/activity-logs` â†’ structured table)
-- [x] Structured columns: `Date & Time`, `Entry No#` (auto-increment ref e.g. AUD-0001),
-      `Actor` (name+role), `Action` (approved / rejected / created / updated /
-      deleted / paid / refunded / payout / status-change), `Entity` (order/product/user/ticket), `Details`
-- [x] Financial actions auto-log: order approved, payment confirmed (COD collected /
-      Maya/GCash settled), refund issued, seller payout released â€” each entry carries
-      **Total Amount** of the transaction
-- [x] Filters: date range, action type, entity type; free-text search
-- [x] Export CSV (audit log + financial ledger)
-- [x] Data layer: extend `addActivityLog(action, actor, entityType, details, amount?)`
-      to store `amount` + `refNo`; backfill from existing orders
-
-### B. Financial Records ledger (new `/admin/financial-records`)
-- [x] Every order/payment/payout as a ledger row: Date/Time, Record No#
-      (FIN-0001), Type (sale/refund/payout/fee), Method (COD/Maya/GCash/wallet),
-      Amount, Status (**pending / approved / completed / refunded**)
-- [ ] Running totals row + period selector (today / week / month / year)
-- [ ] Summary cards: Gross Sales Â· Refunds Â· Net Revenue Â· COD Collected Â· Pending Payouts
-- [x] Approve/reject workflow on pending financial entries (writes back to audit log)
-
-### C. Charts, Graphs & Time Analytics (Reports + Financial pages)
-- [x] Custom SVG charts extended in `Reports.jsx` + Financial page \(no new deps\):
-      - Line: sales/revenue over time (daily Â· weekly Â· monthly toggle)
-      - Bar: revenue by category; top sellers by GMV
-      - Donut: orders by status; payments by method share
-      - Area: cumulative revenue trend
-      - Heatmap/bar-by-hour: peak ordering hours ("time" dimension)
-- [ ] Comparison mode: this week vs last week, this month vs last month (% delta badges)
-- [ ] All charts keyboard-focusable with aria-labels + text summary fallback
+> Source: client recommendations (review meetings) + manuscript §5.3 roadmap.
+> Legend: `[ ]` pending · `[~]` in progress / partial · `[x]` done
+> Priority: **P0** = next batch · P1 = following · P2 = later
 
 ---
 
+## ▶ RESUME HERE TOMORROW
 
+1. **Run migration `0003_client_features.sql`** in Supabase SQL Editor (manual step — file is ready in `supabase/migrations/`)
+2. **Track D batch**: Accessibility Mode preset · Low-Data Mode · Multi-Language (EN/FIL/Chavacano) · Voice Feedback · Size/Color variants · finish Keyword Filter hooks on listing/review submit
+3. **Buyer-side blocklist self-service view** (admin panel done; user-facing list pending)
+4. **Hourly peak-time heatmap** — needs order timestamps to accumulate (`createdAt` now recorded)
+5. **Track E**: Shipping types/manage/report + Returns Hub
+6. Then Tracks F–G (vouchers, group buying, pickup points, QR, bitly)
 
-## Phase 0 â€” Foundations (do first, unblocks everything)
+---
+
+## ⭐ Priority — Audit Log & Financial Records Dashboard (P0) ✅ COMPLETE
+
+> Every money movement and approval action recorded with **Date/Time · Entry No# ·
+> Actor · Action (approved/rejected/…) · Total Amount**, visualized over time.
+
+### A. Audit Log upgrade (`/admin/activity-logs`)
+- [x] Structured columns: Date & Time, Entry No# (AUD-1001…), Actor, Action, Entity badge, Amount, Details
+- [x] Financial actions auto-log with Total Amount (order placed/approved/refunded/cancelled, payouts)
+- [x] Filters: entity type + date range + free-text search
+- [x] Export CSV
+- [x] Data layer: `addActivityLog(action, actor, type, details, amount?)` stores amount + refNo + ISO ts
+
+### B. Financial Records ledger (`/admin/financial-records`)
+- [x] Ledger rows: Record No# (FIN-…), Date & Time, Type (Sale/Refund), Method, Amount, Status (pending/approved/completed/refunded/rejected)
+- [x] Period selector (Today / Week / Month / Year / All)
+- [x] Summary cards: Gross Sales (+MoM % delta) · Net Revenue · Refunds · COD Collected (+ pending value shown in table footer note)
+- [x] Approve/reject workflow on pending entries → writes decision back to audit log
+
+### C. Charts, Graphs & Time Analytics
+- [x] Real-data Revenue Trend (was hardcoded) with Daily/Weekly/Monthly toggle + area fill
+- [x] Orders-by-Day-of-Week bar chart
+- [x] Donuts: order status + payment method share; Top sellers bars; category performance bars
+- [~] Hourly peak-time heatmap — deferred until order timestamps accumulate (createdAt now saved)
+- [x] Comparison mode: month-vs-month % delta badges on Gross Sales card
+- [x] Charts have role="img" + aria-labels + text fallbacks
+
+---
+
+## Phase 0 — Foundations
 
 - [x] Supabase schema 0001/0002 applied (tables, RLS, atomic checkout RPC)
-- [x] SPA fallback rewrite on Vercel (`vercel.json`) â€” deep links no longer 404
-- [x] Admin Dashboard â†’ Reports link path fixed (`/admin/admin-reports`)
-- [~] DB migration `0003_client_features.sql` written â€” awaiting manual SQL Editor run:
-      - `im_support_tickets` + `im_ticket_messages`, `im_notifications`
-      - `im_blocklist` + ban/KYC columns on `im_profiles`
-      - `im_wallets` + `im_wallet_txns`, `im_vouchers`, `im_returns`,
-        `im_pickup_points`, `im_shipping_methods` (seeded), product `options jsonb`
-      - RLS + indexes on all new tables
-      - `im_blocklist(blocker_id, blocked_id, reason, created_at)`
-      - `im_user_status` extension â†’ ban fields (`banned_at`, `ban_reason`, `banned_by`)
-      - `im_support_tickets(id, user_id, subject, category, priority, status, sla_due_at)` +
-        `im_ticket_messages(ticket_id, sender_role, body, created_at)`
-      - `im_wallets(user_id, balance)` + `im_wallet_txns(wallet_id, type, amount, ref)`
-      - `im_vouchers(code, discount_type, value, rules, expires_at, usage_limit, used_count)`
-      - `im_returns(return_id, order_item_id, reason, status, resolution)`
-      - `im_pickup_points(barangay, name, handler, schedule)`
-      - `im_shipping_methods(name, type, base_rate, zones)` + per-order shipping snapshot cols
-      - product option columns: `options jsonb` (size/color) on `im_products`
-      - `im_notifications(user_id, type, payload, read_at)`
-- [ ] RLS policies for every new table + indexes on FK columns
+- [x] SPA fallback rewrite on Vercel (`vercel.json`) — deep links no longer 404
+- [x] Admin Dashboard → Reports link path fixed (`/admin/admin-reports`)
+- [x] Admin sidebar grouped: ⚙️ System (top) / 🛒 Commerce / 👥 People & Catalog
+- [~] DB migration `0003_client_features.sql` WRITTEN — **awaiting manual SQL Editor run**:
+      im_support_tickets + im_ticket_messages · im_notifications · im_blocklist +
+      ban/KYC columns on im_profiles · im_wallets + im_wallet_txns · im_vouchers ·
+      im_returns · im_pickup_points · im_shipping_methods (seeded) · product options jsonb
+      — includes RLS policies + indexes for every table
+- [ ] After migration runs: switch ticket/notification/wallet reads to Supabase (optional parity pass)
 
-## Track A â€” Trust & Safety (P0)
+## Track A — Trust & Safety (P0) ✅ COMPLETE
 
-- [ ] **Block System** â€” block/unblock user; hides their listings from feed & blocks DMs
-      
-- [ ] **Ban System** â€” admin bans account w/ reason; AuthGuard rejects login; banner shown
-      
-- [ ] **Blocklist panel** â€” admin view of all blocks; user view of own blocks + unblock
-- [ ] **ID Verification** â€” seller KYC status machine: pending â†’ verified/rejected;
-      admin queue in Compliance → ID Verification tab; seller "Submit for Verification" banner on dashboard; decisions notify seller + audit log
-- [ ] **COD Verification** â€” OTP or confirm-step before COD order placement
-- [ ] **Review Integrity** â€” only buyers with delivered order can review; 1 review/order/item;
-      duplicate detection; admin moderation queue exists (link it)
-- [ ] **Fraud Detection** â€” velocity flags (>N orders/hr, payout anomalies) â†’ `im_audit_logs`
-- [ ] **Report & Mediation** â€” report button (listing/user/message) â†’ ticket queue w/ mediation states
+- [x] **Block System** — buyer blocks/unblocks seller from Messages; blocked sellers' products hidden from Catalog; sending disabled while blocked; audited
+- [x] **Ban System** — suspend w/ required reason modal; login rejected showing reason; ban reason visible in User Details; audited
+- [~] **Blocklist panel** — admin `/admin/blocklist` w/ names lookup + unblock DONE; buyer self-service list pending
+- [x] **ID Verification** — KYC tab in Compliance (approve/reject/reset); seller dashboard verification banner; decisions notify seller + audit log
+- [x] **COD Verification** — mandatory confirm checkbox before COD placement
+- [ ] **Review Integrity** — no review-submit UI exists yet; when built: delivered-order-only, 1 review/item, moderation link
+- [x] **Fraud Detection** — ≥3 orders in 1h by same buyer → audit entry + admin notification
+- [x] **Report & Mediation** — "Report this product" → high-priority ticket w/ reason categories → admin Tickets queue
 
-## Track B â€” Payments & Payouts (P0/P1)
+## Track B — Payments & Payouts (P0/P1)
 
-- [ ] **Cash on Delivery** â€” payment method `cod`; order flagged; collected-on-delivery workflow
-      files: `Checkout.jsx`, provider registry, order badges
-- [ ] **E-wallet Integration** â€” direct GCash/Maya deep-link flows (documented sandbox first)
-- [ ] **Seller Wallet** â€” balance accrues on delivered orders (`im_wallets`); wallet page in SellerLayout
-- [ ] **Instant Payout** â€” withdraw from wallet when balance â‰¥ threshold; auto-approval rule
+- [x] **Cash on Delivery** — COD method live at checkout (default) + verification step
+- [~] **E-wallet Integration** — Maya/GCash provider flows wired at checkout via paymentProviders registry; deep-link sandbox docs pending
+- [x] **Seller Wallet** — real computed balance (delivered ×95% − paid − on-hold) in `/seller/payouts`
+- [x] **Instant Payout** — ≤ ₱500 auto-approved instantly; larger amounts queued for admin; audited
 
-## Track C â€” Support & Communication (P0)
+## Track C — Support & Communication (P0) ✅ COMPLETE
 
-- [ ] **Support Ticket Resolution** â€” full lifecycle openâ†’assignedâ†’resolvedâ†’closed,
-      SLA due dates, buyer/seller/admin ticket pages, thread messages
-- [ ] **Notification Center** â€” bell icon + `/notifications` page; rows written on
-      order/approval/payout/ticket events; mark-as-read
-- [ ] **LiveChat Selling Support** â€” pre-purchase buyerâ†”seller chat (reuse im_chat_sessions)
-- [ ] **CS Real-Time Chatbot** â€” scripted FAQ bot; handoff creates support ticket
-- [ ] **Contact Support Chatbot** â€” same bot embedded on Contact page
-- [ ] **SmartChat Concern Routing** â€” classify concern (order/payment/product/account)
-      via keyword match â†’ route to right queue/template
+- [x] **Support Ticket Resolution** — buyer create/thread page, admin queue w/ status flow open→in_progress→resolved, replies both ways, notifications on every event
+- [x] **Notification Center** — navbar bell w/ unread badge + `/notifications` page; events: tickets, replies, status changes, orders (buyer+seller), fraud alerts, KYC decisions
+- [x] **LiveChat Selling Support** — buyer↔seller conversations (pre-purchase) via Messages pages
+- [x] **CS Real-Time Chatbot** — IncluBot floating widget: typing indicator, quick topics, human handoff → ticket w/ transcript
+- [x] **Contact Support Chatbot** — "Chat with IncluBot" card on Contact page opens same widget
+- [x] **SmartChat Concern Routing** — keyword-scored classifier (order/payment/refund/product/seller/account) w/ canned answers; low-confidence or human request → escalation
 
-## Track D â€” Accessibility & Buyer Experience (P1)
+## Track D — Accessibility & Buyer Experience (P1)
 
-- [ ] **Accessibility Mode** â€” one-tap profile preset (font+contrast+motion+TTS) saved to prefs
-- [ ] **Low-Data Mode** â€” toggle: lazy images, thumbnail quality, disable autoplay sections
-- [ ] **Multi-Language Support** â€” i18n dictionary (EN/FIL/Chavacano), language switcher in footer
-- [ ] **Voice Feedback System** â€” speak confirmations for add-to-cart/checkout actions
-- [ ] **Keyword Filter System** â€” banned-word list checked on listing/review/chat submit
-- [ ] **Size / Color variants** â€” optional option sets on products; selected at detailâ†’cart
-- [ ] **Only-Available toggle** â€” catalog filter switch hiding out-of-stock
+- [ ] **Accessibility Mode** — one-tap profile preset (font+contrast+motion+TTS) saved to prefs
+- [ ] **Low-Data Mode** — lazy images, thumbnail quality, disable autoplay sections
+- [ ] **Multi-Language Support** — i18n dictionary (EN/FIL/Chavacano), footer switcher
+- [ ] **Voice Feedback System** — speak confirmations for add-to-cart/checkout (SpeakButton component exists to build on)
+- [~] **Keyword Filter System** — moderation util live on chat sends; listing/review submit hooks pending
+- [ ] **Size / Color variants** — optional option sets on products; selected at detail→cart (options jsonb column ready in migration)
+- [x] **Only-Available toggle** — "In-stock items only" checkbox in catalog filters
 
-## Track E â€” Shipping & Fulfillment (P1)
+## Track E — Shipping & Fulfillment (P1)
 
-- [ ] **Shipping Types** â€” pickup / local courier / LBC-J&T placeholders at checkout
-- [ ] **Shipping Manage** â€” admin rates/zones screen; methods table seeded
-- [ ] **Shipping Report** â€” fulfillment export (lead time, failures) in Reports page
-- [ ] **Returns Hub** â€” return request per item â†’ seller approve â†’ admin arbitrate; status emails
+- [ ] **Shipping Types** — pickup / local courier / LBC-J&T selection at checkout (methods seeded in migration)
+- [ ] **Shipping Manage** — admin rates/zones screen
+- [ ] **Shipping Report** — fulfillment export (lead time, failures) in Reports
+- [ ] **Returns Hub** — return request per item → seller approve → admin arbitrate (im_returns table ready)
 
-## Track F â€” Community Commerce & Seller Enablement (P2)
+## Track F — Community Commerce & Seller Enablement (P2)
 
-- [ ] **Group Buying** â€” batch deals: join-until-deadline â†’ single bulk order to seller
-- [ ] **Rural Pickup Points** â€” barangay pickup selection at checkout (im_pickup_points)
-- [ ] **Barangay Storefront** â€” geo-filtered catalog view (`?brgy=`)
-- [ ] **Voucher System** â€” codes at checkout; validation vs rules/expiry/usage
-- [ ] **Micro-Seller Onboarding** â€” 3-step guided wizard for first-time sellers
-- [ ] **Training Hub** â€” static tutorial section (videos/PDFs) curated by AVRC
-- [ ] **Offline Upload Advance** â€” queue drafts offline (localStorage), sync on reconnect
-- [ ] **Greetings Module** â€” time-aware greeting on dashboards ("Magandang umaga, John!")
-- [ ] **Date/Time Standardization** â€” Asia/Manila tz helper + relative "2h ago" everywhere
+- [ ] **Group Buying** — join-until-deadline bulk deals
+- [ ] **Rural Pickup Points** — barangay pickup at checkout (im_pickup_points ready)
+- [ ] **Barangay Storefront** — geo-filtered catalog view (`?brgy=`)
+- [ ] **Voucher System** — codes at checkout w/ rules/expiry/usage (im_vouchers ready)
+- [ ] **Micro-Seller Onboarding** — 3-step guided wizard
+- [ ] **Training Hub** — tutorials section curated by AVRC
+- [ ] **Offline Upload Advance** — draft queue offline, sync on reconnect
+- [ ] **Greetings Module** — time-aware greeting on dashboards ("Magandang umaga, John!")
+- [ ] **Date/Time Standardization** — Asia/Manila helper + relative "2h ago" everywhere
 
-## Track G â€” Extras (P2)
+## Track G — Extras (P2)
 
-- [ ] **QR Code Support** â€” QR per product (share) + QR payments reference on receipts
-- [ ] **bitly.com Links** â€” short-link generation for product shares via Bitly API
+- [ ] **QR Code Support** — QR per product share + payment reference on receipts
+- [ ] **bitly.com Links** — short-link generation via Bitly API
 
 ---
 
@@ -145,9 +125,10 @@
 
 - [x] `/docs` system documentation + deck
 - [x] `/format` format guide + deck
-- [x] `/manual` manuscript (new TRB format) + defense deck + Â§5.3 roadmap
+- [x] `/manual` manuscript (new TRB format) + defense deck + §5.3 roadmap
+- [x] Branding: "PWD Seller - Inclusive Market" + "Zamboanga · Asia's Latin City" (navbar, footer, SEO title)
 - [ ] Add each shipped Track feature to: manuscript Ch.4 evidence, docs site features list
-- [ ] Keep both aliases synced after every deploy (`vercel alias set â€¦ inklusivemarketâ€¦`)
+- [x] Keep both aliases synced after every deploy (`vercel alias set inclusive-market.vercel.app inklusivemarket.vercel.app`)
 
 ## Definition of Done (per feature)
 
