@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Capstone Format Guide — ZPPSU CICS IT/IS · IncluMarket</title>
+<meta name="description" content="ZPPSU CICS IT/IS Capstone Format Revision — previous vs TRB-approved new format, chapter-by-chapter breakdown and the TDFOSIAN sample capstone."/>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+<style>
+  :root{--blue:#0047AB;--blue-dark:#1e3a8a;--sky:#3b82f6;--gold:#F2B705;--red:#E6397E;
+    --green:#15803D;--ink:#0f172a;--soft:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  a{text-decoration:none}
+  /* ── Top bar ─────────────────────────────────────────────── */
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;
+    background:linear-gradient(90deg,#0b1f3f,#0047AB);color:#fff;padding:12px 22px;box-shadow:0 2px 14px rgba(11,31,63,.35)}
+  .logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--gold),#fb923c);font-weight:900;font-size:19px;color:#0b1f3f}
+  .topbar h1{font-size:18px;font-weight:800;line-height:1.15}
+  .topbar p{font-size:12px;opacity:.75}
+  .spacer{flex:1}
+  .btn{border:none;border-radius:9px;padding:8px 16px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+  .btn-ghost:hover{background:rgba(255,255,255,.24)}
+  .btn-gold{background:var(--gold);color:#422006}
+  .btn-blue{background:var(--red);color:#fff;margin-left:-8px;border-radius:9px;padding:8px 16px;font-weight:700;font-size:13.5px;cursor:pointer;border:none;font-family:inherit}
+  /* ── Document layout ─────────────────────────────────────── */
+  main{max-width:1200px;margin:0 auto;padding:34px 22px 60px}
+  section.doc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px 32px;margin-bottom:26px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .sec-num{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;flex-shrink:0}
+  .sec-head h2{font-size:23px;font-weight:900;color:var(--blue-dark)}
+  .sec-sub{color:var(--soft);font-size:14.5px;margin-bottom:20px;margin-left:54px}
+  .hero{background:linear-gradient(120deg,#0b1f3f,#0047AB 55%,#0891b2);color:#fff;border:none;text-align:center}
+  .hero h2{font-size:clamp(26px,4vw,38px);font-weight:900;background:linear-gradient(90deg,#FFD700,#fb923c,#f472b6);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{max-width:820px;margin:12px auto 0;font-size:15.5px;opacity:.85;line-height:1.65}
+  .badge-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+  .badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.3);padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:700}
+  /* cards — always centered */
+  .cards{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;width:100%}
+  .icard{flex:0 1 340px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:13px;padding:18px 20px;text-align:left}
+  .icard h3{color:var(--blue-dark);font-size:16px;margin-bottom:7px}
+  .icard p{color:#334155;font-size:13.8px;line-height:1.6}
+  .icard.gold{background:#fefce8;border-color:#fde047}.icard.gold h3{color:#a16207}
+  .icard.green{background:#f0fdf4;border-color:#bbf7d0}.icard.green h3{color:#166534}
+  .icard.pink{background:#fdf2f8;border-color:#fbcfe8}.icard.pink h3{color:#be185d}
+  /* chapter cards */
+  .chcard{flex:0 1 350px;background:#fff;border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:12px;padding:16px 18px;text-align:left}
+  .chcard h3{font-size:15.5px;color:var(--blue-dark);margin-bottom:6px}
+  .chcard p{font-size:13.5px;color:#334155;line-height:1.6}
+  .chcard.new{border-left-color:var(--gold);background:#fffdf5}
+  .chcard.new h3{color:#a16207}
+  /* comparison panels */
+  .versus{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;width:100%}
+  .panel{flex:1 1 380px;border-radius:13px;padding:18px 20px;text-align:left}
+  .panel.prev{background:#fef2f2;border:1.5px solid #fecaca}
+  .panel.next{background:#f0fdf4;border:1.5px solid #bbf7d0}
+  .panel h3{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:12px}
+  .panel.prev h3{color:#b91c1c}.panel.next h3{color:#15803d}
+  .panel ul{list-style:none}
+  .panel li{font-size:14px;line-height:1.55;color:#334155;padding:7px 0 7px 26px;position:relative;border-bottom:1px dashed rgba(100,116,139,.25)}
+  .panel li:last-child{border-bottom:none}
+  .panel.prev li::before{content:'○';position:absolute;left:4px;color:#dc2626;font-weight:900}
+  .panel.next li::before{content:'✓';position:absolute;left:2px;color:#16a34a;font-weight:900}
+  .note{margin-top:16px;background:#f1f5f9;border-left:4px solid var(--blue);border-radius:8px;padding:12px 16px;font-size:13.8px;color:#334155;font-style:italic}
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border:1.5px solid var(--line);border-radius:13px;background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{background:linear-gradient(90deg,var(--blue),#1e40af);color:#fff;padding:11px 14px;text-align:left;font-weight:700}
+  td{padding:10px 14px;border-top:1px solid var(--line);color:#1e293b}
+  tbody tr:nth-child(even){background:#f8fafc}
+  td.yes{color:#16a34a;font-weight:800}td.no{color:#dc2626;font-weight:800}td.part{color:#d97706;font-weight:800}
+  tr.hl-row{background:#fefce8 !important}tr.hl-row td{font-weight:800;color:#854d0e}
+  /* sdlc chips */
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:14px 0}
+  .chip{background:#eff6ff;border:2px solid var(--blue);color:var(--blue-dark);border-radius:999px;padding:9px 18px;font-weight:800;font-size:13.5px}
+  .arrow{color:var(--soft);font-weight:900;font-size:17px}
+  .defgrid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+  .defitem{flex:0 1 300px;background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:14px 16px;text-align:left}
+  .defitem b{display:block;color:var(--blue-dark);margin-bottom:4px;font-size:14px}
+  .defitem span{font-size:13.3px;color:#475569;line-height:1.55}
+  footer.docfoot{text-align:center;color:var(--soft);font-size:13px;padding:26px 0 8px;border-top:1px solid var(--line);margin-top:8px}
+  /* ── Dark mode (document) ────────────────────────────────── */
+  body.dark-doc{background:#0b1220;color:#e2e8f0}
+  body.dark-doc section.doc{background:#101a2e;border-color:#334155}
+  body.dark-doc .sec-head h2{color:#93c5fd}
+  body.dark-doc .sec-sub,body.dark-doc footer.docfoot{color:#94a3b8}
+  body.dark-doc .icard,body.dark-doc .defitem{background:#0d1730;border-color:#334155}
+  body.dark-doc .icard p,body.dark-doc .defitem span,body.dark-doc .note{color:#cbd5e1}
+  body.dark-doc .icard h3,body.dark-doc .defitem b{color:#93c5fd}
+  body.dark-doc .icard.gold{background:#292005;border-color:#713f12}.dark-doc .icard.gold h3{color:#fde68a}
+  body.dark-doc .chcard{background:#0d1730;border-color:#334155}
+  body.dark-doc .chcard p{color:#cbd5e1}
+  body.dark-doc .panel.prev{background:#2a1215;border-color:#7f1d1d}
+  body.dark-doc .panel.next{background:#0d2113;border-color:#14532d}
+  body.dark-doc .panel li{color:#e2e8f0;border-bottom-color:#334155}
+  body.dark-doc .tbl-wrap{background:#101a2e;border-color:#334155}
+  body.dark-doc td{border-top-color:#1e293b;color:#cbd5e1}
+  body.dark-doc tbody tr:nth-child(even){background:#0d1730}
+  body.dark-doc .chip{background:#0d1730;color:#93c5fd}
+  /* ── Presentation deck ───────────────────────────────────── */
+  #deck{position:fixed;inset:0;z-index:150;background:#0b1220;display:none;flex-direction:column;color:#e2e8f0}
+  #deck.open{display:flex}
+  .deck-top{display:flex;align-items:center;gap:14px;padding:12px 26px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.12)}
+  .deck-top h4{font-size:16px;font-weight:800}
+  .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 14px;overflow:hidden}
+  .slide{width:min(1800px,100%);height:100%;display:none;flex-direction:column;margin:0 auto}
+  .slide.on{display:flex;animation:fSlide .35s ease}
+  @keyframes fSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .slide h3{font-size:clamp(26px,3vw,40px);margin-bottom:6px;text-align:center;width:100%;font-weight:900;
+    background:linear-gradient(90deg,#60a5fa,#FFD700,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .slide .sk{color:var(--gold);font-weight:800;font-size:13.5px;letter-spacing:2.5px;text-transform:uppercase;text-align:center;width:100%}
+  .sb{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:auto;padding:6px 0}
+  .sb-in{width:100%;text-align:center}
+  .fl{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:14px;margin:18px auto 0;width:100%}
+  .fl li{flex:0 1 430px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-left:4px solid var(--gold);border-radius:10px;padding:16px 20px;font-size:17px;line-height:1.55;text-align:left}
+  .fl li b{color:#ffd700;display:block;font-size:.86em;margin-bottom:3px}
+  .slide table{margin:0 auto;text-align:left;font-size:clamp(14px,1.4vw,19px)}
+  .slide th{padding:10px 18px}.slide td{padding:9px 18px;border-top-color:rgba(255,255,255,.14);color:#e2e8f0}
+  .slide tbody tr:nth-child(even){background:rgba(255,255,255,.05)}
+  .slide .chip{background:rgba(59,130,246,.18);color:#93c5fd}
+  .slide .arrow{color:#94a3b8}
+  .big{font-size:clamp(30px,4.5vw,56px);font-weight:900;letter-spacing:3px}
+  .sub{font-size:clamp(15px,1.6vw,21px);color:#94a3b8;margin-top:12px}
+  .deck-bot{display:flex;align-items:center;gap:18px;padding:12px 26px;background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.12)}
+  .progress{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#fb923c);transition:width .3s}
+  .counter{font-weight:800;font-size:15px}
+  .nav-arrow{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#fff;width:44px;height:44px;border-radius:50%;font-size:19px;cursor:pointer}
+  .nav-arrow:hover{background:var(--blue)}
+  #autoBadge{display:none;background:var(--red);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:1.5px;padding:5px 14px;border-radius:999px;animation:pulse 1.2s infinite}
+  #autoBadge.on{display:inline-block}
+  @keyframes pulse{50%{opacity:.55}}
+  #deck.light{background:#FDF6EE;color:#0f172a}
+  #deck.light .deck-top,#deck.light .deck-bot{background:rgba(15,23,42,.05);border-color:rgba(15,23,42,.14)}
+  #deck.light .slide h3{background:linear-gradient(90deg,#1d4ed8,#b45309,#be185d);-webkit-background-clip:text;background-clip:text}
+  #deck.light .fl li{background:#fff;border-color:#e2e8f0;border-left-color:var(--blue);color:#334155;box-shadow:0 2px 8px rgba(15,23,42,.06)}
+  #deck.light .fl li b{color:var(--blue-dark)}
+  #deck.light .nav-arrow{background:rgba(15,23,42,.08);border-color:rgba(15,23,42,.25);color:#0f172a}
+  #deck.light .progress{background:rgba(15,23,42,.15)}
+  #deck.light .counter{color:#334155}
+  #deck.light .sub{color:#64748b}
+  #deck.light .slide td{color:#334155;border-top-color:#e2e8f0}
+  #deck.light .slide tbody tr:nth-child(even){background:#faf5ef}
+  #deck.light .slide .chip{background:#eff6ff;color:var(--blue-dark)}
+  @media(max-width:900px){
+    .topbar{flex-wrap:wrap}
+    section.doc{padding:22px 18px}
+    .sec-sub{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">IF</div>
+  <div><h1>Capstone Format Guide</h1><p>ZPPSU CICS · IT/IS Capstone — TRB-Approved Format Revision</p></div>
+  <div class="spacer"></div>
+  <div class="mode-btns" style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn btn-ghost" href="/">← App</a>
+    <a class="btn btn-ghost" href="/docs/">📘 System Docs</a>
+    <button id="docThemeBtn" class="btn btn-ghost" onclick="toggleDocTheme()">◐ Dark</button>
+    <button class="btn btn-ghost" onclick="toggleDocFullscreen()">⛶ Fullscreen</button>
+    <button class="btn btn-gold" onclick="openDeck(0)">▤ Presentation</button>
+    <button class="btn btn-blue" onclick="presentAll()">▶ Present All</button>
+  </div>
+</header>
+
+<main>
+
+<section class="doc hero">
+  <h2>Capstone Format Revision</h2>
+  <p>Why the ZPPSU CICS IT/IS capstone outline changed, how the new TRB-approved structure differs
+     chapter by chapter, and a complete worked sample — the TDFOSIAN academe–employer portal.</p>
+  <div class="badge-row">
+    <span class="badge">Previous → New Format</span><span class="badge">CMO 25 s. 2015 aligned</span>
+    <span class="badge">Decimal Subsections</span><span class="badge">TDFOSIAN Sample Capstone</span>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">1</div><h2>Why the Format Changed</h2></div>
+  <p class="sec-sub">A format built for consistency, not just compliance.</p>
+  <div class="cards">
+    <div class="icard"><h3>The Problem</h3><p>The previous outline satisfied CMO 25 s. 2015 only at the chapter level.
+      Subsections, literature scope, research instruments and ethics were undefined — producing inconsistent manuscripts across panels.</p></div>
+    <div class="icard gold"><h3>The Reform</h3><p>The Technical Review Board (TRB) reformulated the outline so every chapter's
+      expectations are explicit for both BSIT and BSIS capstone groups.</p></div>
+    <div class="icard green"><h3>Numbered Subsections</h3><p>Every chapter now carries decimal-numbered subsections
+      (1.1, 2.3, 3.1.2…) removing ambiguity on what each section must contain.</p></div>
+    <div class="icard"><h3>Explicit RRL Scope</h3><p>Local vs. foreign literature and systems are separate required subsections,
+      plus a mandatory synthesis table reconciling them.</p></div>
+    <div class="icard pink"><h3>SDLC-Anchored Methodology</h3><p>Chapter III is built around the group's chosen SDLC model,
+      with ethics and statistical tools formally required.</p></div>
+    <div class="icard gold"><h3>Outcome-Framed Results</h3><p>Chapter IV is restructured around the study's specific objectives
+      rather than a development narrative.</p></div>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">2</div><h2>Previous Format — At a Glance</h2></div>
+  <p class="sec-sub">No decimal numbering; subsection depth and RRL/methodology scope were left to each adviser's discretion.</p>
+  <div class="cards">
+    <div class="chcard"><h3>Chapter 1 — Background of the Problem</h3><p>Introduction · Project Context · Purpose · Objectives · Scope &amp; Limitations · Definition of Terms</p></div>
+    <div class="chcard"><h3>Chapter 2 — RRL &amp; Systems</h3><p>Technical Background (single, undivided section)</p></div>
+    <div class="chcard"><h3>Chapter 3 — Design &amp; Methodology</h3><p>Requirements Analysis · Requirements Documentation · System/Product Design</p></div>
+    <div class="chcard"><h3>Chapter 4 — Development &amp; Testing</h3><p>Prototype Description · Development · Testing · Implementation Plan</p></div>
+    <div class="chcard"><h3>Chapter 5 — Results, Conclusion…</h3><p>Implementation results, discussions, conclusion and recommendations combined into one chapter.</p></div>
+    <div class="chcard"><h3>References</h3><p>ACM format · Appendices as listed.</p></div>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">3</div><h2>New Format — TRB Approved</h2></div>
+  <p class="sec-sub">Decimal-numbered subsections throughout; methodology explicitly anchored to the chosen SDLC model.</p>
+  <div class="cards">
+    <div class="chcard new"><h3>Ch. 1 — Introduction</h3><p>1.1 Background · 1.2 Project Context · 1.3 Purpose &amp; Description · 1.4 Objectives · 1.5 Significance · 1.6 Scope &amp; Limitations · 1.7 Definition of Terms</p></div>
+    <div class="chcard new"><h3>Ch. 2 — Related Literature, Studies &amp; Systems</h3><p>2.1 Literature (Local) · 2.2 Literature (Foreign) · 2.3 Studies &amp; Systems (Local) · 2.4 Studies &amp; Systems (Foreign) · 2.5 Synthesis — Table of Comparison + Synthesis Tables</p></div>
+    <div class="chcard new"><h3>Ch. 3 — Methodology</h3><p>3.1 SDLC Model (Planning→Maintenance) incl. 3.1.3.1 Technical Background · 3.2 Research Instruments · 3.3 Statistical Tools · 3.4 Ethical Considerations</p></div>
+    <div class="chcard new"><h3>Ch. 4 — Results &amp; Discussion</h3><p>4.1, 4.2, 4.3… organized per Specific Objective.</p></div>
+    <div class="chcard new"><h3>Ch. 5 — Conclusion &amp; Recommendations</h3><p>Separated from results reporting into its own focused chapter.</p></div>
+    <div class="chcard new"><h3>References</h3><p>APA format · Appendices as listed (unchanged).</p></div>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">4</div><h2>Structural Comparison</h2></div>
+  <p class="sec-sub">Previous format ○ versus ✓ new TRB-approved structure — side by side.</p>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:6px 0 12px">Chapter II — Review of Related Literature</h3>
+  <div class="versus">
+    <div class="panel prev"><h3>Previous</h3><ul>
+      <li>Technical Background (single undivided section)</li></ul></div>
+    <div class="panel next"><h3>New — TRB Approved</h3><ul>
+      <li>2.1 Related Literature (Local)</li><li>2.2 Related Literature (Foreign)</li>
+      <li>2.3 Related Studies and Systems (Local)</li><li>2.4 Related Studies and Systems (Foreign)</li>
+      <li>2.5 Synthesis — Comparison &amp; Synthesis Table — NEW</li></ul></div>
+  </div>
+  <div class="note">Local/foreign literature and systems must now be reviewed separately and reconciled in a required synthesis table.</div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapter III — Design &amp; Methodology</h3>
+  <div class="versus">
+    <div class="panel prev"><h3>Previous</h3><ul>
+      <li>Requirements Analysis</li><li>Requirements Documentation</li>
+      <li>Design of Software Systems, Product and/or Processes</li></ul></div>
+    <div class="panel next"><h3>New — TRB Approved</h3><ul>
+      <li>3.1 SDLC Model (e.g., Agile): Planning → Analysis → Design → Implementation → Testing &amp; Integration → Maintenance</li>
+      <li>3.1.3.1 Technical Background</li><li>3.2 Capstone/Research Instruments</li>
+      <li>3.3 Statistical Tools</li><li>3.4 Ethical Considerations — NEW</li></ul></div>
+  </div>
+  <div class="note">Methodology is now explicitly anchored to the group's chosen SDLC model; ethics is a required, citable subsection.</div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapters IV–V — From Prototype to Outcomes</h3>
+  <div class="versus">
+    <div class="panel prev"><h3>Previous</h3><ul>
+      <li>Ch. IV: Prototype Description, Development, Testing, Implementation Plan</li>
+      <li>Ch. V: Implementation Results, Discussions, Conclusion &amp; Recommendations — combined</li></ul></div>
+    <div class="panel next"><h3>New — TRB Approved</h3><ul>
+      <li>Ch. IV: Results and Discussion — organized per Specific Objective (4.1, 4.2, 4.3…)</li>
+      <li>Ch. V: Conclusion and Recommendations — a separate, focused chapter</li></ul></div>
+  </div>
+  <div class="note">Reporting shifts from a development narrative to evidence organized around each specific objective; conclusions get their own chapter.</div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">5</div><h2>What Stays the Same</h2></div>
+  <p class="sec-sub">Continuity items carried over unchanged from the previous format.</p>
+  <div class="cards">
+    <div class="icard green"><h3>References — APA</h3><p>APA citation format required — unchanged in both versions.</p></div>
+    <div class="icard green"><h3>Appendices</h3><p>Source code · evaluation tools/test documents · sample I/O reports · user's guide · process/data/information flow · screen layouts · test results · sample outputs · photo documentation · CV per member · MOA (optional).</p></div>
+    <div class="icard green"><h3>Front Matter</h3><p>Title page · Executive Summary (250–300 words) · Table of Contents · List of Figures/Tables/Notations — the new format only formalizes the Executive Summary word count.</p></div>
+  </div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">6</div><h2>Sample Capstone — TDFOSIAN</h2></div>
+  <p class="sec-sub">A complete worked example of the new format: TDFOSIAN, an academe–employer portal for ZPPSU graduates.</p>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:4px 0 12px">Chapter I — Introduction</h3>
+  <div class="defgrid">
+    <div class="defitem"><b>1.1 Background</b><span>Graduate tracer data across Zamboanga Peninsula HEIs shows persistent skills–employer mismatch, with no shared region-specific channel linking academe and industry.</span></div>
+    <div class="defitem"><b>1.2 Project Context</b><span>National job boards and PESO listings are not integrated with ZPPSU's tracer study or curriculum data — employability insight stays fragmented.</span></div>
+    <div class="defitem"><b>1.3 Purpose &amp; Description</b><span>TDFOSIAN is a web portal connecting ZPPSU academe, regional employers and job-seeking alumni through one shared platform.</span></div>
+    <div class="defitem"><b>1.4 Objectives</b><span>A portal with alumni/employer registration, job matching, and a tracer-linked employability dashboard for GATEU.</span></div>
+    <div class="defitem"><b>1.5 Significance</b><span>Alumni gain job access; employers gain a localized talent pool; ZPPSU gains CHED-aligned tracer and employability reporting.</span></div>
+    <div class="defitem"><b>1.6 Scope &amp; Limitations</b><span>Web-based; covers ZPPSU BSIT/BSIS/related graduates and employers registered within the Zamboanga Peninsula.</span></div>
+    <div class="defitem"><b>1.7 Definition of Terms</b><span>TDFOSIAN · Tracer Study · Employability · cNPS · Applicant Tracking — operationally defined for the study.</span></div>
+  </div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapter II — RRL Synthesis (2.5 Comparison Table)</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>System</th><th>Region-Specific</th><th>Tracer-Linked</th><th>Employer Portal</th></tr></thead>
+    <tbody>
+      <tr><td>PESO Online</td><td class="yes">Yes</td><td class="no">No</td><td class="part">Limited</td></tr>
+      <tr><td>LinkedIn / Indeed</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+      <tr class="hl-row"><td>TDFOSIAN (Proposed)</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+    </tbody></table></div>
+  <div class="note">2.1 Local literature: RA 10931 &amp; employability gaps · 2.2 Foreign: e-recruitment/job-matching research ·
+    2.3 Local systems: PESO Online &amp; DOLE job fairs · 2.4 Foreign systems: LinkedIn &amp; Indeed matching engines.</div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapter III — Methodology (Agile SDLC)</h3>
+  <div class="flow">
+    <span class="chip">1 · Planning</span><span class="arrow">→</span>
+    <span class="chip">2 · Analysis</span><span class="arrow">→</span>
+    <span class="chip">3 · Design</span><span class="arrow">→</span>
+    <span class="chip">4 · Implementation</span><span class="arrow">→</span>
+    <span class="chip">5 · Testing &amp; Integration</span><span class="arrow">→</span>
+    <span class="chip">6 · Maintenance</span>
+  </div>
+  <div class="defgrid">
+    <div class="defitem"><b>Planning</b><span>Stakeholder scoping with CICS &amp; GATEU.</span></div>
+    <div class="defitem"><b>Analysis</b><span>Requirements from alumni &amp; employer surveys.</span></div>
+    <div class="defitem"><b>Design</b><span>ERD, portal wireframes &amp; UI flow.</span></div>
+    <div class="defitem"><b>Implementation</b><span>Laravel / MySQL build — with 3.1.3.1 Technical Background.</span></div>
+    <div class="defitem"><b>Testing &amp; Integration</b><span>Sprint-based beta testing with pilot users.</span></div>
+    <div class="defitem"><b>Maintenance</b><span>Post-deployment support plan for GATEU.</span></div>
+    <div class="defitem"><b>3.2 Research Instruments</b><span>Structured surveys for alumni &amp; employers; interview guide for GATEU staff.</span></div>
+    <div class="defitem"><b>3.3 Statistical Tools</b><span>Weighted mean &amp; Likert-scale analysis; ISO 25010 for software quality evaluation.</span></div>
+    <div class="defitem"><b>3.4 Ethical Considerations</b><span>Data Privacy Act compliance, informed consent, secure handling of tracer records.</span></div>
+  </div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapter IV — Results per Specific Objective</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Objective</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><b>4.1</b> Develop registration &amp; matching module</td><td>Portal supports alumni, employer &amp; admin roles; matching accuracy validated against 3 pilot job postings.</td></tr>
+      <tr><td><b>4.2</b> Evaluate using ISO 25010</td><td>Functional Suitability and Usability rated “Very Satisfactory” by IT-expert and end-user evaluators.</td></tr>
+      <tr><td><b>4.3</b> Assess employability-tracking effectiveness</td><td>GATEU staff reported faster tracer-to-employer data linkage versus the previous manual process.</td></tr>
+    </tbody></table></div>
+
+  <h3 style="text-align:center;color:var(--blue-dark);margin:26px 0 12px">Chapter V — Conclusion &amp; Recommendations</h3>
+  <div class="note">TDFOSIAN meets its objectives as a functional, ISO 25010-rated academe–employer portal.
+    Recommended next steps: mobile companion app, expanded employer onboarding, and integration with ZPPSU's official
+    tracer-study database for future cohorts. References remain APA-formatted; appendices carry the same required set
+    (source code, ISO 25010 tool, I/O reports, user's guide, ERD/data flow, screen layouts, test results, photos, CVs).</div>
+</section>
+
+<section class="doc">
+  <div class="sec-head"><div class="sec-num">7</div><h2>Key Takeaways</h2></div>
+  <p class="sec-sub">What every BSIT/BSIS capstone group must remember under the new format.</p>
+  <div class="cards">
+    <div class="icard"><h3>Number everything</h3><p>Use decimal subsections in all chapters — panels now expect exact placement.</p></div>
+    <div class="icard gold"><h3>Split your RRL</h3><p>Local ≠ foreign, literature ≠ systems — four required sections plus a synthesis table.</p></div>
+    <div class="icard pink"><h3>Name your SDLC</h3><p>Chapter III walks your model phase by phase, with instruments, statistics and ethics cited.</p></div>
+    <div class="icard green"><h3>Report per objective</h3><p>Chapter IV answers each specific objective with evidence; Chapter V concludes separately.</p></div>
+  </div>
+</section>
+
+<footer class="docfoot">ZPPSU CICS — IT/IS Capstone Format · Prepared for the IncluMarket team · <a href="/" style="color:var(--blue)">← Back to IncluMarket</a></footer>
+</main>
+
+<!-- ══ PRESENTATION DECK ═══════════════════════════════════ -->
+<div id="deck">
+  <div class="deck-top">
+    <button class="nav-arrow" onclick="closeDeck()" title="Exit deck (Esc)">✕</button>
+    <h4 id="deckTitle">Capstone Format Revision</h4>
+    <span id="autoBadge">▶ AUTO</span>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="toggleDeckTheme()" title="Dark / white slides">◐ Dark / ◑ White</button>
+    <button class="btn btn-ghost" onclick="toggleDocFullscreen()">⛶ Fullscreen</button>
+    <button class="btn btn-gold" id="autoBtn" onclick="presentAll()">▶ Auto-play</button>
+  </div>
+  <div class="deck-stage"><div id="slideHost" style="width:100%;height:100%"></div></div>
+  <div class="deck-bot">
+    <button class="nav-arrow" onclick="step(-1)" title="Previous (←)">‹</button>
+    <div class="progress"><i id="bar"></i></div>
+    <span class="counter" id="ctr">1 / N</span>
+    <button class="nav-arrow" onclick="step(1)" title="Next (→ or Space)">›</button>
+  </div>
+</div>
+
+<script>
+const SLIDES=[
+ {k:'Cover',t:'Capstone Format Revision',h:`<div class="sb-in">
+   <div style="font-size:15px;letter-spacing:3px;color:#FFD700;font-weight:800">ZPPSU CICS · IT/IS CAPSTONE</div>
+   <h3 style="font-size:52px;margin:14px 0">Format Guide</h3>
+   <p class="sub" style="max-width:760px;margin:12px auto 0">Previous format → TRB-approved new format,<br/>chapter by chapter — with the TDFOSIAN sample capstone.</p>
+   <p style="margin-top:26px;color:#94a3b8;font-size:15px">Press → or click ‹ › to navigate · “Auto-play” runs the whole demo</p></div>`},
+ {k:'Agenda',t:'What this deck covers',h:`<ul class="fl">
+   <li><b>1–2</b> Why it changed · Previous format at a glance</li>
+   <li><b>3</b> New TRB-approved format at a glance</li>
+   <li><b>4–5</b> Structural comparisons · What stays the same</li>
+   <li><b>6–7</b> TDFOSIAN sample (Ch. I–V) · Key takeaways</li></ul>`},
+ {k:'Section 1',t:'Why the format changed',h:`<ul class="fl">
+   <li><b>Consistency gap</b> Old outline met CMO 25 s. 2015 only at chapter level — subsections, instruments &amp; ethics were undefined.</li>
+   <li><b>TRB reformulation</b> Every chapter's expectations made explicit for BSIT &amp; BSIS groups.</li>
+   <li><b>Numbered subsections</b> 1.1, 2.3, 3.1.2… remove ambiguity on required content.</li>
+   <li><b>Explicit RRL scope</b> Local/foreign × literature/systems split + mandatory synthesis table.</li>
+   <li><b>SDLC-anchored Ch. III</b> Model phases + statistical tools + formal ethics section.</li>
+   <li><b>Outcome-framed Ch. IV</b> Results organized per specific objective, not dev narrative.</li></ul>`},
+ {k:'Section 2',t:'Previous format — at a glance',h:`<ul class="fl">
+   <li><b>Ch. 1</b> Background of the Problem — intro, context, purpose, objectives, scope, terms.</li>
+   <li><b>Ch. 2</b> RRL &amp; Systems — one undivided Technical Background section.</li>
+   <li><b>Ch. 3</b> Requirements analysis · documentation · system/product design.</li>
+   <li><b>Ch. 4</b> Prototype description · development · testing · implementation plan.</li>
+   <li><b>Ch. 5</b> Results + discussion + conclusion + recommendations — all combined.</li>
+   <li><b>References</b> ACM format · no decimal numbering anywhere.</li></ul>`},
+ {k:'Section 3',t:'New format — TRB approved',h:`<ul class="fl">
+   <li><b>Ch. 1 · 1.1–1.7</b> Introduction — background, context, purpose, objectives, significance, scope, terms.</li>
+   <li><b>Ch. 2 · 2.1–2.5</b> Literature (L/F) · Studies &amp; Systems (L/F) · Synthesis tables.</li>
+   <li><b>Ch. 3 · 3.1–3.4</b> SDLC model w/ technical background · instruments · stats · ethics.</li>
+   <li><b>Ch. 4</b> Results &amp; Discussion — one section per specific objective.</li>
+   <li><b>Ch. 5</b> Conclusion &amp; Recommendations — own dedicated chapter.</li>
+   <li><b>References</b> APA format · appendices unchanged.</li></ul>`},
+ {k:'Compare',t:'Chapter II — RRL restructure',h:`<table style="max-width:1100px"><thead><tr><th>Previous</th><th>New — TRB</th></tr></thead>
+   <tbody><tr><td>Technical Background<br/>(single undivided section)</td>
+   <td>✓ 2.1 Lit (Local) · 2.2 Lit (Foreign)<br/>✓ 2.3 Studies/Systems (Local) · 2.4 (Foreign)<br/>✓ 2.5 Synthesis table — NEW</td></tr></tbody></table>
+   <p class="sub" style="margin-top:16px">Reviewed separately, reconciled in a required synthesis table.</p>`},
+ {k:'Compare',t:'Chapter III — methodology anchor',h:`<table style="max-width:1150px"><thead><tr><th>Previous</th><th>New — TRB</th></tr></thead>
+   <tbody><tr><td>Requirements Analysis · Documentation · Design of Software/Product/Processes</td>
+   <td>✓ 3.1 SDLC Model: Planning → … → Maintenance<br/>✓ 3.1.3.1 Technical Background<br/>✓ 3.2 Instruments · 3.3 Statistical Tools<br/>✓ 3.4 Ethical Considerations — NEW</td></tr></tbody></table>
+   <p class="sub" style="margin-top:16px">Methodology explicitly walks the chosen SDLC model; ethics is citable.</p>`},
+ {k:'Compare',t:'Chapters IV–V — prototype → outcomes',h:`<table style="max-width:1150px"><thead><tr><th>Previous</th><th>New — TRB</th></tr></thead>
+   <tbody><tr><td>Ch. IV: prototype, development, testing, implementation plan<br/><br/>Ch. V: results, discussions, conclusion, recommendations — combined</td>
+   <td>✓ Ch. IV: Results &amp; Discussion per specific objective (4.1, 4.2…)<br/>✓ Ch. V: Conclusion &amp; Recommendations — separate chapter</td></tr></tbody></table>
+   <p class="sub" style="margin-top:16px">Evidence organized around objectives; conclusions get their own space.</p>`},
+ {k:'Section 5',t:'What stays the same',h:`<ul class="fl">
+   <li><b>References</b> APA citation format — unchanged in both versions.</li>
+   <li><b>Appendices</b> Source code · eval tools · I/O reports · user's guide · flows · layouts · test results · outputs · photos · CVs · MOA (opt.).</li>
+   <li><b>Front matter</b> Title page · ToC · lists of figures/tables/notations; Executive Summary now formalized at 250–300 words.</li></ul>`},
+ {k:'Sample · TDFOSIAN',t:'Chapter I — Introduction',h:`<ul class="fl">
+   <li><b>1.1 Background</b> Skills–employer mismatch across Zamboanga Peninsula HEIs; no shared academe–industry channel.</li>
+   <li><b>1.2 Context</b> Job boards &amp; PESO listings not integrated with ZPPSU tracer/curriculum data.</li>
+   <li><b>1.3 Purpose</b> One portal linking ZPPSU academe, regional employers &amp; job-seeking alumni.</li>
+   <li><b>1.4 Objectives</b> Registration, job matching &amp; tracer-linked employability dashboard for GATEU.</li>
+   <li><b>1.5 Significance</b> Alumni access · localized talent pool · CHED-aligned reporting.</li>
+   <li><b>1.6 Scope · 1.7 Terms</b> Web-based, peninsula-wide · TDFOSIAN, tracer study, cNPS defined.</li></ul>`},
+ {k:'Sample · TDFOSIAN',t:'Chapter II — 2.5 synthesis table',h:`<table style="max-width:1050px">
+   <thead><tr><th>System</th><th>Region-Specific</th><th>Tracer-Linked</th><th>Employer Portal</th></tr></thead>
+   <tbody>
+   <tr><td>PESO Online</td><td style="color:#4ade80;font-weight:800">Yes</td><td style="color:#f87171;font-weight:800">No</td><td style="color:#fbbf24;font-weight:800">Limited</td></tr>
+   <tr><td>LinkedIn / Indeed</td><td style="color:#f87171;font-weight:800">No</td><td style="color:#f87171;font-weight:800">No</td><td style="color:#4ade80;font-weight:800">Yes</td></tr>
+   <tr><td style="font-weight:900;color:#FFD700">TDFOSIAN (Proposed)</td><td style="color:#4ade80;font-weight:800">Yes</td><td style="color:#4ade80;font-weight:800">Yes</td><td style="color:#4ade80;font-weight:800">Yes</td></tr>
+   </tbody></table>
+   <p class="sub" style="margin-top:14px">Local &amp; foreign literature/systems reviewed in 2.1–2.4, reconciled here.</p>`},
+ {k:'Sample · TDFOSIAN',t:'Chapter III — Agile methodology',h:`<div class="sb-in">
+   <div class="flow" style="margin:0 auto">
+     <span class="chip">Planning</span><span class="arrow">→</span><span class="chip">Analysis</span><span class="arrow">→</span>
+     <span class="chip">Design</span><span class="arrow">→</span><span class="chip">Implementation</span><span class="arrow">→</span>
+     <span class="chip">Testing &amp; Integration</span><span class="arrow">→</span><span class="chip">Maintenance</span></div>
+   <ul class="fl" style="margin-top:20px">
+     <li><b>CICS &amp; GATEU scoping</b> Stakeholder planning with alumni/employer surveys driving analysis.</li>
+     <li><b>Laravel / MySQL build</b> ERD + wireframes; sprint beta testing; 3.1.3.1 technical background.</li>
+     <li><b>Instruments · Stats · Ethics</b> Surveys &amp; interviews · weighted mean/Likert + ISO 25010 · DPA compliance.</li></ul></div>`},
+ {k:'Sample · TDFOSIAN',t:'Chapter IV — results per objective',h:`<table style="max-width:1250px">
+   <thead><tr><th>Objective</th><th>Result</th></tr></thead><tbody>
+   <tr><td><b>4.1</b> Registration &amp; matching module</td><td>All roles supported; accuracy validated on 3 pilot postings.</td></tr>
+   <tr><td><b>4.2</b> ISO 25010 evaluation</td><td>Functional Suitability &amp; Usability rated “Very Satisfactory”.</td></tr>
+   <tr><td><b>4.3</b> Employability tracking</td><td>Faster tracer-to-employer linkage than manual process.</td></tr>
+   </tbody></table>`},
+ {k:'Sample · TDFOSIAN',t:'Chapter V · references · appendices',h:`<ul class="fl">
+   <li><b>Conclusion</b> Functional, ISO 25010-rated academe–employer portal meeting all objectives.</li>
+   <li><b>Recommendations</b> Mobile app · expanded employer onboarding · official tracer-database integration.</li>
+   <li><b>References &amp; appendices</b> APA throughout; same appendix set as before (code, evals, guides, flows, CVs…).</li></ul>`},
+ {k:'Wrap-up',t:'Key takeaways',h:`<ul class="fl">
+   <li><b>Number everything</b> Decimal subsections in all chapters — panels expect exact placement.</li>
+   <li><b>Split your RRL</b> Four required sections + mandatory synthesis table.</li>
+   <li><b>Name your SDLC</b> Walk the model phase-by-phase with instruments, stats &amp; ethics.</li>
+   <li><b>Report per objective</b> Ch. IV answers each objective with evidence; Ch. V concludes.</li></ul>`},
+ {k:'Close',t:'Thank you',h:`<div class="sb-in">
+   <h3 style="font-size:46px;margin-bottom:10px">Good luck, capstone teams!</h3>
+   <p class="sub">Consistency beats compliance — write to the format, defend with confidence.</p>
+   <p style="margin-top:24px"><a href="/format/" style="color:#FFD700;font-weight:800;font-size:18px">← Back to the document</a></p></div>`},
+];
+
+let cur=0,timer=null;
+const host=document.getElementById('slideHost');
+function buildSlides(){
+  host.innerHTML='';
+  SLIDES.forEach(s=>{
+    const d=document.createElement('div');d.className='slide';
+    d.innerHTML=`<div class="sk">${s.k}</div><h3>${s.t}</h3><div class="sb">${s.h}</div>`;
+    host.appendChild(d);
+  });
+}
+function show(i){
+  cur=Math.max(0,Math.min(SLIDES.length-1,i));
+  document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('on',j===cur));
+  document.getElementById('ctr').textContent=`${cur+1} / ${SLIDES.length}`;
+  document.getElementById('bar').style.width=((cur+1)/SLIDES.length*100)+'%';
+  document.getElementById('deckTitle').textContent=SLIDES[cur].t.replace(/&amp;/g,'&');
+}
+window.step=n=>{stopAuto();show(cur+n)};
+window.openDeck=i=>{
+  buildSlides();show(i??0);
+  const dk=document.getElementById('deck');
+  if(localStorage.getItem('im_fmt_deck_theme')==='light')dk.classList.add('light');
+  dk.classList.add('open');document.body.style.overflow='hidden';stopAuto();
+};
+window.closeDeck=()=>{stopAuto();document.getElementById('deck').classList.remove('open');document.body.style.overflow=''};
+function stopAuto(){if(timer){clearInterval(timer);timer=null}document.getElementById('autoBadge').classList.remove('on')}
+window.presentAll=()=>{
+  if(timer){stopAuto();return}
+  const dk=document.getElementById('deck');
+  if(!dk.classList.contains('open'))openDeck(cur);
+  document.getElementById('autoBadge').classList.add('on');
+  timer=setInterval(()=>{cur>=SLIDES.length-1?stopAuto():show(cur+1)},6000);
+};
+window.toggleDeckTheme=()=>{
+  const light=document.getElementById('deck').classList.toggle('light');
+  localStorage.setItem('im_fmt_deck_theme',light?'light':'dark');
+};
+window.toggleDocTheme=()=>{
+  const on=document.body.classList.toggle('dark-doc');
+  document.getElementById('docThemeBtn').textContent=on?'☀ Light':'◐ Dark';
+  localStorage.setItem('im_fmt_theme',on?'dark':'light');
+};
+window.toggleDocFullscreen=()=>{
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});
+  else document.exitFullscreen?.();
+};
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('deck').classList.contains('open'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')step(1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')step(-1);
+  else if(e.key==='Escape')closeDeck();
+});
+if(localStorage.getItem('im_fmt_theme')==='dark'){
+  document.body.classList.add('dark-doc');
+  document.getElementById('docThemeBtn').textContent='☀ Light';
+}
+</script>
+</body>
+</html>
