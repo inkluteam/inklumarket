@@ -85,6 +85,12 @@ export function AuthProvider({ children }) {
     const allUsers = [...demoAccounts, ...customUsers]
     const found = allUsers.find(u => u.email === email && u.password === password)
     if (found) {
+      // Ban check: admin may have suspended this account
+      const storeUsers = (() => { try { return JSON.parse(localStorage.getItem('im_users')) || [] } catch { return [] } })()
+      const record = storeUsers.find(u => u.email === email)
+      if (record?.status === 'suspended') {
+        return { success: false, error: `This account has been suspended by an administrator.${record.banReason ? ` Reason: ${record.banReason}` : ''}` }
+      }
       const { password: _, ...safeUser } = found
       setUser(safeUser)
       localStorage.setItem('im_current_user', JSON.stringify(safeUser))

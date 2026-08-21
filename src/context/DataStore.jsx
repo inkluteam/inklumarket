@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react'
+﻿import { createContext, useContext, useState, useCallback, useMemo } from 'react'
 import { categories as initCategories, sellers as initSellers, products as initProducts, users as initUsers, orders as initOrders, reviews as initReviews, activityLogs as initLogs, payouts as initPayouts, transactions as initTransactions, conversations as initConversations, supportTickets as initTickets, notifications as initNotifications, flashSales as initFlashSales, wishlist as initWishlist, consentLogs as initConsentLogs, newsletter as initNewsletter, chatSessions as initChatSessions } from '../data/mockData'
 
 const DataStoreContext = createContext(null)
@@ -162,9 +162,12 @@ export function DataStoreProvider({ children }) {
       persist('im_orders', next)
       return next
     })
-    addActivityLog('Order placed', order.buyer || 'Buyer', 'order', `${newOrder.id} · ${String(order.paymentMethod || 'cod').toUpperCase()}`, Number(order.total) || 0)
+    addActivityLog('Order placed', order.buyer || 'Buyer', 'order', `${newOrder.id} Â· ${String(order.paymentMethod || 'cod').toUpperCase()}`, Number(order.total) || 0)
+    const sellerUserIds = [...new Set((order.items || []).map(it => products.find(p => p.id === it.productId)?.sellerId).filter(Boolean))]
+      .map(sid => users.find(u => u.sellerId === sid)?.id).filter(Boolean)
+    sellerUserIds.forEach(uid => addNotification(uid, 'order', `New order ${newOrder.id} â€” please prepare for processing`, '/seller/seller-orders'))
     return newOrder
-  }, [addActivityLog])
+  }, [addActivityLog, products, users, addNotification])
 
   const updateOrderStatus = useCallback((orderId, status) => {
     setOrders(prev => {
@@ -173,13 +176,14 @@ export function DataStoreProvider({ children }) {
       return next
     })
     const o = orders.find(x => x.id === orderId)
+    if (o?.buyerId) addNotification(o.buyerId, 'order', `Your order ${orderId} is now "${status}"`, '/notifications')
     const FIN_STATUSES = ['paid', 'completed', 'delivered', 'refunded', 'cancelled']
     if (o && FIN_STATUSES.includes(status)) {
-      addActivityLog(`Order ${status}`, 'Admin', 'order', `${orderId} · ${o.buyer || ''} (${status})`, status === 'refunded' || status === 'cancelled' ? -Math.abs(Number(o.total) || 0) : Math.abs(Number(o.total) || 0))
+      addActivityLog(`Order ${status}`, 'Admin', 'order', `${orderId} Â· ${o.buyer || ''} (${status})`, status === 'refunded' || status === 'cancelled' ? -Math.abs(Number(o.total) || 0) : Math.abs(Number(o.total) || 0))
     } else {
       addActivityLog('Order updated', 'System', 'order', `${orderId} marked as ${status}`)
     }
-  }, [addActivityLog, orders])
+  }, [addActivityLog, orders, addNotification])
 
   const bulkUpdateOrderStatus = useCallback((orderIds, status) => {
     setOrders(prev => {
@@ -218,13 +222,13 @@ export function DataStoreProvider({ children }) {
     })
   }, [])
 
-  const updateUserStatus = useCallback((userId, status) => {
+  const updateUserStatus = useCallback((userId, status, reason = '') => {
     setUsers(prev => {
-      const next = prev.map(u => u.id === userId ? { ...u, status } : u)
+      const next = prev.map(u => u.id === userId ? { ...u, status, banReason: status === 'suspended' ? (reason || 'Policy violation') : null } : u)
       persist('im_users', next)
       return next
     })
-    addActivityLog(status === 'active' ? 'User activated' : 'User suspended', 'Admin', 'user', `Account ${status}`)
+    addActivityLog(status === 'active' ? 'User activated' : 'User suspended', 'Admin', 'user', `Account ${status}${reason ? ` · reason: ${reason}` : ''}`)
   }, [addActivityLog])
 
   const updateSellerStatus = useCallback((sellerId, status) => {
@@ -403,40 +407,40 @@ export function DataStoreProvider({ children }) {
     sellerOrders.forEach(o => { if (statusBreakdown[o.status] !== undefined) statusBreakdown[o.status]++ })
 
     const lines = []
-    lines.push('═══════════════════════════════════════════════')
-    lines.push('         INCLUSIVE MARKET — SALES REPORT')
-    lines.push('═══════════════════════════════════════════════')
+    lines.push('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•')
+    lines.push('         INCLUSIVE MARKET â€” SALES REPORT')
+    lines.push('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•')
     lines.push(`Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`)
     lines.push('')
-    lines.push('── SUMMARY ──────────────────────────────────')
+    lines.push('â”€â”€ SUMMARY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€')
     lines.push(`Total Products:    ${sellerProducts.length}`)
     lines.push(`Total Orders:      ${sellerOrders.length}`)
-    lines.push(`Total Revenue:     ₱${totalRevenue.toFixed(2)}`)
-    lines.push(`Avg Order Value:   ₱${sellerOrders.length > 0 ? (totalRevenue / sellerOrders.length).toFixed(2) : '0.00'}`)
+    lines.push(`Total Revenue:     â‚±${totalRevenue.toFixed(2)}`)
+    lines.push(`Avg Order Value:   â‚±${sellerOrders.length > 0 ? (totalRevenue / sellerOrders.length).toFixed(2) : '0.00'}`)
     lines.push('')
-    lines.push('── ORDER STATUS BREAKDOWN ───────────────────')
+    lines.push('â”€â”€ ORDER STATUS BREAKDOWN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€')
     Object.entries(statusBreakdown).forEach(([status, count]) => {
       lines.push(`  ${status.charAt(0).toUpperCase() + status.slice(1).padEnd(12)} ${count}`)
     })
     lines.push('')
-    lines.push('── PRODUCT LISTINGS ─────────────────────────')
+    lines.push('â”€â”€ PRODUCT LISTINGS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€')
     sellerProducts.forEach((p, i) => {
       lines.push(`  ${i + 1}. ${p.name}`)
-      lines.push(`     Price: ₱${p.price.toFixed(2)}  |  Stock: ${p.stock}  |  Rating: ${p.rating}★  |  Reviews: ${p.reviews}`)
+      lines.push(`     Price: â‚±${p.price.toFixed(2)}  |  Stock: ${p.stock}  |  Rating: ${p.rating}â˜…  |  Reviews: ${p.reviews}`)
     })
     lines.push('')
-    lines.push('── ORDER HISTORY ────────────────────────────')
+    lines.push('â”€â”€ ORDER HISTORY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€')
     sellerOrders.forEach((o, i) => {
-      lines.push(`  ${i + 1}. ${o.id} — ${o.buyer}`)
-      lines.push(`     Date: ${o.date}  |  Total: ₱${o.total.toFixed(2)}  |  Status: ${o.status}`)
+      lines.push(`  ${i + 1}. ${o.id} â€” ${o.buyer}`)
+      lines.push(`     Date: ${o.date}  |  Total: â‚±${o.total.toFixed(2)}  |  Status: ${o.status}`)
       o.items.forEach(item => {
-        lines.push(`     └ ${item.name} x${item.qty} @ ₱${item.price.toFixed(2)}`)
+        lines.push(`     â”” ${item.name} x${item.qty} @ â‚±${item.price.toFixed(2)}`)
       })
     })
     lines.push('')
-    lines.push('═══════════════════════════════════════════════')
-    lines.push('        End of Report — Inclusive Market')
-    lines.push('═══════════════════════════════════════════════')
+    lines.push('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•')
+    lines.push('        End of Report â€” Inclusive Market')
+    lines.push('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•')
 
     return lines.join('\n')
   }, [products, orders])
@@ -504,7 +508,7 @@ export function DataStoreProvider({ children }) {
     if (pendingOrders.length > 0) alerts.push({ type: 'info', title: 'Pending Orders', message: `${pendingOrders.length} order(s) awaiting processing`, icon: 'ShoppingCart' })
     if (pendingSellers.length > 0) alerts.push({ type: 'info', title: 'Seller Applications', message: `${pendingSellers.length} seller application(s) pending review`, icon: 'User' })
     if (suspendedUsers.length > 0) alerts.push({ type: 'danger', title: 'Suspended Users', message: `${suspendedUsers.length} user(s) currently suspended`, icon: 'AlertTriangle' })
-    if (totalRevenue > 10000) alerts.push({ type: 'success', title: 'Revenue Milestone', message: `Platform revenue has exceeded ₱10,000`, icon: 'TrendingUp' })
+    if (totalRevenue > 10000) alerts.push({ type: 'success', title: 'Revenue Milestone', message: `Platform revenue has exceeded â‚±10,000`, icon: 'TrendingUp' })
     if (avgRating >= 4.5) alerts.push({ type: 'success', title: 'High Satisfaction', message: `Average product rating is ${avgRating.toFixed(1)}/5 stars`, icon: 'Star' })
     if (alerts.length === 0) alerts.push({ type: 'success', title: 'All Systems Operational', message: 'No issues detected', icon: 'CheckCircle' })
     return alerts
@@ -561,7 +565,7 @@ export function DataStoreProvider({ children }) {
       persist('im_refunds', next)
       return next
     })
-    addActivityLog('Refund requested', refund.buyerName || 'Buyer', 'order', `Refund of ₱${refund.amount.toFixed(2)} for ${refund.orderId}`)
+    addActivityLog('Refund requested', refund.buyerName || 'Buyer', 'order', `Refund of â‚±${refund.amount.toFixed(2)} for ${refund.orderId}`)
     return newRefund
   }, [addActivityLog])
 
@@ -587,7 +591,7 @@ export function DataStoreProvider({ children }) {
     addActivityLog('Review moderated', 'Admin', 'user', `Review ${reviewId} ${action}`)
   }, [addActivityLog])
 
-  // ── Conversations ────────────────────────────────────────────
+  // â”€â”€ Conversations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const getOrCreateConversation = useCallback((buyerId, sellerId, productId = null) => {
     const existing = conversations.find(c => c.buyerId === buyerId && c.sellerId === sellerId && (productId ? c.productId === productId : true))
     if (existing) return existing
@@ -615,7 +619,7 @@ export function DataStoreProvider({ children }) {
     return conversations.filter(c => c.buyerId === userId || c.sellerId === userId)
   }, [conversations])
 
-  // ── Support Tickets ──────────────────────────────────────────
+  // â”€â”€ Support Tickets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const createTicket = useCallback((ticket) => {
     const newTicket = { ...ticket, id: 'TKT-' + Date.now().toString().slice(-6), status: 'open', createdAt: new Date().toISOString(), responses: [] }
     setSupportTickets(prev => { const next = [newTicket, ...prev]; persist('im_support_tickets', next); return next })
@@ -655,7 +659,7 @@ export function DataStoreProvider({ children }) {
     return supportTickets.filter(t => t.userId === userId)
   }, [supportTickets])
 
-  // ── Notifications ────────────────────────────────────────────
+  // â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const addNotification = useCallback((userId, type, message, link = null) => {
     const notif = { id: 'n-' + Date.now(), userId, type, message, link, isRead: false, createdAt: new Date().toISOString() }
     setNotifications(prev => { const next = [notif, ...prev]; persist('im_notifications', next); return next })
@@ -674,7 +678,31 @@ export function DataStoreProvider({ children }) {
     return notifications.filter(n => n.userId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }, [notifications])
 
-  // ── Flash Sales ──────────────────────────────────────────────
+  // â”€â”€ Blocklist â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const [blocklist, setBlocklist] = useState(() => {
+    const saved = localStorage.getItem('im_blocklist')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  const toggleBlockUser = useCallback((userId, blockedId) => {
+    let nowBlocked = false
+    setBlocklist(prev => {
+      const exists = prev.some(b => b.userId === userId && b.blockedId === blockedId)
+      nowBlocked = !exists
+      const next = exists
+        ? prev.filter(b => !(b.userId === userId && b.blockedId === blockedId))
+        : [{ userId, blockedId, createdAt: new Date().toISOString() }, ...prev]
+      persist('im_blocklist', next)
+      return next
+    })
+    addActivityLog(nowBlocked ? 'User blocked' : 'User unblocked', 'User', 'user', `${userId} ${nowBlocked ? 'blocked' : 'unblocked'} ${blockedId}`)
+    return nowBlocked
+  }, [addActivityLog])
+
+  const blockedIdsFor = useCallback((userId) => blocklist.filter(b => b.userId === userId).map(b => b.blockedId), [blocklist])
+  const isBlockedBy = useCallback((ownerId, targetId) => blocklist.some(b => b.userId === ownerId && b.blockedId === targetId), [blocklist])
+
+  // â”€â”€ Flash Sales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const addFlashSale = useCallback((sale) => {
     const newSale = { ...sale, id: 'fs-' + Date.now(), createdAt: new Date().toISOString() }
     setFlashSales(prev => { const next = [newSale, ...prev]; persist('im_flash_sales', next); return next })
@@ -691,7 +719,7 @@ export function DataStoreProvider({ children }) {
     return flashSales.filter(s => s.startsAt <= now && s.endsAt >= now)
   }, [flashSales])
 
-  // ── Wishlist ─────────────────────────────────────────────────
+  // â”€â”€ Wishlist â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const addToWishlist = useCallback((userId, productId) => {
     const existing = wishlist.find(w => w.userId === userId && w.productId === productId)
     if (existing) return
@@ -711,7 +739,7 @@ export function DataStoreProvider({ children }) {
     return wishlist.some(w => w.userId === userId && w.productId === productId)
   }, [wishlist])
 
-  // ── Consent Logs ─────────────────────────────────────────────
+  // â”€â”€ Consent Logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const addConsentLog = useCallback((userId, action, purpose) => {
     const log = { id: 'cl-' + Date.now(), userId, action, purpose, consent: true, loggedAt: new Date().toISOString() }
     setConsentLogs(prev => { const next = [log, ...prev]; persist('im_consent_logs', next); return next })
@@ -721,7 +749,7 @@ export function DataStoreProvider({ children }) {
     return consentLogs.filter(l => l.userId === userId)
   }, [consentLogs])
 
-  // ── Newsletter ───────────────────────────────────────────────
+  // â”€â”€ Newsletter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const subscribeNewsletter = useCallback((email, userId = null) => {
     const existing = newsletter.find(n => n.email === email)
     if (existing) return existing
@@ -734,7 +762,7 @@ export function DataStoreProvider({ children }) {
     setNewsletter(prev => { const next = prev.map(n => n.email === email ? { ...n, active: false, unsubscribedAt: new Date().toISOString() } : n); persist('im_newsletter', next); return next })
   }, [])
 
-  // ── Chat Sessions ────────────────────────────────────────────
+  // â”€â”€ Chat Sessions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const createChatSession = useCallback((userId = null, guestId = null) => {
     const session = { id: 'cs-' + Date.now(), userId, guestId, status: 'open', messages: [], escalatedTicketId: null, createdAt: new Date().toISOString() }
     setChatSessions(prev => { const next = [session, ...prev]; persist('im_chat_sessions', next); return next })
@@ -762,13 +790,13 @@ export function DataStoreProvider({ children }) {
     return ticket
   }, [chatSessions, createTicket])
 
-  // ── Payment Providers ────────────────────────────────────────
+  // â”€â”€ Payment Providers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const updatePaymentProvider = useCallback((providerId, updates) => {
     setPaymentProviders(prev => { const next = prev.map(p => p.id === providerId ? { ...p, ...updates } : p); persist('im_payment_providers', next); return next })
     addActivityLog('Payment provider updated', 'Admin', 'system', `Provider ${providerId} updated`)
   }, [addActivityLog])
 
-  // ── Theme Settings ───────────────────────────────────────────
+  // â”€â”€ Theme Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const updateThemeSettings = useCallback((updates) => {
     setThemeSettings(prev => { const next = { ...prev, ...updates }; persist('im_theme_settings', next); return next })
     addActivityLog('Theme updated', 'Admin', 'system', 'Theme settings saved')
@@ -776,7 +804,7 @@ export function DataStoreProvider({ children }) {
 
   const value = useMemo(() => ({
     products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
-    conversations, supportTickets, notifications, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
+    conversations, supportTickets, notifications, blocklist, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -794,6 +822,7 @@ export function DataStoreProvider({ children }) {
     getOrCreateConversation, sendConversationMessage, getConversationMessages, getConversationsForUser,
     createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
     addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
+    blocklist, toggleBlockUser, blockedIdsFor, isBlockedBy,
     addFlashSale, removeFlashSale, getActiveFlashSales,
     addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
     addConsentLog, getConsentLogsByUser,
@@ -801,7 +830,7 @@ export function DataStoreProvider({ children }) {
     createChatSession, addChatMessage, escalateChatToTicket,
     updatePaymentProvider, updateThemeSettings,
   }), [products, orders, users, sellers, categories, reviews, activityLogs, payouts, transactions, messages, addresses, refunds,
-    conversations, supportTickets, notifications, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
+    conversations, supportTickets, notifications, blocklist, flashSales, wishlist, consentLogs, newsletter, chatSessions, paymentProviders, themeSettings,
     addProduct, updateProduct, deleteProduct,
     addOrder, updateOrderStatus, bulkUpdateOrderStatus,
     updateUserStatus, updateUser,
@@ -819,6 +848,7 @@ export function DataStoreProvider({ children }) {
     getOrCreateConversation, sendConversationMessage, getConversationMessages, getConversationsForUser,
     createTicket, updateTicketStatus, addTicketResponse, getTicketsByUser,
     addNotification, markNotificationRead, markAllNotificationsRead, getNotificationsForUser,
+    blocklist, toggleBlockUser, blockedIdsFor, isBlockedBy,
     addFlashSale, removeFlashSale, getActiveFlashSales,
     addToWishlist, removeFromWishlist, getWishlistByUser, isInWishlist,
     addConsentLog, getConsentLogsByUser,

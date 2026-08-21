@@ -73,9 +73,9 @@
 ## Track A â€” Trust & Safety (P0)
 
 - [ ] **Block System** â€” block/unblock user; hides their listings from feed & blocks DMs
-      files: `db.js (blockUser/unblockUser/isBlocked)`, ProductCard filter, Messages guard
+      
 - [ ] **Ban System** â€” admin bans account w/ reason; AuthGuard rejects login; banner shown
-      files: `Admin Users.jsx`, `AuthContext`, login flow
+      
 - [ ] **Blocklist panel** â€” admin view of all blocks; user view of own blocks + unblock
 - [ ] **ID Verification** â€” seller KYC status machine: pending â†’ verified/rejected;
       admin verification queue page reusing PWD-ID upload

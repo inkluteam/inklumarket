@@ -21,10 +21,13 @@ export default function AdminUsers() {
     return matchesSearch && matchesRole && matchesStatus
   })
 
-  const handleStatusChange = (userId, newStatus) => {
-    updateUserStatus(userId, newStatus)
+  const handleStatusChange = (userId, newStatus, reason = '') => {
+    updateUserStatus(userId, newStatus, reason)
     toast.success(`User ${newStatus === 'active' ? 'activated' : 'suspended'}`)
   }
+
+  const [banTarget, setBanTarget] = useState(null)
+  const [banReason, setBanReason] = useState('')
 
   return (
     <div>
@@ -87,7 +90,7 @@ export default function AdminUsers() {
                     <div className="flex items-center gap-1">
                       <button onClick={() => setViewUser(user)} className="p-1.5 text-amber-600 hover:bg-amber-50 rounded" aria-label="View user"><Eye className="w-4 h-4" /></button>
                       {user.status === 'active' && user.role !== 'admin' ? (
-                        <button onClick={() => handleStatusChange(user.id, 'suspended')} className="p-1.5 text-red-600 hover:bg-red-50 rounded" aria-label="Suspend user"><Ban className="w-4 h-4" /></button>
+                        <button onClick={() => { setBanTarget(user); setBanReason('') }} className="p-1.5 text-red-600 hover:bg-red-50 rounded" aria-label="Suspend user"><Ban className="w-4 h-4" /></button>
                       ) : user.status === 'suspended' ? (
                         <button onClick={() => handleStatusChange(user.id, 'active')} className="p-1.5 text-green-600 hover:bg-green-50 rounded" aria-label="Activate user"><CheckCircle className="w-4 h-4" /></button>
                       ) : null}
@@ -99,6 +102,23 @@ export default function AdminUsers() {
           </table>
         </div>
       </div>
+
+      {banTarget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setBanTarget(null)}>
+          <div className="bg-white rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()} role="dialog" aria-label="Suspend user">
+            <h2 className="text-xl font-bold mb-1 flex items-center gap-2"><Ban className="w-5 h-5 text-red-600" /> Suspend {banTarget.name}</h2>
+            <p className="text-sm text-gray-500 mb-4">The account will be blocked from logging in. A reason is required and will be recorded in the Audit Log.</p>
+            <textarea value={banReason} onChange={e => setBanReason(e.target.value)} rows={3}
+              placeholder="Reason (e.g. fraudulent orders, abusive messages…)"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-red-100" aria-label="Suspension reason" />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setBanTarget(null)} className="btn-secondary text-sm">Cancel</button>
+              <button disabled={!banReason.trim()} onClick={() => { handleStatusChange(banTarget.id, 'suspended', banReason.trim()); setBanTarget(null) }}
+                className="btn-primary text-sm bg-red-600 disabled:opacity-40">Suspend Account</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {viewUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setViewUser(null)}>
@@ -113,6 +133,7 @@ export default function AdminUsers() {
               <div className="flex justify-between"><span className="text-gray-500">Phone</span><span>{viewUser.phone}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Role</span><span className={`badge capitalize ${roleColors[viewUser.role]}`}>{viewUser.role}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Status</span><span className={`badge capitalize ${statusColors[viewUser.status]}`}>{viewUser.status}</span></div>
+              {viewUser.banReason && <div className="flex justify-between"><span className="text-gray-500">Ban Reason</span><span className="font-medium text-red-600 text-right">{viewUser.banReason}</span></div>}
               <div className="flex justify-between"><span className="text-gray-500">Joined</span><span>{viewUser.joined}</span></div>
             </div>
           </div>

@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { MessageCircle, Send, Search, ChevronLeft } from 'lucide-react'
+import { MessageCircle, Send, Search, ChevronLeft, Ban, ShieldCheck, AlertTriangle } from 'lucide-react'
 import { useDataStore } from '../../context/DataStore'
 import { useAuth } from '../../context/AuthContext'
+import { containsBannedWords } from '../../utils/moderation'
 
 export default function BuyerMessages() {
   const { user } = useAuth()
-  const { conversations, users, sellers, products, getConversationMessages, sendConversationMessage } = useDataStore()
+  const { conversations, users, sellers, products, getConversationMessages, sendConversationMessage, toggleBlockUser, isBlockedBy } = useDataStore()
   const [selected, setSelected] = useState(null)
   const [body, setBody] = useState('')
   const [search, setSearch] = useState('')
+  const [notice, setNotice] = useState('')
 
   const myConvs = (conversations || []).filter(c => c.buyerId === user?.id)
     .filter(c => {
@@ -19,12 +21,28 @@ export default function BuyerMessages() {
   const thread = selected ? (getConversationMessages ? getConversationMessages(selected.id) : []) : []
   const sellerOfSelected = selected ? sellers.find(s => s.id === selected.sellerId) : null
   const productOfSelected = selected ? products.find(p => p.id === selected.productId) : null
+  // Block state: buyer blocks the seller account tied to this conversation
+  const sellerUser = selected ? (users || []).find(u => u.sellerId === selected.sellerId) : null
+  const isBlocked = selected && sellerUser ? isBlockedBy(user.id, sellerUser.id) : false
 
   function handleSend(e) {
     e.preventDefault()
     if (!body.trim() || !selected) return
+    if (isBlocked) { setNotice('You blocked this seller. Unblock to continue messaging.'); return }
+    const bad = containsBannedWords(body)
+    if (bad) {
+      setNotice(`Message not sent — flagged word "${bad}" detected. Please keep conversations respectful.`)
+      return
+    }
+    setNotice('')
     sendConversationMessage(selected.id, user.id, body.trim())
     setBody('')
+  }
+
+  function handleToggleBlock() {
+    if (!selected || !sellerUser) return
+    const nowBlocked = toggleBlockUser(user.id, sellerUser.id)
+    setNotice(nowBlocked ? `${sellerOfSelected?.name || 'Seller'} blocked — their products are hidden from your catalog.` : 'Seller unblocked.')
   }
 
   return (
@@ -72,7 +90,21 @@ export default function BuyerMessages() {
                 <div style={{ fontWeight: 600 }}>{sellerOfSelected?.name || 'Seller'}</div>
                 {productOfSelected && <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>About: {productOfSelected.name}</div>}
               </div>
+              {sellerUser && (
+                <button onClick={handleToggleBlock} aria-pressed={isBlocked}
+                  title={isBlocked ? 'Unblock seller' : 'Block seller'}
+                  style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
+                    border: '1px solid ' + (isBlocked ? '#a7f3d0' : '#fecaca'), color: isBlocked ? '#047857' : '#dc2626',
+                    background: isBlocked ? '#ecfdf5' : '#fef2f2', borderRadius: 8, padding: '0.3rem 0.6rem' }}>
+                  {isBlocked ? <ShieldCheck size={13} /> : <Ban size={13} />} {isBlocked ? 'Unblock' : 'Block'}
+                </button>
+              )}
             </div>
+            {notice && (
+              <div role="status" style={{ margin: '0.6rem 1rem 0', padding: '0.5rem 0.75rem', borderRadius: 8, background: '#fffbeb', border: '1px solid #fde68a', color: '#92400e', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <AlertTriangle size={13} /> {notice}
+              </div>
+            )}
             {/* Messages */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {thread.length === 0 && <p style={{ textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>Start the conversation.</p>}
@@ -90,7 +122,9 @@ export default function BuyerMessages() {
             </div>
             {/* Input */}
             <form onSubmit={handleSend} style={{ padding: '0.75rem 1rem', borderTop: '1px solid var(--color-border, #e5e7eb)', display: 'flex', gap: '0.5rem' }}>
-              <input value={body} onChange={e => setBody(e.target.value)} placeholder="Type a message…" style={{ flex: 1, padding: '0.5rem 0.75rem', border: '1px solid var(--color-border, #e5e7eb)', borderRadius: 8, fontSize: '0.875rem' }} />
+              <input value={body} onChange={e => setBody(e.target.value)} disabled={isBlocked}
+                placeholder={isBlocked ? 'Blocked — unblock to send messages' : 'Type a message…'}
+                style={{ flex: 1, padding: '0.5rem 0.75rem', border: '1px solid var(--color-border, #e5e7eb)', borderRadius: 8, fontSize: '0.875rem', opacity: isBlocked ? 0.5 : 1 }} />
               <button type="submit" style={{ background: 'var(--color-primary, #0047AB)', color: '#fff', border: 'none', borderRadius: 8, padding: '0.5rem 1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <Send size={14} /> Send
               </button>

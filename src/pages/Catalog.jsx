@@ -19,7 +19,12 @@ export default function Catalog() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { formatMoney } = useSettings()
-  const { products, categories } = useDataStore()
+  const { products, categories, blockedIdsFor } = useDataStore()
+
+  const blockedSellerIds = useMemo(
+    () => (user && blockedIdsFor ? blockedIdsFor(user.id) : []),
+    [user, blockedIdsFor]
+  )
 
   const handleAddToCart = (product) => {
     if (!user) { navigate('/login'); return }
@@ -37,7 +42,8 @@ export default function Catalog() {
       const matchesCategory = !selectedCategory || p.category === selectedCategory
       const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1]
       const matchesRating = p.rating >= minRating
-      return matchesSearch && matchesCategory && matchesPrice && matchesRating
+      const notBlocked = !blockedSellerIds.includes(p.sellerId)
+      return matchesSearch && matchesCategory && matchesPrice && matchesRating && notBlocked
     }).sort((a, b) => {
       switch (sortBy) {
         case 'price-low': return a.price - b.price
