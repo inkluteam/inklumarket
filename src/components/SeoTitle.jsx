@@ -13,6 +13,8 @@ const ROUTE_TITLES = [
   ['/buyer/orders', 'My Orders'],
   ['/buyer/messages', 'Messages'],
   ['/buyer/support', 'Support Tickets'],
+['/notifications', 'Notifications'],
+['/admin/support-tickets', 'Support Tickets · Admin'],
   ['/buyer/wishlist', 'My Wishlist'],
   ['/seller/dashboard', 'Seller Dashboard'],
   ['/seller/products', 'My Products'],

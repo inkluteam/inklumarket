@@ -30,6 +30,8 @@ import Orders from './pages/buyer/Orders'
 import OrderDetail from './pages/buyer/OrderDetail'
 import BuyerMessages from './pages/buyer/Messages'
 import BuyerSupport from './pages/buyer/Support'
+import Notifications from './pages/Notifications'
+import AdminTickets from './pages/admin/Tickets'
 import BuyerWishlist from './pages/buyer/Wishlist'
 
 import SellerDashboard from './pages/seller/Dashboard'
@@ -93,6 +95,7 @@ export default function App() {
                       <Route path="/buyer/order-detail/:id" element={<AuthGuard><OrderDetail /></AuthGuard>} />
                       <Route path="/buyer/messages" element={<AuthGuard><BuyerMessages /></AuthGuard>} />
                       <Route path="/buyer/support" element={<AuthGuard><BuyerSupport /></AuthGuard>} />
+                      <Route path="/notifications" element={<AuthGuard><Notifications /></AuthGuard>} />
                       <Route path="/buyer/wishlist" element={<AuthGuard><BuyerWishlist /></AuthGuard>} />
                       <Route path="/seller/register-seller" element={<RegisterSeller />} />
                       <Route path="/static/about" element={<About />} />
@@ -114,7 +117,8 @@ export default function App() {
                         <Route path="admin-orders" element={<AdminOrders />} />
                         <Route path="admin-transactions" element={<AdminTransactions />} />
                         <Route path="admin-reports" element={<AdminReports />} />
-                        <Route path="review-moderation" element={<ReviewModeration />} />
+                         <Route path="review-moderation" element={<ReviewModeration />} />
+                         <Route path="support-tickets" element={<AdminTickets />} />
                         <Route path="activity-logs" element={<ActivityLogs />} />
                         <Route path="admin-settings" element={<AdminSettings />} />
                         <Route path="payments" element={<AdminPayments />} />

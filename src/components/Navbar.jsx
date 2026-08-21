@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useDataStore } from '../context/DataStore'
 import { useSettings } from '../context/SettingsContext'
-import { ShoppingCart, Menu, X, Search, Clock, TrendingUp, Sparkles, ChevronDown, LayoutDashboard, Store, UserCircle, Building2, BookOpen, ShoppingBag, Heart, LogOut, LogIn, UserPlus } from 'lucide-react'
+import { ShoppingCart, Menu, X, Search, Clock, TrendingUp, Sparkles, ChevronDown, LayoutDashboard, Store, UserCircle, Building2, BookOpen, ShoppingBag, Heart, LogOut, LogIn, UserPlus, Bell } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 
 const RECENT_KEY = 'im_recent_searches'
@@ -43,7 +43,8 @@ function VintaMark({ size = 34 }) {
 export default function Navbar() {
   const { user, logout } = useAuth()
   const { count } = useCart()
-  const { products, categories, smartSearch } = useDataStore()
+  const { products, categories, smartSearch, getNotificationsForUser } = useDataStore()
+  const unreadCount = user && getNotificationsForUser ? (getNotificationsForUser(user.id) || []).filter(n => !n.isRead).length : 0
   const { formatMoney } = useSettings()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -251,6 +252,13 @@ export default function Navbar() {
                 </Link>
               )}
 
+              {user && (
+                <Link to="/notifications" className="relative text-gray-700 hover:text-pink-700 transition-colors" aria-label={`Notifications, ${unreadCount} unread`}>
+                  <Bell className="w-6 h-6" />
+                  {unreadCount > 0 && <span className="absolute -top-1.5 -right-1.5 bg-blue-600 text-white text-[.65rem] font-bold min-w-[1.15rem] h-[1.15rem] px-1 rounded-full flex items-center justify-center" aria-hidden="true">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+                </Link>
+              )}
+
               {/* ── Unified Account control ─────────────────── */}
               <div className="relative" ref={acctRef}>
                 <button
@@ -296,6 +304,12 @@ export default function Navbar() {
                         <Link to={accountTo} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
                           <UserCircle className="w-4 h-4" /> My Profile
                         </Link>
+                        {user && (
+                          <Link to="/notifications" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
+                            <Bell className="w-4 h-4" /> Notifications
+                            {unreadCount > 0 && <span className="ml-auto bg-blue-600 text-white text-[.65rem] font-bold min-w-[1.15rem] h-[1.15rem] px-1 rounded-full grid place-items-center">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+                          </Link>
+                        )}
                         {user.role === 'buyer' && (
                           <Link to="/buyer/wishlist" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-rose-50 hover:text-pink-700" onClick={() => setAcctOpen(false)}>
                             <Heart className="w-4 h-4" /> Wishlist

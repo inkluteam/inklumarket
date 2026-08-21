@@ -611,9 +611,10 @@ export function DataStoreProvider({ children }) {
   const createTicket = useCallback((ticket) => {
     const newTicket = { ...ticket, id: 'TKT-' + Date.now().toString().slice(-6), status: 'open', createdAt: new Date().toISOString(), responses: [] }
     setSupportTickets(prev => { const next = [newTicket, ...prev]; persist('im_support_tickets', next); return next })
+    users.filter(u => u.role === 'admin').forEach(a => addNotification(a.id, 'ticket', `New support ticket ${newTicket.id}: ${ticket.subject}`, '/admin/support-tickets'))
     addActivityLog('Support ticket opened', ticket.userName || 'User', 'user', ticket.subject)
     return newTicket
-  }, [addActivityLog])
+  }, [addActivityLog, users, addNotification])
 
   const updateTicketStatus = useCallback((ticketId, status, adminNote = '') => {
     setSupportTickets(prev => {
@@ -621,8 +622,10 @@ export function DataStoreProvider({ children }) {
       persist('im_support_tickets', next)
       return next
     })
+    const t = supportTickets.find(x => x.id === ticketId)
+    if (t) addNotification(t.userId, 'ticket', `Your ticket ${ticketId} was marked "${status}"`, '/notifications')
     addActivityLog(`Ticket ${status}`, 'Admin', 'user', `TKT ${ticketId} marked ${status}`)
-  }, [addActivityLog])
+  }, [addActivityLog, supportTickets, addNotification])
 
   const addTicketResponse = useCallback((ticketId, authorId, authorName, message) => {
     setSupportTickets(prev => {
@@ -630,7 +633,15 @@ export function DataStoreProvider({ children }) {
       persist('im_support_tickets', next)
       return next
     })
-  }, [])
+    const t = supportTickets.find(x => x.id === ticketId)
+    if (t) {
+      if (authorId === t.userId) {
+        users.filter(u => u.role === 'admin').forEach(a => addNotification(a.id, 'ticket', `${authorName} replied to ticket ${ticketId}`, '/admin/support-tickets'))
+      } else {
+        addNotification(t.userId, 'ticket', `Support replied to your ticket ${ticketId}`, '/notifications')
+      }
+    }
+  }, [supportTickets, users, addNotification])
 
   const getTicketsByUser = useCallback((userId) => {
     return supportTickets.filter(t => t.userId === userId)

@@ -6,12 +6,57 @@
 
 ---
 
+## ⭐ Priority — Audit Log & Financial Records Dashboard (P0)
+
+> Fully implemented e-commerce audit trail: every money movement and approval action
+> is recorded with **Date/Time · Entry No# · Actor · Action (approved/rejected/…) ·
+> Total Amount**, and visualized in charts/graphs over time.
+
+### A. Audit Log upgrade (`/admin/activity-logs` → structured table)
+- [ ] Structured columns: `Date & Time`, `Entry No#` (auto-increment ref e.g. AUD-0001),
+      `Actor` (name+role), `Action` (approved / rejected / created / updated /
+      deleted / paid / refunded / payout / status-change), `Entity` (order/product/user/ticket), `Details`
+- [ ] Financial actions auto-log: order approved, payment confirmed (COD collected /
+      Maya/GCash settled), refund issued, seller payout released — each entry carries
+      **Total Amount** of the transaction
+- [ ] Filters: date range, action type, entity type, actor; free-text search
+- [ ] Export CSV / print-friendly view
+- [ ] Data layer: extend `addActivityLog(action, actor, entityType, details, amount?)`
+      to store `amount` + `refNo`; backfill from existing orders
+
+### B. Financial Records ledger (new `/admin/financial-records`)
+- [ ] Every order/payment/payout as a ledger row: Date/Time, Record No#
+      (FIN-0001), Type (sale/refund/payout/fee), Method (COD/Maya/GCash/wallet),
+      Amount, Status (**pending / approved / completed / refunded**)
+- [ ] Running totals row + period selector (today / week / month / year)
+- [ ] Summary cards: Gross Sales · Refunds · Net Revenue · COD Collected · Pending Payouts
+- [ ] Approve/reject workflow on pending financial entries (writes back to audit log)
+
+### C. Charts, Graphs & Time Analytics (Reports + Financial pages)
+- [ ] Extend existing custom SVG charts in `Reports.jsx` (no new deps):
+      - Line: sales/revenue over time (daily · weekly · monthly toggle)
+      - Bar: revenue by category; top sellers by GMV
+      - Donut: orders by status; payments by method share
+      - Area: cumulative revenue trend
+      - Heatmap/bar-by-hour: peak ordering hours ("time" dimension)
+- [ ] Comparison mode: this week vs last week, this month vs last month (% delta badges)
+- [ ] All charts keyboard-focusable with aria-labels + text summary fallback
+
+---
+
+
+
 ## Phase 0 — Foundations (do first, unblocks everything)
 
 - [x] Supabase schema 0001/0002 applied (tables, RLS, atomic checkout RPC)
 - [x] SPA fallback rewrite on Vercel (`vercel.json`) — deep links no longer 404
 - [x] Admin Dashboard → Reports link path fixed (`/admin/admin-reports`)
-- [ ] DB migration `0003_client_features.sql`:
+- [~] DB migration `0003_client_features.sql` written — awaiting manual SQL Editor run:
+      - `im_support_tickets` + `im_ticket_messages`, `im_notifications`
+      - `im_blocklist` + ban/KYC columns on `im_profiles`
+      - `im_wallets` + `im_wallet_txns`, `im_vouchers`, `im_returns`,
+        `im_pickup_points`, `im_shipping_methods` (seeded), product `options jsonb`
+      - RLS + indexes on all new tables
       - `im_blocklist(blocker_id, blocked_id, reason, created_at)`
       - `im_user_status` extension → ban fields (`banned_at`, `ban_reason`, `banned_by`)
       - `im_support_tickets(id, user_id, subject, category, priority, status, sla_due_at)` +
