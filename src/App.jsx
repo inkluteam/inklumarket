@@ -32,6 +32,7 @@ import BuyerMessages from './pages/buyer/Messages'
 import BuyerSupport from './pages/buyer/Support'
 import Notifications from './pages/Notifications'
 import AdminTickets from './pages/admin/Tickets'
+import FinancialRecords from './pages/admin/FinancialRecords'
 import BuyerWishlist from './pages/buyer/Wishlist'
 
 import SellerDashboard from './pages/seller/Dashboard'
@@ -119,6 +120,7 @@ export default function App() {
                         <Route path="admin-reports" element={<AdminReports />} />
                          <Route path="review-moderation" element={<ReviewModeration />} />
                          <Route path="support-tickets" element={<AdminTickets />} />
+                         <Route path="financial-records" element={<FinancialRecords />} />
                         <Route path="activity-logs" element={<ActivityLogs />} />
                         <Route path="admin-settings" element={<AdminSettings />} />
                         <Route path="payments" element={<AdminPayments />} />

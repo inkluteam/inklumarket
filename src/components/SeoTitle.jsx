@@ -15,6 +15,7 @@ const ROUTE_TITLES = [
   ['/buyer/support', 'Support Tickets'],
 ['/notifications', 'Notifications'],
 ['/admin/support-tickets', 'Support Tickets · Admin'],
+['/admin/financial-records', 'Financial Records · Admin'],
   ['/buyer/wishlist', 'My Wishlist'],
   ['/seller/dashboard', 'Seller Dashboard'],
   ['/seller/products', 'My Products'],

@@ -1,4 +1,5 @@
-import { ArrowUp, ArrowDown, DollarSign, Users, Package, ShoppingCart, Download } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { ArrowUp, ArrowDown, DollarSign, Users, Package, ShoppingCart, Download, CalendarDays } from 'lucide-react'
 import { useDataStore } from '../../context/DataStore'
 import { useSettings } from '../../context/SettingsContext'
 import { exportOrdersCSV, exportTransactionsCSV, exportProductsCSV, exportSellersCSV } from '../../utils/exportCSV'
@@ -105,15 +106,40 @@ function HorizontalBar({ label, value, max, color, display }) {
 export default function AdminReports() {
   const { formatMoney, currencySymbol } = useSettings()
   const { orders, sellers, categories, products, transactions } = useDataStore()
+  const [gran, setGran] = useState('monthly')
   const totalRevenue = orders.reduce((s, o) => s + o.total, 0)
   const totalFees = transactions.reduce((s, t) => s + t.platformFee, 0)
   const totalPayouts = transactions.reduce((s, t) => s + t.sellerPayout, 0)
   const approvedProducts = products.filter(p => p.status === 'approved').length
   const activeSellers = sellers.filter(s => s.status === 'active').length
 
-  const revenueData = [
-    { label: 'Aug', value: 4200 }, { label: 'Sep', value: 5100 }, { label: 'Oct', value: 4800 },
-    { label: 'Nov', value: 6200 }, { label: 'Dec', value: 5800 }, { label: 'Jan', value: Math.round(totalRevenue * 3) },
+  const revenueSeries = useMemo(() => {
+    const buckets = new Map()
+    orders.forEach(o => {
+      const d = new Date(o.createdAt || o.date || Date.now())
+      if (isNaN(d)) return
+      const key = gran === 'daily' ? d.toISOString().slice(0, 10)
+        : gran === 'weekly' ? (() => { const t = new Date(d); const day = (t.getDay() + 6) % 7; t.setDate(t.getDate() - day); return t.toISOString().slice(0, 10) })()
+        : d.toISOString().slice(0, 7)
+      buckets.set(key, (buckets.get(key) || 0) + (Number(o.total) || 0))
+    })
+    const sorted = [...buckets.entries()].sort((a, b) => a[0].localeCompare(b[0])).slice(-8)
+    return sorted.map(([k, v]) => ({
+      label: gran === 'daily' ? k.slice(5) : gran === 'weekly' ? k.slice(5) : k.slice(2, 7),
+      value: Math.round(v)
+    }))
+  }, [orders, gran])
+
+  const dow = useMemo(() => {
+    const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const counts = Array(7).fill(0)
+    orders.forEach(o => { const d = new Date(o.date || o.createdAt || Date.now()); if (!isNaN(d)) counts[d.getDay()]++ })
+    return names.map((n, i) => ({ label: n, value: counts[i] }))
+  }, [orders])
+  const maxDow = Math.max(...dow.map(d => d.value), 1)
+
+  const revenueData = revenueSeries.length >= 2 ? revenueSeries : [
+    { label: '—', value: 0 }, { label: '—', value: 0 }
   ]
 
   const ordersByStatus = [
@@ -182,11 +208,18 @@ export default function AdminReports() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="card p-6 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h2 className="font-bold text-lg">Revenue Trend</h2>
-            <span className="text-sm text-gray-500">Last 6 months</span>
+            <div className="flex items-center gap-1.5">
+              {[['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']].map(([k, l]) => (
+                <button key={k} onClick={() => setGran(k)} aria-pressed={gran === k}
+                  className="px-3 py-1 rounded-full text-xs font-semibold transition-colors"
+                  style={{ background: gran === k ? '#059669' : '#f3f4f6', color: gran === k ? '#fff' : '#374151' }}>{l}</button>
+              ))}
+              <span className="text-xs text-gray-400 ml-1 hidden sm:inline-flex items-center gap-1"><CalendarDays className="w-3.5 h-3.5" /> real order data</span>
+            </div>
           </div>
-          <div className="h-64">
+          <div className="h-64" role="img" aria-label={`Revenue trend, ${gran}, total ${formatMoney(revenueData.reduce((s, d) => s + d.value, 0))}`}>
             <LineChart data={revenueData} color="#059669" currencySymbol={currencySymbol} />
           </div>
         </div>
@@ -228,7 +261,20 @@ export default function AdminReports() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+        <div className="card p-6">
+          <h2 className="font-bold text-lg mb-4">Orders by Day of Week</h2>
+          <div className="flex items-end gap-2.5 h-44" role="img" aria-label="Bar chart of orders per weekday">
+            {dow.map(d => (
+              <div key={d.label} className="flex-1 flex flex-col items-center gap-1.5">
+                <span className="text-[.68rem] font-bold text-gray-500">{d.value}</span>
+                <div className="w-full rounded-t-lg transition-all duration-700" style={{ height: `${(d.value / maxDow) * 100}%`, minHeight: 4, background: 'linear-gradient(180deg,#2563eb,#60a5fa)' }} />
+                <span className="text-xs text-gray-400">{d.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="card p-6">
           <h2 className="font-bold text-lg mb-4">Payment Methods</h2>
           <DonutChart

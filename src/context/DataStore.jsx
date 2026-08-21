@@ -111,9 +111,11 @@ export function DataStoreProvider({ children }) {
 
   const persist = (key, data) => localStorage.setItem(key, JSON.stringify(data))
 
-  const addActivityLog = useCallback((action, user, type, details) => {
-    const newLog = { id: 'a' + Date.now(), action, user, type, time: 'Just now', icon: type === 'user' ? 'User' : type === 'product' ? 'Package' : type === 'order' ? 'ShoppingCart' : 'Settings', details }
+  const addActivityLog = useCallback((action, user, type, details, amount = null) => {
+    let newLog = null
     setActivityLogs(prev => {
+      const refNo = 'AUD-' + String(1000 + prev.length + 1)
+      newLog = { id: 'a' + Date.now(), action, user, type, details, amount, refNo, ts: new Date().toISOString(), time: new Date().toLocaleString('en-PH'), icon: type === 'user' ? 'User' : type === 'product' ? 'Package' : type === 'order' ? 'ShoppingCart' : 'Settings' }
       const next = [newLog, ...prev]
       persist('im_activity_logs', next)
       return next
@@ -160,7 +162,7 @@ export function DataStoreProvider({ children }) {
       persist('im_orders', next)
       return next
     })
-    addActivityLog('Order placed', order.buyer || 'Buyer', 'order', `${newOrder.id} for ₱${order.total.toFixed(2)}`)
+    addActivityLog('Order placed', order.buyer || 'Buyer', 'order', `${newOrder.id} · ${String(order.paymentMethod || 'cod').toUpperCase()}`, Number(order.total) || 0)
     return newOrder
   }, [addActivityLog])
 
@@ -170,8 +172,14 @@ export function DataStoreProvider({ children }) {
       persist('im_orders', next)
       return next
     })
-    addActivityLog('Order updated', 'System', 'order', `${orderId} marked as ${status}`)
-  }, [addActivityLog])
+    const o = orders.find(x => x.id === orderId)
+    const FIN_STATUSES = ['paid', 'completed', 'delivered', 'refunded', 'cancelled']
+    if (o && FIN_STATUSES.includes(status)) {
+      addActivityLog(`Order ${status}`, 'Admin', 'order', `${orderId} · ${o.buyer || ''} (${status})`, status === 'refunded' || status === 'cancelled' ? -Math.abs(Number(o.total) || 0) : Math.abs(Number(o.total) || 0))
+    } else {
+      addActivityLog('Order updated', 'System', 'order', `${orderId} marked as ${status}`)
+    }
+  }, [addActivityLog, orders])
 
   const bulkUpdateOrderStatus = useCallback((orderIds, status) => {
     setOrders(prev => {
