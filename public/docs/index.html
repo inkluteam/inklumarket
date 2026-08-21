@@ -148,17 +148,26 @@
   .deck-top .spacer{flex:1}
   .deck-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 14px;overflow:hidden}
   .slide{width:min(1800px,100%);height:100%;display:none;flex-direction:column}
-  .slide.on{display:flex;animation:fadein .35s ease}
+  .slide.on{display:flex;animation:fadeSlide .35s ease}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
   @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .slide h3{font-size:34px;margin-bottom:4px;text-align:center;width:100%}
+  .slide h3{
+    font-size:clamp(26px,3vw,40px);margin-bottom:6px;text-align:center;width:100%;font-weight:900;
+    background:linear-gradient(90deg,#60a5fa,#FFD700,#f472b6);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
   .slide .sk{color:var(--gold);font-weight:800;font-size:13.5px;letter-spacing:2.5px;text-transform:uppercase;text-align:center;width:100%}
-  .slide .sc{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;
+  .slide .sc{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;text-align:center;
     background:#fff;border-radius:16px;margin-top:12px;padding:12px;overflow:auto}
-  .slide .sc svg{max-width:100%;height:auto;max-height:100%;margin:0 auto;display:block}
-  .slide ul.sl{list-style:none;margin:16px auto 0;display:grid;gap:12px;max-width:1050px;width:100%}
-  .slide ul.sl li{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);
-    border-left:5px solid var(--gold);border-radius:10px;padding:12px 18px;font-size:17.5px}
-  .slide ul.sl li b{color:#ffd700}
+  .slide .sc svg,.slide .sc > *{max-width:100%;margin-left:auto !important;margin-right:auto !important}
+  .slide .sc svg{height:auto;display:block}
+  .diagram .body{text-align:center}
+  .diagram .body svg{margin-left:auto !important;margin-right:auto !important}
+  .slide ul.sl{list-style:none;margin:18px auto 0;display:grid;gap:14px;
+    grid-template-columns:repeat(auto-fit,minmax(400px,1fr));justify-content:center;width:100%}
+  .slide ul.sl li{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-left:4px solid var(--gold);border-radius:10px;padding:16px 20px;font-size:17.5px;line-height:1.55}
+  .slide ul.sl li b{color:#ffd700;display:block;font-size:.86em;margin-bottom:3px}
   .deck-bot{display:flex;align-items:center;gap:18px;padding:12px 26px;
     background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.12)}
   .progress{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
@@ -174,7 +183,7 @@
   /* ── Light (white) deck theme ───────────────────────────── */
   #deck.light{background:#FDF6EE;color:#0f172a}
   #deck.light .deck-top,#deck.light .deck-bot{background:rgba(15,23,42,.05);border-color:rgba(15,23,42,.14)}
-  #deck.light .slide h3{color:#0b1f3f}
+  #deck.light .slide h3{background:linear-gradient(90deg,#1d4ed8,#b45309,#be185d);-webkit-background-clip:text;background-clip:text}
   #deck.light .slide ul.sl li{background:#fff;border-color:#e2e8f0;border-left-color:var(--blue);color:#334155;box-shadow:0 2px 8px rgba(15,23,42,.06)}
   #deck.light .slide ul.sl li b{color:var(--blue-dark)}
   #deck.light .nav-arrow{background:rgba(15,23,42,.08);border-color:rgba(15,23,42,.25);color:#0f172a}
@@ -1123,12 +1132,23 @@
     for (const [key, src] of Object.entries(D)) {
       try {
         const { svg } = await m.default.render('g-' + key, src);
-        document.querySelectorAll(`[data-d="${key}"]`).forEach(el => el.innerHTML = svg);
+        document.querySelectorAll(`[data-d="${key}"]`).forEach(el => { el.innerHTML = svg; normalizeSvg(el); });
       } catch(e) {
         document.querySelectorAll(`[data-d="${key}"]`).forEach(el =>
           el.innerHTML = '<pre style="white-space:pre-wrap">'+src.replace(/</g,'&lt;')+'</pre>');
       }
     }
+  }
+
+  // Force every mermaid svg to be a centered, container-filling block
+  function normalizeSvg(root) {
+    root.querySelectorAll('svg').forEach(s => {
+      s.style.width = '100%';
+      s.style.height = 'auto';
+      s.style.maxWidth = 'none';
+      s.style.display = 'block';
+      s.style.margin = '0 auto';
+    });
   }
 
   // ── Slide deck definition (the whole chapter, separate view) ──
@@ -1288,7 +1308,9 @@
   });
   window.openLightbox = (title, html) => {
     document.getElementById('lbTitle').textContent = title;
-    document.getElementById('lbBody').innerHTML = html;
+    const lbBody = document.getElementById('lbBody');
+    lbBody.innerHTML = html;
+    normalizeSvg(lbBody);
     document.getElementById('lightbox').classList.add('open');
   };
   window.closeLightbox = () => document.getElementById('lightbox').classList.remove('open');
